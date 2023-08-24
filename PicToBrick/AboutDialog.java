@@ -3,7 +3,7 @@ package PicToBrick;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.BorderFactory; 
+import javax.swing.BorderFactory;
 import javax.swing.border.*;
 import java.util.*;
 
@@ -18,7 +18,7 @@ extends JDialog
 implements ActionListener
 {
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	
+
 	/**
 	 * method:          AboutDialog
 	 * description:     constructor
@@ -33,11 +33,12 @@ implements ActionListener
 		JPanel content = new JPanel();
 		JPanel information = new JPanel(new GridLayout(4,1,10,10));
 		JPanel information2 = new JPanel(new GridLayout(4,1,3,3));
-		JLabel name = new JLabel("PicToBrick 1.0 - 2006-12-01");
+		JLabel name = new JLabel("PicToBrick 2.0 - 2023-08-24");
 		name.setFont(new Font(name.getFont().getFontName(), Font.BOLD, name.getFont().getSize()));
 		JLabel homepage = new JLabel("http://www.pictobrick.de (" + textbundle.getString("dialog_about_label_5") + ")");
 		JLabel author1 = new JLabel("Tobias Reichling - pictobrick@t-reichling.de");
 		JLabel author2 = new JLabel("Adrian Schütz - pictobrick@basezero.net");
+		JLabel author3 = new JLabel("John Watne (v2.0) - john.watne@gmail.com");
 		JButton ok = new JButton(textbundle.getString("button_ok"));
 		ok.setActionCommand("ok");
 		JPanel okPanel = new JPanel();
@@ -51,6 +52,7 @@ implements ActionListener
 		information.add(homepage);
 		information.add(author1);
 		information.add(author2);
+		information.add(author3);
 		JLabel lego1 = new JLabel(textbundle.getString("dialog_about_label_1"));
 		JLabel lego2 = new JLabel(textbundle.getString("dialog_about_label_2"));
 		JLabel ministeck1 = new JLabel(textbundle.getString("dialog_about_label_3"));
@@ -69,7 +71,7 @@ implements ActionListener
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
 	/**
 	 * method:          actionPerformed
 	 * description:     ActionListener
