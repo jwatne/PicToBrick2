@@ -1,21 +1,23 @@
 package PicToBrick.model;
 
 import java.awt.Color;
-import java.util.*;
-import java.io.*;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
- * class: 		Configuration
- * layer: 		DataManagement (three tier architecture)
+ * class: Configuration
+ * layer: DataManagement (three tier architecture)
  * description: contains all information about a single configuration
- * 				and offers related methods
+ * and offers related methods
  *
  * @author Tobias Reichling
  */
 public class Configuration
 		implements Serializable {
 
-	private Vector colors, elements;
+	private Vector<ColorObject> colors;
+	private Vector<ElementObject> elements;
 	private String name;
 	private String basisName;
 	private int basisWidth, basisHeight, basisCosts, basisStability;
@@ -45,8 +47,9 @@ public class Configuration
 	 * @param basisStability stability basisElement
 	 * @param material       material index
 	 */
-	public Configuration(String name, String basisName, int basisWidth, int basisHeight, double basisWidthMM,
-			int basisStability, int basisCosts, int material) {
+	public Configuration(final String name, final String basisName, final int basisWidth, final int basisHeight,
+			final double basisWidthMM,
+			final int basisStability, final int basisCosts, final int material) {
 		this.name = name;
 		this.basisName = basisName;
 		this.basisWidth = basisWidth;
@@ -55,9 +58,9 @@ public class Configuration
 		this.basisCosts = basisCosts;
 		this.basisStability = basisStability;
 		this.material = material;
-		colors = new Vector();
-		elements = new Vector();
-		boolean[][] basisElement = { { true } };
+		colors = new Vector<>();
+		elements = new Vector<>();
+		final boolean[][] basisElement = { { true } };
 		setElement(basisName, 1, 1, basisElement, basisStability, basisCosts);
 	}
 
@@ -123,7 +126,7 @@ public class Configuration
 	 * @author Tobias Reichling
 	 * @param material
 	 */
-	public void setMaterial(int material) {
+	public void setMaterial(final int material) {
 		this.material = material;
 	}
 
@@ -156,7 +159,7 @@ public class Configuration
 	 * @author Tobias Reichling
 	 * @param name
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -204,8 +207,8 @@ public class Configuration
 	 * @param b    color value blue
 	 * @return true or false
 	 */
-	public boolean setColor(String name, int r, int g, int b) {
-		Color rgb = new Color(r, g, b);
+	public boolean setColor(final String name, final int r, final int g, final int b) {
+		final Color rgb = new Color(r, g, b);
 		return setColor(name, rgb);
 	}
 
@@ -216,7 +219,7 @@ public class Configuration
 	 * @author Tobias Reichling
 	 * @param color object
 	 */
-	public void setColor(ColorObject color) {
+	public void setColor(final ColorObject color) {
 		colors.addElement(color);
 	}
 
@@ -229,18 +232,22 @@ public class Configuration
 	 * @param rgb  color object
 	 * @return true or false
 	 */
-	public boolean setColor(String name, Color rgb) {
+	public boolean setColor(final String name, final Color rgb) {
 		ColorObject color;
-		ColorObject colorNew = new ColorObject(name, rgb);
-		for (Enumeration enumColors = colors.elements(); enumColors.hasMoreElements();) {
+		final ColorObject colorNew = new ColorObject(name, rgb);
+
+		for (final Enumeration<ColorObject> enumColors = colors.elements(); enumColors.hasMoreElements();) {
 			color = (ColorObject) enumColors.nextElement();
+
 			if (color.getName().equals(name)) {
 				return false;
 			}
+
 			if (color.getRGB().equals(rgb)) {
 				return false;
 			}
 		}
+
 		colors.addElement(colorNew);
 		return true;
 	}
@@ -253,17 +260,21 @@ public class Configuration
 	 * @param name name of the color
 	 * @return true or false
 	 */
-	public boolean deleteColor(String name) {
+	public boolean deleteColor(final String name) {
 		ColorObject color;
 		int counter = 0;
-		for (Enumeration enumColors = colors.elements(); enumColors.hasMoreElements();) {
+
+		for (final Enumeration<ColorObject> enumColors = colors.elements(); enumColors.hasMoreElements();) {
 			color = (ColorObject) enumColors.nextElement();
+
 			if (color.getName().equals(name)) {
 				colors.remove(counter);
 				return true;
 			}
+
 			counter++;
 		}
+
 		return false;
 	}
 
@@ -275,14 +286,17 @@ public class Configuration
 	 * @param name name of the color object
 	 * @return color object or null
 	 */
-	public ColorObject getColor(String name) {
+	public ColorObject getColor(final String name) {
 		ColorObject color;
-		for (Enumeration enumColors = colors.elements(); enumColors.hasMoreElements();) {
+
+		for (final Enumeration<ColorObject> enumColors = colors.elements(); enumColors.hasMoreElements();) {
 			color = (ColorObject) enumColors.nextElement();
+
 			if (color.getName().equals(name)) {
 				return color;
 			}
 		}
+
 		return null;
 	}
 
@@ -293,9 +307,8 @@ public class Configuration
 	 * @author Tobias Reichling
 	 * @return enumeration
 	 */
-	public Enumeration getAllColors() {
-		Enumeration enumColors = colors.elements();
-		return enumColors;
+	public Enumeration<ColorObject> getAllColors() {
+		return colors.elements();
 	}
 
 	/**
@@ -312,17 +325,22 @@ public class Configuration
 	 * @param costs
 	 * @return true or false
 	 */
-	public boolean setElement(String name, int width, int height, boolean[][] matrix, int stability, int costs) {
+	public boolean setElement(final String name, final int width, final int height, final boolean[][] matrix,
+			final int stability, final int costs) {
 		ElementObject element;
-		ElementObject elementNew = new ElementObject(name, width, height, matrix, stability, costs);
-		for (Enumeration enumElements = elements.elements(); enumElements.hasMoreElements();) {
+		final ElementObject elementNew = new ElementObject(name, width, height, matrix, stability, costs);
+
+		for (final Enumeration<ElementObject> enumElements = elements.elements(); enumElements.hasMoreElements();) {
 			element = (ElementObject) enumElements.nextElement();
+
 			if (element.getName().equals(name)) {
 				return false;
 			}
+
 			if ((element.getWidth() == width) && (element.getHeight() == height)) {
-				boolean[][] matrixNew = element.getMatrix();
+				final boolean[][] matrixNew = element.getMatrix();
 				boolean difference = false;
+
 				for (int row = 0; row < height; row++) {
 					for (int column = 0; column < width; column++) {
 						if (!(matrixNew[row][column] == matrix[row][column])) {
@@ -330,11 +348,13 @@ public class Configuration
 						}
 					}
 				}
+
 				if (!difference) {
 					return false;
 				}
 			}
 		}
+
 		elements.addElement(elementNew);
 		return true;
 	}
@@ -351,18 +371,22 @@ public class Configuration
 	 *               otherwise)
 	 * @return true or false
 	 */
-	public boolean setElement(String name, int width, int height, boolean[][] matrix) {
+	public boolean setElement(final String name, final int width, final int height, final boolean[][] matrix) {
 		ElementObject element;
-		ElementObject elementNew = new ElementObject(name, width, height, matrix);
-		for (Enumeration enumElements = elements.elements(); enumElements.hasMoreElements();) {
+		final ElementObject elementNew = new ElementObject(name, width, height, matrix);
+
+		for (final Enumeration<ElementObject> enumElements = elements.elements(); enumElements.hasMoreElements();) {
 			element = (ElementObject) enumElements.nextElement();
+
 			if (element.getName().equals(name)) {
 				return false;
 			}
+
 			if ((element.getWidth() == width) && (element.getHeight() == height) && (element.getMatrix() == matrix)) {
 				return false;
 			}
 		}
+
 		elements.addElement(elementNew);
 		return true;
 	}
@@ -374,7 +398,7 @@ public class Configuration
 	 * @author Tobias Reichling
 	 * @param element
 	 */
-	public void setElement(ElementObject element) {
+	public void setElement(final ElementObject element) {
 		elements.addElement(element);
 	}
 
@@ -386,17 +410,21 @@ public class Configuration
 	 * @param name
 	 * @return true or false
 	 */
-	public boolean deleteElement(String name) {
+	public boolean deleteElement(final String name) {
 		ElementObject element;
 		int counter = 0;
-		for (Enumeration enumElements = elements.elements(); enumElements.hasMoreElements();) {
+
+		for (final Enumeration<ElementObject> enumElements = elements.elements(); enumElements.hasMoreElements();) {
 			element = (ElementObject) enumElements.nextElement();
+
 			if (element.getName().equals(name)) {
 				elements.remove(counter);
 				return true;
 			}
+
 			counter++;
 		}
+
 		return false;
 	}
 
@@ -408,14 +436,16 @@ public class Configuration
 	 * @param name
 	 * @return element object
 	 */
-	public ElementObject getElement(String name) {
+	public ElementObject getElement(final String name) {
 		ElementObject element;
-		for (Enumeration enumElements = elements.elements(); enumElements.hasMoreElements();) {
+
+		for (final Enumeration<ElementObject> enumElements = elements.elements(); enumElements.hasMoreElements();) {
 			element = (ElementObject) enumElements.nextElement();
 			if (element.getName().equals(name)) {
 				return element;
 			}
 		}
+
 		return null;
 	}
 
@@ -426,9 +456,8 @@ public class Configuration
 	 * @author Tobias Reichling
 	 * @return enumeration
 	 */
-	public Enumeration getAllElements() {
-		Enumeration enumElements = elements.elements();
-		return enumElements;
+	public Enumeration<ElementObject> getAllElements() {
+		return elements.elements();
 	}
 
 }
