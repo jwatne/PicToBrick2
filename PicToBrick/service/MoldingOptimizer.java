@@ -12,16 +12,16 @@ import PicToBrick.model.Mosaic;
 import java.util.*;
 
 /**
- * class:            MoldingOptimisation
+ * class:            MoldingOptimizer
  * layer:            Data processing (three tier architecture)
  * description:      tiling with molding optimisation
  * @author           Tobias Reichling
  */
-public class MoldingOptimisation
-implements Tiling {
+public class MoldingOptimizer
+implements Tiler {
 
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	private DataProcessing dataProcessing;
+	private DataProcessor dataProcessing;
 	private int percent = 0;
 	private int rows = 0;
 	private int colorRow;
@@ -42,11 +42,11 @@ implements Tiling {
 	 * method:           MoldingOptimisation
 	 * description:      contructor
 	 * @author           Tobias Reichling
-	 * @param            DataProcessing  dataProcessing
-	 * @param            Calculation     calculation
+	 * @param            DataProcessor  dataProcessing
+	 * @param            Calculator     calculation
 	 * @param            Vector          dialogSelection
 	 */
-	public MoldingOptimisation(DataProcessing dataProcessing, Calculation calculation, Vector dialogSelection){
+	public MoldingOptimizer(DataProcessor dataProcessing, Calculator calculation, Vector dialogSelection){
 		this.dataProcessing = dataProcessing;
 		this.dialogSelection = dialogSelection;
 	}

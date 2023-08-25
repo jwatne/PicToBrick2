@@ -10,31 +10,31 @@ import PicToBrick.model.Configuration;
 import PicToBrick.model.Mosaic;
 
 /**
- * class:            Slicing
+ * class:            Slicer
  * layer:            DataProcessing (three tier architecture)
  * description:      slicing (n-level-quantisation; pseudocolor-quantisation;
  *                   gray-level-to-color-transformation)
  * @author           Tobias Reichling
  */
-public class Slicing
-implements Quantisation {
+public class Slicer
+implements Quantizer {
 
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private Vector selection;
 	private int percent = 0;
 	private int rows = 0;
 	private int mosaicRow;
 
 	/**
-	 * method:           Slicing
+	 * method:           Slicer
 	 * description:      constructor
 	 * @author           Tobias Reichling
 	 * @param            data processing class
 	 * @param            calculation class
 	 * @param            selection
 	 */
-	public Slicing(DataProcessing dataProcessing, Calculation calculation, Vector selection){
+	public Slicer(DataProcessor dataProcessing, Calculator calculation, Vector selection){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 		this.selection = selection;

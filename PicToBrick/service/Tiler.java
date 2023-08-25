@@ -9,7 +9,7 @@ import PicToBrick.model.Mosaic;
  * description:      interface for all tiling clases
  * @author           Tobias Reichling
  */
-public interface Tiling {
+public interface Tiler {
 
 	/**
 	 * method:           tiling

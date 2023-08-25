@@ -7,13 +7,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.util.*;
 
+import PicToBrick.model.Lab;
+
 /**
- * class:            Calculation
+ * class:            Calculator
  * layer:            DataProcessing (three tier architecture)
  * description:      untility class with mathematical methods
  * @author           Tobias Reichling / Adrian Schuetz
  */
-public class Calculation {
+public class Calculator {
 
 	/**
 	 * method:           labToRgb

@@ -10,16 +10,16 @@ import PicToBrick.model.Configuration;
 import PicToBrick.model.Mosaic;
 
 /**
- * class:            FloydSteinberg
+ * class:            FloydSteinbergQuantizer
  * layer:            DataProcessing (three tier architecture)
  * description:      quantisation with error diffusion (floyd steinberg) with 2 colors
  * @author           Adrian Schuetz
  */
-public class FloydSteinberg
-implements Quantisation {
+public class FloydSteinbergQuantizer
+implements Quantizer {
 
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private Vector selection;
 	private int percent = 0;
 	private int rows = 0;
@@ -32,7 +32,7 @@ implements Quantisation {
 	 * @param            data processing class
 	 * @param            selection
 	 */
-	public FloydSteinberg(DataProcessing dataProcessing, Calculation calculation, Vector selection){
+	public FloydSteinbergQuantizer(DataProcessor dataProcessing, Calculator calculation, Vector selection){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 		this.selection = selection;

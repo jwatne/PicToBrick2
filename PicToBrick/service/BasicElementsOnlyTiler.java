@@ -6,15 +6,15 @@ import PicToBrick.model.Configuration;
 import PicToBrick.model.Mosaic;
 
 /**
- * class:            BasicElementsOnly
+ * class:            BasicElementsOnlyTiler
  * layer:            Data processing (three tier architecture)
  * description:      tiling with basis elements
  * @author           Adrian Schuetz
  */
-public class BasicElementsOnly
-implements Tiling {
+public class BasicElementsOnlyTiler
+implements Tiler {
 
-	private DataProcessing dataProcessing;
+	private DataProcessor dataProcessing;
 	private int rows = 0;
 	private int procent = 0;
 	private boolean statisticOutput;
@@ -24,10 +24,10 @@ implements Tiling {
 	 * method:           BasicElementsOnly
 	 * description:      construkcor
 	 * @author           Adrian Schuetz
-	 * @param            DataProcessing  dataProcessing
-	 * @param            Calculation     calculation
+	 * @param            DataProcessor  dataProcessing
+	 * @param            Calculator     calculation
 	 */
-	public BasicElementsOnly(DataProcessing dataProcessing, Calculation calculation){
+	public BasicElementsOnlyTiler(DataProcessor dataProcessing, Calculator calculation){
 		this.dataProcessing = dataProcessing;
 	}
 

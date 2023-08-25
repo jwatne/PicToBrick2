@@ -4,7 +4,7 @@ import java.io.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 
-import PicToBrick.service.DataProcessing;
+import PicToBrick.service.DataProcessor;
 
 import java.util.*;
 import java.awt.Color;
@@ -31,7 +31,7 @@ public class DataManagement {
 	private String projectName = "";
 	private Vector configurations;
 	private Mosaic mosaic;
-	private DataProcessing dataProcessing;
+	private DataProcessor dataProcessing;
 
 	/**
 	 * method:           DataManagement
@@ -46,7 +46,7 @@ public class DataManagement {
 	 * @author           Adrian Schuetz
 	 * @param            dataProcessing
 	 */
-	public DataManagement(DataProcessing dataProcessing)
+	public DataManagement(DataProcessor dataProcessing)
 	{
 		this.dataProcessing = dataProcessing;
 		configurations = new Vector();

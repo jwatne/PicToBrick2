@@ -9,16 +9,16 @@ import PicToBrick.model.Configuration;
 import PicToBrick.model.Mosaic;
 
 /**
- * class:            NaiveQuantisationRgb
+ * class:            NaiveRgbQuantizer
  * layer:            DataProcessing (three tier architecture)
  * description:      simple quantisation - sRGB - euclidean distance
  * @author           Adrian Schuetz
  */
-public class NaiveQuantisationRgb
-implements Quantisation {
+public class NaiveRgbQuantizer
+implements Quantizer {
 
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int percent = 0;
 	private int rows = 0;
 	private int mosaicRow;
@@ -30,7 +30,7 @@ implements Quantisation {
 	 * @param            data processing class
 	 * @param            calculation class
 	 */
-	public NaiveQuantisationRgb(DataProcessing dataProcessing, Calculation calculation){
+	public NaiveRgbQuantizer(DataProcessor dataProcessing, Calculator calculation){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 	}

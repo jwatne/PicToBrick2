@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
+import PicToBrick.model.Lab;
 import PicToBrick.model.Mosaic;
 
 /**
@@ -17,11 +18,11 @@ import PicToBrick.model.Mosaic;
  * description:      simple quantisation - cielab - euclidean distance
  * @author           Adrian Schuetz
  */
-public class NaiveQuantisationLab
-implements Quantisation {
+public class NaiveLabQuantizer
+implements Quantizer {
 
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int percent = 0;
 	private int rows = 0;
 	private int mosaicRow;
@@ -33,7 +34,7 @@ implements Quantisation {
 	 * @param            dataProcessing      dataProcessing
 	 * @param            calculation         calculation
 	 */
-	public NaiveQuantisationLab(DataProcessing dataProcessing, Calculation calculation){
+	public NaiveLabQuantizer(DataProcessor dataProcessing, Calculator calculation){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 	}

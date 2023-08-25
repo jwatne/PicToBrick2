@@ -11,17 +11,17 @@ import PicToBrick.model.Mosaic;
 import java.util.*;
 
 /**
- * class:            ElementSizeOptimisation
+ * class:            ElementSizeOptimizer
  * layer:            Data processing (three tier architecture)
  * description:      tiling with element size optimisation
  * @author           Adrian Schuetz
  */
-public class ElementSizeOptimisation
-implements Tiling {
+public class ElementSizeOptimizer
+implements Tiler {
 
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int percent = 0;
 	private int referenceValue;
 	private int elements = 0;
@@ -32,13 +32,13 @@ implements Tiling {
 	private int totalCosts;
 
 	/**
-	 * method:           ElementSizeOptimisation
+	 * method:           ElementSizeOptimizer
 	 * description:      contructor
 	 * @author           Adrian Schuetz
 	 * @param            dataProcessing  dataProcessing
 	 * @param            calculation         calculation
 	 */
-	public ElementSizeOptimisation(DataProcessing dataProcessing, Calculation calculation){
+	public ElementSizeOptimizer(DataProcessor dataProcessing, Calculator calculation){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 	}

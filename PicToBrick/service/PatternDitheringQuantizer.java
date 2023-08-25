@@ -8,33 +8,34 @@ import javax.swing.SwingUtilities;
 
 import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
+import PicToBrick.model.Lab;
 import PicToBrick.model.Mosaic;
 
 /**
- * class:            PatternDithering
+ * class:            PatternDitheringQuantizer
  * layer:            DataProcessing (three tier architecture)
  * description:      pattern dithering with 2x2 color pattern
  * @author           Adrian Schuetz
  */
-public class PatternDithering
-implements Quantisation {
+public class PatternDitheringQuantizer
+implements Quantizer {
 
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int percent = 0;
 	private int rows = 0;
 	private int mosaicRow;
 	private int luminanceLimit;
 
 	/**
-	 * method:           PatternDithering
+	 * method:           PatternDitheringQuantizer
 	 * description:      constructor
 	 * @author           Adrian Schuetz
 	 * @param            data processing class
 	 * @param            calculation class
 	 * @param            selection
 	 */
-	public PatternDithering(DataProcessing dataProcessing, Calculation calculation, Vector selection){
+	public PatternDitheringQuantizer(DataProcessor dataProcessing, Calculator calculation, Vector selection){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 		this.luminanceLimit = (Integer)selection.get(0);

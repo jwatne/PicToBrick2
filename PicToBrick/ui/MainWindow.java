@@ -12,7 +12,7 @@ import javax.swing.border.*;
 import javax.swing.filechooser.FileFilter;
 
 import PicToBrick.model.Configuration;
-import PicToBrick.service.DataProcessing;
+import PicToBrick.service.DataProcessor;
 import PicToBrick.service.SwingWorker;
 
 /**
@@ -29,7 +29,7 @@ implements ActionListener, ChangeListener
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	//--------------------------------------------------------------------------------------------------------
 	//data processing
-	private DataProcessing dataProcessing;
+	private DataProcessor dataProcessing;
 	//--------------------------------------------------------------------------------------------------------
 	//dialogs
 	private ProgressBarsAlgorithms progressBarsAlgorithm;
@@ -83,7 +83,7 @@ implements ActionListener, ChangeListener
 		super("PicToBrick");
 		addWindowListener(new WindowClosingAdapter(true));
 		osStyle();
-		dataProcessing = new DataProcessing(this);
+		dataProcessing = new DataProcessor(this);
 		progressBarsAlgorithm = new ProgressBarsAlgorithms(this);
 		progressBarsOutputFiles = new ProgressBarsOutputFiles(this);
 		buildMenu();

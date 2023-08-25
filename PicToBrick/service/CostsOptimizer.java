@@ -10,17 +10,17 @@ import PicToBrick.model.Mosaic;
 import java.util.*;
 
 /**
- * class:            CostsOptimisation
+ * class:            CostsOptimizer
  * layer:            Data processing (three tier architecture)
  * description:      tiling with cost optimisation
  * @author           Tobias Reichling
  */
-public class CostsOptimisation
-implements Tiling {
+public class CostsOptimizer
+implements Tiler {
 
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int procent = 0;
 	private int referenceValue;
 	private int elements = 0;
@@ -34,7 +34,7 @@ implements Tiling {
 	 * @param            dataProcessing  dataProcessing
 	 * @param            calculation         calculation
 	 */
-	public CostsOptimisation(DataProcessing dataProcessing, Calculation calculation){
+	public CostsOptimizer(DataProcessor dataProcessing, Calculator calculation){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 	}

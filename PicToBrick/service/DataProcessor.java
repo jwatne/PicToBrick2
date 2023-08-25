@@ -14,36 +14,36 @@ import PicToBrick.model.Mosaic;
 import PicToBrick.ui.MainWindow;
 
 /**
- * class:            DataProcessing
+ * class:            DataProcessor
  * layer:            Data processing (three tier architecture)
  * description:      Provides appropriate methods
  * @author           Adrian Schuetz
  */
-public class DataProcessing {
+public class DataProcessor {
 
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	private DataManagement dataManagement;
 	private MainWindow mainWindow;
-	private OutputFiles outputFiles;
-	private Calculation calculation;
-	private DataProcessing dataProcessing;
+	private OutputFileGenerator outputFiles;
+	private Calculator calculation;
+	private DataProcessor dataProcessing;
 	private Vector info1, info2;
 	private Vector quantisationInfo;
 	private Vector tilingInfo;
 	private boolean threeDEffect, statisticOutput;
 	private int quantisationAlgo, tilingAlgo;
-	private NaiveQuantisationRgb naiveQuantisation;
-	private FloydSteinberg floydSteinberg;
-	private NaiveQuantisationLab naiveQuantisationLab;
-	private Slicing slicing;
-	private SolidRegions solidRegions;
-	private PatternDithering patternDithering;
-	private VectorErrorDiffusion vectorErrorDiffusion;
-	private BasicElementsOnly basicElementsOnly;
-	private StabilityOptimisation stabilityOptimisation;
-	private CostsOptimisation costsOptimisation;
-	private MoldingOptimisation moldingOptimisation;
-	private ElementSizeOptimisation elementSizeOptimisation;
+	private NaiveRgbQuantizer naiveQuantisation;
+	private FloydSteinbergQuantizer floydSteinberg;
+	private NaiveLabQuantizer naiveQuantisationLab;
+	private Slicer slicing;
+	private SolidRegionsQuantizer solidRegions;
+	private PatternDitheringQuantizer patternDithering;
+	private VectorErrorDiffuser vectorErrorDiffusion;
+	private BasicElementsOnlyTiler basicElementsOnly;
+	private StabilityOptimizer stabilityOptimisation;
+	private CostsOptimizer costsOptimisation;
+	private MoldingOptimizer moldingOptimisation;
+	private ElementSizeOptimizer elementSizeOptimisation;
 	private Mosaic statisticMosaic;
 	private int interpolation;
 
@@ -53,12 +53,12 @@ public class DataProcessing {
 	 * @author           Adrian Schuetz
 	 * @param            mainWindow
 	 */
-	public DataProcessing(MainWindow mainWindow)
+	public DataProcessor(MainWindow mainWindow)
 	{
 		dataManagement = new DataManagement(this);
 		this.mainWindow = mainWindow;
-		outputFiles = new OutputFiles(this);
-		calculation = new Calculation();
+		outputFiles = new OutputFileGenerator(this);
+		calculation = new Calculator();
 		dataProcessing = this;
 		initInfo();
 	}
@@ -151,7 +151,7 @@ public class DataProcessing {
 	        public Object construct() {
 				switch (quantisationAlgo){
 				case 1:{
-					naiveQuantisation = new NaiveQuantisationRgb(dataProcessing,calculation);
+					naiveQuantisation = new NaiveRgbQuantizer(dataProcessing,calculation);
 					naiveQuantisation.quantisation(dataManagement.getImage(false),
 							dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
@@ -161,7 +161,7 @@ public class DataProcessing {
 					break;
 				}
 				case 2:{
-					floydSteinberg = new FloydSteinberg(dataProcessing,calculation,quantisationInfo);
+					floydSteinberg = new FloydSteinbergQuantizer(dataProcessing,calculation,quantisationInfo);
 					floydSteinberg.quantisation(dataManagement.getImage(false),
 							dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
@@ -171,7 +171,7 @@ public class DataProcessing {
 					break;
 				}
 				case 3:{
-					vectorErrorDiffusion = new VectorErrorDiffusion(dataProcessing,calculation);
+					vectorErrorDiffusion = new VectorErrorDiffuser(dataProcessing,calculation);
 					vectorErrorDiffusion.quantisation(dataManagement.getImage(false),
 							dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
@@ -181,7 +181,7 @@ public class DataProcessing {
 					break;
 				}
 				case 4:{
-					patternDithering = new PatternDithering(dataProcessing,calculation, quantisationInfo);
+					patternDithering = new PatternDitheringQuantizer(dataProcessing,calculation, quantisationInfo);
 					patternDithering.quantisation(dataManagement.getImage(false),
 							dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
@@ -191,7 +191,7 @@ public class DataProcessing {
 					break;
 				}
 				case 5:{
-					solidRegions = new SolidRegions(dataProcessing,calculation);
+					solidRegions = new SolidRegionsQuantizer(dataProcessing,calculation);
 					solidRegions.quantisation(dataManagement.getImage(false),
 							dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
@@ -201,7 +201,7 @@ public class DataProcessing {
 					break;
 				}
 				case 6:{
-					slicing = new Slicing(dataProcessing,calculation,quantisationInfo);
+					slicing = new Slicer(dataProcessing,calculation,quantisationInfo);
 					slicing.quantisation(dataManagement.getImage(false),
 							dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
@@ -211,7 +211,7 @@ public class DataProcessing {
 					break;
 				}
 				case 7:{
-					naiveQuantisationLab = new NaiveQuantisationLab(dataProcessing,calculation);
+					naiveQuantisationLab = new NaiveLabQuantizer(dataProcessing,calculation);
 					naiveQuantisationLab.quantisation(dataManagement.getImage(false),
 							dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
@@ -250,7 +250,7 @@ public class DataProcessing {
 	        public Object construct() {
 				switch (tilingAlgo){
 				case 1:{
-		        	elementSizeOptimisation = new ElementSizeOptimisation(dataProcessing,calculation);
+		        	elementSizeOptimisation = new ElementSizeOptimizer(dataProcessing,calculation);
 		        	elementSizeOptimisation.tiling(dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
 		                    dataManagement.getCurrentConfiguration(),
@@ -280,7 +280,7 @@ public class DataProcessing {
 						statisticMosaic.setMosaic(dataManagement.mosaicCopy());
 					}
 					//now the real algorithm
-					moldingOptimisation = new MoldingOptimisation(dataProcessing,calculation,tilingInfo);
+					moldingOptimisation = new MoldingOptimizer(dataProcessing,calculation,tilingInfo);
 					moldingOptimisation.tiling(dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
 		                    dataManagement.getCurrentConfiguration(),
@@ -294,7 +294,7 @@ public class DataProcessing {
 						dataProcessing.setInfo(textbundle.getString("output_dataProcessing_1") + ":",3);
 		        		if (tilingInfo.isEmpty() || ((String)tilingInfo.elementAt(0)).equals("no")){
 							//Element size optimisation
-							elementSizeOptimisation = new ElementSizeOptimisation(dataProcessing,calculation);
+							elementSizeOptimisation = new ElementSizeOptimizer(dataProcessing,calculation);
 				        	elementSizeOptimisation.tiling(dataManagement.getMosaicWidth(),
 									dataManagement.getMosaicHeight(),
 				                    dataManagement.getCurrentConfiguration(),
@@ -305,7 +305,7 @@ public class DataProcessing {
 							//Molding optimisation (without improvements)
 							Vector no = new Vector();
 							no.add("no");
-							moldingOptimisation = new MoldingOptimisation(dataProcessing,calculation,no);
+							moldingOptimisation = new MoldingOptimizer(dataProcessing,calculation,no);
 							moldingOptimisation.tiling(dataManagement.getMosaicWidth(),
 									dataManagement.getMosaicHeight(),
 				                    dataManagement.getCurrentConfiguration(),
@@ -323,7 +323,7 @@ public class DataProcessing {
 								dataManagement.getMosaicHeight(), dataManagement);
 						statisticMosaic.setMosaic(dataManagement.mosaicCopy());
 					}
-					costsOptimisation = new CostsOptimisation(dataProcessing,calculation);
+					costsOptimisation = new CostsOptimizer(dataProcessing,calculation);
 					costsOptimisation.tiling(dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
 		                    dataManagement.getCurrentConfiguration(),
@@ -333,7 +333,7 @@ public class DataProcessing {
 					//Statistic evaluation with element size optimisation
 	        	 	if(statisticOutput){
 	        	 		dataProcessing.setInfo(textbundle.getString("output_dataProcessing_1") + ":",3);
-		        		elementSizeOptimisation = new ElementSizeOptimisation(dataProcessing,calculation);
+		        		elementSizeOptimisation = new ElementSizeOptimizer(dataProcessing,calculation);
 			        	elementSizeOptimisation.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
 			                    dataManagement.getCurrentConfiguration(),
@@ -359,7 +359,7 @@ public class DataProcessing {
 			        		}});}catch(Exception e){System.out.println(e.toString());}
 						}
 					}
-					stabilityOptimisation = new StabilityOptimisation(dataProcessing,calculation,tilingInfo);
+					stabilityOptimisation = new StabilityOptimizer(dataProcessing,calculation,tilingInfo);
 					stabilityOptimisation.tiling(dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
 		                    dataManagement.getCurrentConfiguration(),
@@ -373,7 +373,7 @@ public class DataProcessing {
 						noOptimisation.add(false);
 						noOptimisation.add(false);
 						noOptimisation.add((Integer)tilingInfo.elementAt(3));
-						stabilityOptimisation = new StabilityOptimisation(dataProcessing,calculation,noOptimisation);
+						stabilityOptimisation = new StabilityOptimizer(dataProcessing,calculation,noOptimisation);
 						stabilityOptimisation.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
 			                    dataManagement.getCurrentConfiguration(),
@@ -384,7 +384,7 @@ public class DataProcessing {
 					break;
 				}
 				case 5:{
-					basicElementsOnly = new BasicElementsOnly(dataProcessing,calculation);
+					basicElementsOnly = new BasicElementsOnlyTiler(dataProcessing,calculation);
 					basicElementsOnly.tiling(dataManagement.getMosaicWidth(),
 							dataManagement.getMosaicHeight(),
 		                    dataManagement.getCurrentConfiguration(),

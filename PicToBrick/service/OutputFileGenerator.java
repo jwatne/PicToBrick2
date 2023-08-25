@@ -9,12 +9,12 @@ import PicToBrick.model.ColorObject;
 import PicToBrick.model.ElementObject;
 
 /**
- * class:            OutputFiles
+ * class:            OutputFileGenerator
  * layer:            DataProcessing (three tier architecture)
  * description:      build all output files
  * @author           Tobias Reichling
  */
-public class OutputFiles {
+public class OutputFileGenerator {
 
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 
@@ -173,7 +173,7 @@ public class OutputFiles {
 
 
 	private String project;
-	private DataProcessing dataProcessing;
+	private DataProcessor dataProcessing;
 	private Color colorNormal = new Color(59,45,167);
 	private Color colorLight = new Color(159,145,255);
 	private Color colorDark = new Color(0,0,67);
@@ -186,7 +186,7 @@ public class OutputFiles {
 	 * description:      constructor
 	 * @author           Tobias Reichling
 	 */
-	public OutputFiles(DataProcessing dataProcessing){
+	public OutputFileGenerator(DataProcessor dataProcessing){
 		this.dataProcessing = dataProcessing;
 	}
 

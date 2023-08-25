@@ -6,12 +6,12 @@ import PicToBrick.model.Configuration;
 import PicToBrick.model.Mosaic;
 
 /**
- * interface:        Quantisation
+ * interface:        Quantizer
  * layer:            DataProcessing (three tier architecture)
  * description:      interface for all quantisation classes
  * @author           Adrian Schuetz
  */
-public interface Quantisation {
+public interface Quantizer {
 
 	/**
 	 * method:           quantisation

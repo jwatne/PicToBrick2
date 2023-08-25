@@ -1,4 +1,4 @@
-package PicToBrick.service;
+package PicToBrick.model;
 
 /**
  * class:            Lab

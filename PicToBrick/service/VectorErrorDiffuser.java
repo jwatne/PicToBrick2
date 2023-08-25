@@ -9,19 +9,20 @@ import javax.swing.SwingUtilities;
 
 import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
+import PicToBrick.model.Lab;
 import PicToBrick.model.Mosaic;
 
 /**
- * class:            VectorErrorDiffusion
+ * class:            VectorErrorDiffuser
  * layer:            DataProcessing (three tier architecture)
  * description:      Vector error diffusion (floyd steinberg) - cielab
  * @author           Tobias Reichling
  */
-public class VectorErrorDiffusion
-implements Quantisation {
+public class VectorErrorDiffuser
+implements Quantizer {
 
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int percent = 0;
 	private int rows = 0;
 	private int mosaicRow;
@@ -33,7 +34,7 @@ implements Quantisation {
 	 * @param            data processing class
 	 * @param            calculation class
 	 */
-	public VectorErrorDiffusion(DataProcessing dataProcessing, Calculation calculation){
+	public VectorErrorDiffuser(DataProcessor dataProcessing, Calculator calculation){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 	}

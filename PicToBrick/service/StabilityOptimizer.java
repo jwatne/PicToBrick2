@@ -9,22 +9,23 @@ import javax.swing.*;
 import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
 import PicToBrick.model.ElementObject;
+import PicToBrick.model.Lab;
 import PicToBrick.model.Mosaic;
 
 import java.util.*;
 
 /**
- * class:            StabilityOptimisation
+ * class:            StabilityOptimizer
  * layer:            Data processing (three tier architecture)
  * description:      tiling with stability optimisation
  * @author           Adrian Schuetz
  */
-public class StabilityOptimisation
-implements Tiling {
+public class StabilityOptimizer
+implements Tiler {
 
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int percent = 0;
 	private int rows = 0;
 	private int colorRow;
@@ -48,7 +49,7 @@ implements Tiling {
 	 * @param            calculation     calculation
 	 * @param            Vector          tilingInfo
 	 */
-	public StabilityOptimisation(DataProcessing dataProcessing, Calculation calculation, Vector tilingInfo){
+	public StabilityOptimizer(DataProcessor dataProcessing, Calculator calculation, Vector tilingInfo){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 		this.tilingInfo = tilingInfo;

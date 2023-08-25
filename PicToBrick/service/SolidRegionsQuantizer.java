@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
+import PicToBrick.model.Lab;
 import PicToBrick.model.Mosaic;
 
 /**
@@ -19,11 +20,11 @@ import PicToBrick.model.Mosaic;
  *                   result: big monochrome regions (solid regions)
  * @author           Tobias Reichling
  */
-public class SolidRegions
-implements Quantisation {
+public class SolidRegionsQuantizer
+implements Quantizer {
 
-	private DataProcessing dataProcessing;
-	private Calculation calculation;
+	private DataProcessor dataProcessing;
+	private Calculator calculation;
 	private int percent = 0;
 	private int rows = 0;
 	private int mosaicRow;
@@ -35,7 +36,7 @@ implements Quantisation {
 	 * @param            data processing class
 	 * @param            calculation class
 	 */
-	public SolidRegions(DataProcessing dataProcessing, Calculation calculation){
+	public SolidRegionsQuantizer(DataProcessor dataProcessing, Calculator calculation){
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 	}
