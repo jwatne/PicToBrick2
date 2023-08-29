@@ -9,56 +9,56 @@ import java.awt.event.*;
 import java.util.*;
 
 /**
- * class:          MoldingOptimisationDialog
- * layer:          Gui (three tier architecture)
- * description:    dialog for choosing parameter for molding optimisation
- * @author         Tobias Reichling
+ * class: MoldingOptimisationDialog
+ * layer: Gui (three tier architecture)
+ * description: dialog for choosing parameter for molding optimisation
+ *
+ * @author Tobias Reichling
  */
 public class MoldingOptimisationDialog
-extends JDialog
-implements ActionListener
-{
+		extends JDialog
+		implements ActionListener {
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	private ButtonGroup optimisation = new ButtonGroup();
+	private final ButtonGroup optimisation = new ButtonGroup();
 
 	/**
-	 * method:          MoldingOptimisationDialog
-	 * description:     constructor
-	 * @author          Tobias Reichling
-	 * @param           owner
-	 * @param           quantisation
+	 * method: MoldingOptimisationDialog
+	 * description: constructor
+	 *
+	 * @author Tobias Reichling
+	 * @param owner
+	 * @param quantisation
 	 */
-	public MoldingOptimisationDialog(Frame owner, int quantisationNumber, String quantisation)
-	{
-		super(owner,textbundle.getString("dialog_moldingOptimisation_frame"),true);
-		this.setLocation(100,100);
+	public MoldingOptimisationDialog(final Frame owner, final int quantisationNumber, final String quantisation) {
+		super(owner, textbundle.getString("dialog_moldingOptimisation_frame"), true);
+		this.setLocation(100, 100);
 		this.setResizable(false);
 		JPanel radio;
-		JPanel content = new JPanel(new BorderLayout());
-		//if quantisation = error diffusino (2color) the radio panel
-		//must be greater because it must show more information
-		if (quantisationNumber == 2){
-			radio = new JPanel(new GridLayout(12,1,0,0));
-		}else{
-			radio = new JPanel(new GridLayout(6,1,0,0));
+		final JPanel content = new JPanel(new BorderLayout());
+		// if quantisation = error diffusino (2color) the radio panel
+		// must be greater because it must show more information
+		if (quantisationNumber == 2) {
+			radio = new JPanel(new GridLayout(12, 1, 0, 0));
+		} else {
+			radio = new JPanel(new GridLayout(6, 1, 0, 0));
 		}
-		JPanel buttons = new JPanel();
-		//Label
+		final JPanel buttons = new JPanel();
+		// Label
 		JLabel text1, text2, text3, text4, text5, text6, text7, text8, text9, text10;
 		text1 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_1") + " " + quantisation + ".");
 		text2 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_2"));
 		text3 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_3"));
 		text4 = new JLabel("");
-		//BUTTON
-		JButton ok = new JButton(textbundle.getString("button_ok"));
+		// BUTTON
+		final JButton ok = new JButton(textbundle.getString("button_ok"));
 		ok.setActionCommand("ok");
 		ok.addActionListener(this);
-		//Radio Buttons
-		JRadioButton a = new JRadioButton();
+		// Radio Buttons
+		final JRadioButton a = new JRadioButton();
 		a.setText(textbundle.getString("dialog_moldingOptimisation_radio_1"));
 		a.setActionCommand("no");
 		a.setSelected(true);
-		JRadioButton b = new JRadioButton();
+		final JRadioButton b = new JRadioButton();
 		b.setText(textbundle.getString("dialog_moldingOptimisation_radio_2"));
 		b.setActionCommand("yes");
 		optimisation.add(a);
@@ -69,11 +69,12 @@ implements ActionListener
 		radio.add(text4);
 		radio.add(a);
 		radio.add(b);
-		//if quantisation = error diffusion (2color) the radio panel
-		//must be greater because it must show more information
-		if (quantisationNumber == 2){
+		// if quantisation = error diffusion (2color) the radio panel
+		// must be greater because it must show more information
+		if (quantisationNumber == 2) {
 			text5 = new JLabel("");
-			text6 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_6a") + " " + quantisation + " " + textbundle.getString("dialog_moldingOptimisation_label_6b"));
+			text6 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_6a") + " " + quantisation + " "
+					+ textbundle.getString("dialog_moldingOptimisation_label_6b"));
 			text7 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_7"));
 			text8 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_8"));
 			text9 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_9"));
@@ -86,9 +87,10 @@ implements ActionListener
 			radio.add(text10);
 		}
 		buttons.add(ok);
-		TitledBorder optimierungBorder = BorderFactory.createTitledBorder(textbundle.getString("dialog_moldingOptimisation_border"));
+		final TitledBorder optimierungBorder = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_moldingOptimisation_border"));
 		radio.setBorder(optimierungBorder);
-		optimierungBorder.setTitleColor(new Color(100,100,100));
+		optimierungBorder.setTitleColor(new Color(100, 100, 100));
 		content.add(radio, BorderLayout.CENTER);
 		content.add(buttons, BorderLayout.SOUTH);
 		this.getContentPane().add(content);
@@ -97,26 +99,27 @@ implements ActionListener
 	}
 
 	/**
-	 * method:          getMethod
-	 * description:     returns the method
-	 * @author          Tobias Reichling
-	 * @return          action command (vector)
+	 * method: getMethod
+	 * description: returns the method
+	 *
+	 * @author Tobias Reichling
+	 * @return action command (vector)
 	 */
-	public Vector getMethod(){
-		Vector vector = new Vector();
+	public Vector<Object> getMethod() {
+		final Vector<Object> vector = new Vector<>();
 		vector.add(optimisation.getSelection().getActionCommand());
 		return vector;
 	}
 
 	/**
-	 * method:          actionPerformed
-	 * description:     ActionListener
-	 * @author          Tobias Reichling
-	 * @param			event
+	 * method: actionPerformed
+	 * description: ActionListener
+	 *
+	 * @author Tobias Reichling
+	 * @param event
 	 */
-	public void actionPerformed(ActionEvent event)
-	{
-		if (event.getActionCommand().contains("ok")){
+	public void actionPerformed(final ActionEvent event) {
+		if (event.getActionCommand().contains("ok")) {
 			this.setVisible(false);
 		}
 	}

@@ -11,34 +11,35 @@ import javax.swing.BorderFactory;
 import javax.swing.border.*;
 import javax.swing.filechooser.FileFilter;
 
+import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
 import PicToBrick.service.DataProcessor;
 import PicToBrick.service.SwingWorker;
 
 /**
- * class:          MainWindow
- * layer:          Gui (three tier architecture)
- * description:    MainWindow
- * @author         Tobias Reichling
+ * class: MainWindow
+ * layer: Gui (three tier architecture)
+ * description: MainWindow
+ *
+ * @author Tobias Reichling
  */
 public class MainWindow
-extends JFrame
-implements ActionListener, ChangeListener
-{
-	//resource bundle
+		extends JFrame
+		implements ActionListener, ChangeListener {
+	// resource bundle
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	//--------------------------------------------------------------------------------------------------------
-	//data processing
-	private DataProcessor dataProcessing;
-	//--------------------------------------------------------------------------------------------------------
-	//dialogs
-	private ProgressBarsAlgorithms progressBarsAlgorithm;
-	private ProgressBarsOutputFiles progressBarsOutputFiles;
-	//--------------------------------------------------------------------------------------------------------
-	//other
+	// --------------------------------------------------------------------------------------------------------
+	// data processing
+	private final DataProcessor dataProcessing;
+	// --------------------------------------------------------------------------------------------------------
+	// dialogs
+	private final ProgressBarsAlgorithms progressBarsAlgorithm;
+	private final ProgressBarsOutputFiles progressBarsOutputFiles;
+	// --------------------------------------------------------------------------------------------------------
+	// other
 	private int mosaicWidth, mosaicHeight;
-	//--------------------------------------------------------------------------------------------------------
-	//menu
+	// --------------------------------------------------------------------------------------------------------
+	// menu
 	private JMenuBar menuBar;
 	private JMenu menuFile, menuPreprocessing, menuMosaic, menuOutput, menuHelp;
 	private JMenuItem menuNewMosaik, menuImageLoad, menuConfigurationLoad, menuSettings, menuEnd;
@@ -48,8 +49,8 @@ implements ActionListener, ChangeListener
 	private JRadioButtonMenuItem menuAlgorithm15, menuAlgorithm16, menuAlgorithm17, menuAlgorithm25;
 	private JRadioButtonMenuItem menuAlgorithm21, menuAlgorithm22, menuAlgorithm23, menuAlgorithm24;
 	private JCheckBoxMenuItem menuGrafic, menuXml, menuBuildingInstruction, menuMaterial, menuConfiguration;
-	//--------------------------------------------------------------------------------------------------------
-	//gui
+	// --------------------------------------------------------------------------------------------------------
+	// gui
 	private JPanel guiPanelTopArea, guiPanelBottomArea, guiPanelRightArea, guiPanelInformation, guiPanelZoom;
 	private JPanel guiPanelOptions1, guiPanelOptions2, guiPanelOptions3, guiPanelOptions2Bottom;
 	private JPanel guiPanelOptions1Top, guiPanelOptions2Top, guiPanelOptions3Top, guiPanelOptions1Empty;
@@ -74,12 +75,12 @@ implements ActionListener, ChangeListener
 	private int guiZoomSlider1Value, guiZoomSlider2Value;
 
 	/**
-	 * method:         MainWindow
-	 * description:    constructor
-	 * @author         Tobias Reichling
+	 * method: MainWindow
+	 * description: constructor
+	 *
+	 * @author Tobias Reichling
 	 */
-	public MainWindow()
-	{
+	public MainWindow() {
 		super("PicToBrick");
 		addWindowListener(new WindowClosingAdapter(true));
 		osStyle();
@@ -90,96 +91,100 @@ implements ActionListener, ChangeListener
 		buildGui();
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setVisible(true);
-		//Check if the minimum of 256MB memory are available
-		if(((Runtime.getRuntime().maxMemory() / 1024) / 1024) < 250){
-			errorDialog (textbundle.getString("dialog_mainWindow_error_1") + "\r\n" +
-						textbundle.getString("dialog_mainWindow_error_2") + "\r\n" +
-						textbundle.getString("dialog_mainWindow_error_3"));
+		// Check if the minimum of 256MB memory are available
+		if (((Runtime.getRuntime().maxMemory() / 1024) / 1024) < 250) {
+			errorDialog(textbundle.getString("dialog_mainWindow_error_1") + "\r\n" +
+					textbundle.getString("dialog_mainWindow_error_2") + "\r\n" +
+					textbundle.getString("dialog_mainWindow_error_3"));
 		}
 		workingDirectory(false);
 	}
 
 	/**
-	 * method:         workingDirectory
-	 * description:    dialog for choosing workingDirectory
-	 * @author         Tobias Reichling
+	 * method: workingDirectory
+	 * description: dialog for choosing workingDirectory
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void workingDirectory(boolean newDirectory){
+	public void workingDirectory(final boolean newDirectory) {
 		File wdFile = null;
-		if(!newDirectory){
-			//Load working directory information from filesystem (if available)
+		if (!newDirectory) {
+			// Load working directory information from filesystem (if available)
 			wdFile = dataProcessing.loadWorkingDirectory();
 		}
-		if(wdFile == null || !(wdFile.isDirectory())){
-			//Working Directory dialog
-			JFileChooser d = new JFileChooser();
+		if (wdFile == null || !(wdFile.isDirectory())) {
+			// Working Directory dialog
+			final JFileChooser d = new JFileChooser();
 			d.setDialogTitle(textbundle.getString("output_mainWindow_1"));
 			d.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			d.setFileFilter( new FileFilter()
-			{
-				public boolean accept(File f)
-				{
+			d.setFileFilter(new FileFilter() {
+				public boolean accept(final File f) {
 					return f.isDirectory();
 				}
-				public String getDescription()
-				{
+
+				public String getDescription() {
 					return textbundle.getString("output_mainWindow_2");
 				}
-			} );
+			});
 			d.showOpenDialog(this);
 			wdFile = d.getSelectedFile();
 		}
-		if (wdFile!=null){
+		if (wdFile != null) {
 			dataProcessing.setWorkingDirectory(wdFile);
-			showInfo(textbundle.getString("output_mainWindow_3") + ": "+wdFile + ".    " + textbundle.getString("output_mainWindow_4") + "!");
-			//Save information about current working directory
+			showInfo(textbundle.getString("output_mainWindow_3") + ": " + wdFile + ".    "
+					+ textbundle.getString("output_mainWindow_4") + "!");
+			// Save information about current working directory
 			dataProcessing.saveWorkingDirectory(wdFile);
-		}else{
-			errorDialog (textbundle.getString("output_mainWindow_5") + "!");
+		} else {
+			errorDialog(textbundle.getString("output_mainWindow_5") + "!");
 		}
 	}
 
 	/**
-	 * method:          refreshProgressBarAlgorithm
-	 * description:     refreshes the Progress Bars
-	 * @author          Tobias Reichling
-	 * @param           value
-	 * @param           number of progressBar
+	 * method: refreshProgressBarAlgorithm
+	 * description: refreshes the Progress Bars
+	 *
+	 * @author Tobias Reichling
+	 * @param value
+	 * @param number of progressBar
 	 */
-	public void refreshProgressBarAlgorithm(int value, int number){
-		progressBarsAlgorithm.showValue(value,number);
+	public void refreshProgressBarAlgorithm(final int value, final int number) {
+		progressBarsAlgorithm.showValue(value, number);
 	}
 
 	/**
-	 * method:          hideProgressBarAlgorithm
-	 * description:     hide dialog
-	 * @author          Tobias Reichling
+	 * method: hideProgressBarAlgorithm
+	 * description: hide dialog
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void hideProgressBarAlgorithm(){
+	public void hideProgressBarAlgorithm() {
 		progressBarsAlgorithm.hideDialog();
 	}
 
 	/**
-	 * method:          showProgressBarAlgorithm
-	 * description:     show dialog
-	 * @author          Tobias Reichling
+	 * method: showProgressBarAlgorithm
+	 * description: show dialog
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void showProgressBarAlgorithm(){
+	public void showProgressBarAlgorithm() {
 		progressBarsAlgorithm.showDialog();
 	}
 
 	/**
-	 * method:          setStatusProgressBarOutputFiles
-	 * description:     sets status
-	 * @author          Tobias Reichling
-	 * @param           true/false for every progress bar
+	 * method: setStatusProgressBarOutputFiles
+	 * description: sets status
+	 *
+	 * @author Tobias Reichling
+	 * @param true/false for every progress bar
 	 */
-	public void setStatusProgressBarOutputFiles(boolean grafic,
-			boolean konfi,
-			boolean material,
-			boolean anleit,
-			boolean xml,
-			boolean sonstiges){
+	public void setStatusProgressBarOutputFiles(final boolean grafic,
+			final boolean konfi,
+			final boolean material,
+			final boolean anleit,
+			final boolean xml,
+			final boolean sonstiges) {
 		progressBarsOutputFiles.setStatus(grafic,
 				konfi,
 				material,
@@ -189,71 +194,75 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:          setStatusProgressBarAlgorithm
-	 * description:     sets status to progressBar statistic
-	 * @author          Tobias Reichling
-	 * @param           true/false
+	 * method: setStatusProgressBarAlgorithm
+	 * description: sets status to progressBar statistic
+	 *
+	 * @author Tobias Reichling
+	 * @param true/false
 	 */
-	public void setStatusProgressBarAlgorithm(boolean active){
+	public void setStatusProgressBarAlgorithm(final boolean active) {
 		progressBarsAlgorithm.setStatus(active);
 	}
 
 	/**
-	 * method:          refreshProgressBarOutputFiles
-	 * description:     refreshes progressBars
-	 * @author          Tobias Reichling
-	 * @param           value
-	 * @param           number of progressBar
+	 * method: refreshProgressBarOutputFiles
+	 * description: refreshes progressBars
+	 *
+	 * @author Tobias Reichling
+	 * @param value
+	 * @param number of progressBar
 	 */
-	public void refreshProgressBarOutputFiles(int value, int number){
-		progressBarsOutputFiles.showValue(value,number);
+	public void refreshProgressBarOutputFiles(final int value, final int number) {
+		progressBarsOutputFiles.showValue(value, number);
 	}
 
 	/**
-	 * method:          hideProgressBarOutputFiles
-	 * description:     hide dialog
-	 * @author          Tobias Reichling
+	 * method: hideProgressBarOutputFiles
+	 * description: hide dialog
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void hideProgressBarOutputFiles(){
+	public void hideProgressBarOutputFiles() {
 		progressBarsOutputFiles.hideDialog();
 	}
 
 	/**
-	 * method:          showProgressBarOutputFiles
-	 * description:     show dialog
-	 * @author          Tobias Reichling
+	 * method: showProgressBarOutputFiles
+	 * description: show dialog
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void showProgressBarOutputFiles(){
+	public void showProgressBarOutputFiles() {
 		progressBarsOutputFiles.showDialog();
 	}
 
-
 	/**
-	 * method:          animateGraficProgressBarOutputFiles
-	 * description:     animate progressBar grafic while saving
-	 * @author          Tobias Reichling
-	 * @param           true/false
+	 * method: animateGraficProgressBarOutputFiles
+	 * description: animate progressBar grafic while saving
+	 *
+	 * @author Tobias Reichling
+	 * @param true/false
 	 */
-	public void animateGraficProgressBarOutputFiles(boolean active){
+	public void animateGraficProgressBarOutputFiles(final boolean active) {
 		progressBarsOutputFiles.animateGraphic(active);
 	}
 
 	/**
-	 * method:         stateChanged
-	 * description:    ChangeListener (zoom slider)
-	 * @author         Tobias Reichling
-	 * @param          event
+	 * method: stateChanged
+	 * description: ChangeListener (zoom slider)
+	 *
+	 * @author Tobias Reichling
+	 * @param event
 	 */
-	public void stateChanged(ChangeEvent event)
-	{
-		if ((JSlider)event.getSource()==guiZoomSlider1){
-			if (guiZoomSlider1Value != guiZoomSlider1.getValue()){
+	public void stateChanged(final ChangeEvent event) {
+		if ((JSlider) event.getSource() == guiZoomSlider1) {
+			if (guiZoomSlider1Value != guiZoomSlider1.getValue()) {
 				guiZoomSlider1Value = guiZoomSlider1.getValue();
 				guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
 				guiPictureElementTop.updateUI();
 			}
-		}else{
-			if (guiZoomSlider2Value != guiZoomSlider2.getValue()){
+		} else {
+			if (guiZoomSlider2Value != guiZoomSlider2.getValue()) {
 				guiZoomSlider2Value = guiZoomSlider2.getValue();
 				guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true, guiZoomSlider2.getValue()));
 				guiPictureElementBottom.updateUI();
@@ -262,146 +271,154 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:         actionPerformed
-	 * description:    ActionListener
-	 * @author         Tobias Reichling
-	 * @param          event
+	 * method: actionPerformed
+	 * description: ActionListener
+	 *
+	 * @author Tobias Reichling
+	 * @param event
 	 */
-	public void actionPerformed(ActionEvent event)
-	{
-		//synchronisize check boxes (gui) and menu items (menu)
-		if (event.getActionCommand().contains("menu")){
-			if (event.getActionCommand().contains("grafic")){
-				checkBoxStatus(11,false);
-			}else if (event.getActionCommand().contains("xml")){
-				checkBoxStatus(13,false);
-			}else if (event.getActionCommand().contains("buildinginstruction")){
-				checkBoxStatus(14,false);
-			}else if (event.getActionCommand().contains("material")){
-				checkBoxStatus(15,false);
-			}else if (event.getActionCommand().contains("configuration")){
-				checkBoxStatus(16,false);
+	public void actionPerformed(final ActionEvent event) {
+		// synchronisize check boxes (gui) and menu items (menu)
+		if (event.getActionCommand().contains("menu")) {
+			if (event.getActionCommand().contains("grafic")) {
+				checkBoxStatus(11, false);
+			} else if (event.getActionCommand().contains("xml")) {
+				checkBoxStatus(13, false);
+			} else if (event.getActionCommand().contains("buildinginstruction")) {
+				checkBoxStatus(14, false);
+			} else if (event.getActionCommand().contains("material")) {
+				checkBoxStatus(15, false);
+			} else if (event.getActionCommand().contains("configuration")) {
+				checkBoxStatus(16, false);
 			}
-		//synchronisize check boxes (gui) and menu items (menu)
-		}else if (event.getActionCommand().contains("gui")){
-			if (event.getActionCommand().contains("grafic")){
-				checkBoxStatus(21,false);
-			}else if (event.getActionCommand().contains("xml")){
-				checkBoxStatus(23,false);
-			}else if (event.getActionCommand().contains("buildinginstruction")){
-				checkBoxStatus(24,false);
-			}else if (event.getActionCommand().contains("material")){
-				checkBoxStatus(25,false);
-			}else if (event.getActionCommand().contains("configuration")){
-				checkBoxStatus(26,false);
+			// synchronisize check boxes (gui) and menu items (menu)
+		} else if (event.getActionCommand().contains("gui")) {
+			if (event.getActionCommand().contains("grafic")) {
+				checkBoxStatus(21, false);
+			} else if (event.getActionCommand().contains("xml")) {
+				checkBoxStatus(23, false);
+			} else if (event.getActionCommand().contains("buildinginstruction")) {
+				checkBoxStatus(24, false);
+			} else if (event.getActionCommand().contains("material")) {
+				checkBoxStatus(25, false);
+			} else if (event.getActionCommand().contains("configuration")) {
+				checkBoxStatus(26, false);
 			}
-		//synchronisize radio buttons (gui) and menu items (menu)
-		}else if (event.getActionCommand().contains("algorithm")){
-			if (event.getActionCommand().contains("11")){
-				radioButtonStatus(1,1);
-			}else if (event.getActionCommand().contains("12")){
-				radioButtonStatus(1,2);
-			}else if (event.getActionCommand().contains("13")){
-				radioButtonStatus(1,3);
-			}else if (event.getActionCommand().contains("14")){
-				radioButtonStatus(1,4);
-			}else if (event.getActionCommand().contains("15")){
-				radioButtonStatus(1,5);
-			}else if (event.getActionCommand().contains("16")){
-				radioButtonStatus(1,6);
-			}else if (event.getActionCommand().contains("17")){
-				radioButtonStatus(1,7);
-			}else if (event.getActionCommand().contains("21")){
-				radioButtonStatus(2,1);
-			}else if (event.getActionCommand().contains("22")){
-				radioButtonStatus(2,2);
-			}else if (event.getActionCommand().contains("23")){
-				radioButtonStatus(2,3);
-			}else if (event.getActionCommand().contains("24")){
-				radioButtonStatus(2,4);
-			}else if (event.getActionCommand().contains("25")){
-				radioButtonStatus(2,5);
+			// synchronisize radio buttons (gui) and menu items (menu)
+		} else if (event.getActionCommand().contains("algorithm")) {
+			if (event.getActionCommand().contains("11")) {
+				radioButtonStatus(1, 1);
+			} else if (event.getActionCommand().contains("12")) {
+				radioButtonStatus(1, 2);
+			} else if (event.getActionCommand().contains("13")) {
+				radioButtonStatus(1, 3);
+			} else if (event.getActionCommand().contains("14")) {
+				radioButtonStatus(1, 4);
+			} else if (event.getActionCommand().contains("15")) {
+				radioButtonStatus(1, 5);
+			} else if (event.getActionCommand().contains("16")) {
+				radioButtonStatus(1, 6);
+			} else if (event.getActionCommand().contains("17")) {
+				radioButtonStatus(1, 7);
+			} else if (event.getActionCommand().contains("21")) {
+				radioButtonStatus(2, 1);
+			} else if (event.getActionCommand().contains("22")) {
+				radioButtonStatus(2, 2);
+			} else if (event.getActionCommand().contains("23")) {
+				radioButtonStatus(2, 3);
+			} else if (event.getActionCommand().contains("24")) {
+				radioButtonStatus(2, 4);
+			} else if (event.getActionCommand().contains("25")) {
+				radioButtonStatus(2, 5);
 			}
-		//buttons
-		}else if (event.getActionCommand().contains("cutout")){
+			// buttons
+		} else if (event.getActionCommand().contains("cutout")) {
 			cutout();
-		}else if (event.getActionCommand().contains("output")){
+		} else if (event.getActionCommand().contains("output")) {
 			guiStatus(30);
 			adjustDividerLocation();
-		}else if (event.getActionCommand().contains("mosaicnew")){
+		} else if (event.getActionCommand().contains("mosaicnew")) {
 			guiStatus(10);
 			adjustDividerLocation();
-			showInfo(textbundle.getString("output_mainWindow_4")+"!");
-		}else if (event.getActionCommand().contains("mosaicgenerate")){
+			showInfo(textbundle.getString("output_mainWindow_4") + "!");
+		} else if (event.getActionCommand().contains("mosaicgenerate")) {
 			dataProcessing.initInfo();
-			dataProcessing.setInterpolation(guiComboBoxInterpolation.getSelectedIndex()+1);
-			int quantisation = (new Integer(guiGroupQuantisation.getSelection().getActionCommand().substring(9,11)).intValue()-10);
-			int tiling = (new Integer(guiGroupTiling.getSelection().getActionCommand().substring(9,11)).intValue()-20);
-			if (tiling==2 && !(dataProcessing.getCurrentConfiguration().getMaterial()==3)){
-				errorDialog (textbundle.getString("output_mainWindow_6"));
-			}else if (tiling==4 && ((dataProcessing.getCurrentConfiguration().getMaterial()==3) || (dataProcessing.getCurrentConfiguration().getMaterial()==1))){
-				errorDialog (textbundle.getString("output_mainWindow_7"));
-			}else if (tiling==3 && (dataProcessing.getCurrentConfiguration().getMaterial()==3)){
-				errorDialog (textbundle.getString("output_mainWindow_8"));
-			}else{
+			dataProcessing.setInterpolation(guiComboBoxInterpolation.getSelectedIndex() + 1);
+			final int quantisation = (new Integer(
+					guiGroupQuantisation.getSelection().getActionCommand().substring(9, 11)).intValue() - 10);
+			final int tiling = (new Integer(guiGroupTiling.getSelection().getActionCommand().substring(9, 11))
+					.intValue() - 20);
+			if (tiling == 2 && !(dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
+				errorDialog(textbundle.getString("output_mainWindow_6"));
+			} else if (tiling == 4 && ((dataProcessing.getCurrentConfiguration().getMaterial() == 3)
+					|| (dataProcessing.getCurrentConfiguration().getMaterial() == 1))) {
+				errorDialog(textbundle.getString("output_mainWindow_7"));
+			} else if (tiling == 3 && (dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
+				errorDialog(textbundle.getString("output_mainWindow_8"));
+			} else {
 				adjustDividerLocation();
 				guiStatus(21);
-				dataProcessing.generateMosaic(mosaicWidth, mosaicHeight, quantisation, tiling, guiThreeDEffect.isSelected(), guiStatistic.isSelected());
+				dataProcessing.generateMosaic(mosaicWidth, mosaicHeight, quantisation, tiling,
+						guiThreeDEffect.isSelected(), guiStatistic.isSelected());
 			}
-		}else if (event.getActionCommand().contains("imageload")){
+		} else if (event.getActionCommand().contains("imageload")) {
 			adjustDividerLocation();
 			imageLoad();
-			if (dataProcessing.isImage() && dataProcessing.isConfiguration()){
+			if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
 				guiStatus(11);
 			}
-		}else if (event.getActionCommand().contains("configurationload")){
+		} else if (event.getActionCommand().contains("configurationload")) {
 
-			if (dataProcessing.getWorkingDirectory() == null){
-				errorDialog (textbundle.getString("output_mainWindow_9"));
+			if (dataProcessing.getWorkingDirectory() == null) {
+				errorDialog(textbundle.getString("output_mainWindow_9"));
 			} else {
 				configurationLoad();
 			}
-			if (dataProcessing.isImage() && dataProcessing.isConfiguration()){
+			if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
 				guiStatus(11);
 			}
-		}else if (event.getActionCommand().contains("settings")){
-			WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(this, dataProcessing.getWorkingDirectory());
-			if (workingDirectoryDialog.getButton()==1){
+		} else if (event.getActionCommand().contains("settings")) {
+			WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(this,
+					dataProcessing.getWorkingDirectory());
+			if (workingDirectoryDialog.getButton() == 1) {
 				workingDirectory(true);
 			}
 			workingDirectoryDialog = null;
-		}else if (event.getActionCommand().contains("exit")){
+		} else if (event.getActionCommand().contains("exit")) {
 			this.setVisible(false);
 			this.dispose();
 			System.exit(0);
-		}else if (event.getActionCommand().contains("mosaicdimension")){
-			 MosaicSizeDialog mosaicDimensionDialog = new MosaicSizeDialog(this, dataProcessing.getCurrentConfiguration());
-			 if (!mosaicDimensionDialog.isCanceled()){
-				 guiPictureElementTop.removeMouseListener(guiPictureElementTop);
-				 guiPictureElementTop.removeMouseMotionListener(guiPictureElementTop);
-				 guiPictureElementTop.setCutoutRatio(new Dimension(mosaicDimensionDialog.getArea().width * dataProcessing.getConfigurationDimension().width, mosaicDimensionDialog.getArea().height * dataProcessing.getConfigurationDimension().height));
-				 guiPictureElementTop.addMouseListener(guiPictureElementTop);
-				 guiPictureElementTop.addMouseMotionListener(guiPictureElementTop);
-				 guiPictureElementTop.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-				 mosaicWidth = mosaicDimensionDialog.getArea().width;
-				 mosaicHeight = mosaicDimensionDialog.getArea().height;
-				 showDimensionInfo(mosaicWidth,mosaicHeight, false);
-				 guiStatus(12);
-			 }
-			 mosaicDimensionDialog = null;
-		}else if (event.getActionCommand().contains("documentgenerate")){
+		} else if (event.getActionCommand().contains("mosaicdimension")) {
+			MosaicSizeDialog mosaicDimensionDialog = new MosaicSizeDialog(this,
+					dataProcessing.getCurrentConfiguration());
+			if (!mosaicDimensionDialog.isCanceled()) {
+				guiPictureElementTop.removeMouseListener(guiPictureElementTop);
+				guiPictureElementTop.removeMouseMotionListener(guiPictureElementTop);
+				guiPictureElementTop.setCutoutRatio(new Dimension(
+						mosaicDimensionDialog.getArea().width * dataProcessing.getConfigurationDimension().width,
+						mosaicDimensionDialog.getArea().height * dataProcessing.getConfigurationDimension().height));
+				guiPictureElementTop.addMouseListener(guiPictureElementTop);
+				guiPictureElementTop.addMouseMotionListener(guiPictureElementTop);
+				guiPictureElementTop.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+				mosaicWidth = mosaicDimensionDialog.getArea().width;
+				mosaicHeight = mosaicDimensionDialog.getArea().height;
+				showDimensionInfo(mosaicWidth, mosaicHeight, false);
+				guiStatus(12);
+			}
+			mosaicDimensionDialog = null;
+		} else if (event.getActionCommand().contains("documentgenerate")) {
 			if (guiOutputGrafic.isSelected() ||
-				guiOutputConfiguration.isSelected() ||
-				guiOutputMaterial.isSelected() ||
-				guiOutputBuildingInstruction.isSelected() ||
-				guiOutputXml.isSelected()){
+					guiOutputConfiguration.isSelected() ||
+					guiOutputMaterial.isSelected() ||
+					guiOutputBuildingInstruction.isSelected() ||
+					guiOutputXml.isSelected()) {
 				guiStatus(31);
-				refreshProgressBarOutputFiles(0,1);
-				refreshProgressBarOutputFiles(0,2);
-				refreshProgressBarOutputFiles(0,3);
-				refreshProgressBarOutputFiles(0,4);
-				refreshProgressBarOutputFiles(0,5);
-				refreshProgressBarOutputFiles(0,6);
+				refreshProgressBarOutputFiles(0, 1);
+				refreshProgressBarOutputFiles(0, 2);
+				refreshProgressBarOutputFiles(0, 3);
+				refreshProgressBarOutputFiles(0, 4);
+				refreshProgressBarOutputFiles(0, 5);
+				refreshProgressBarOutputFiles(0, 6);
 				setStatusProgressBarOutputFiles(guiOutputGrafic.isSelected(),
 						guiOutputConfiguration.isSelected(),
 						guiOutputMaterial.isSelected(),
@@ -409,101 +426,111 @@ implements ActionListener, ChangeListener
 						guiOutputXml.isSelected(),
 						true);
 				showProgressBarOutputFiles();
-				//SwingWorker
-				//"construct": all commands are startet in a new thread
-				//"finished":  all commands are queued to the gui thread
-				//after finshing aforesaid (construct-)thread
+				// SwingWorker
+				// "construct": all commands are startet in a new thread
+				// "finished": all commands are queued to the gui thread
+				// after finshing aforesaid (construct-)thread
 				final SwingWorker worker = new SwingWorker() {
-			        public Object construct() {
-						String message = new String(dataProcessing.generateDocuments(
+					public Object construct() {
+						final String message = new String(dataProcessing.generateDocuments(
 								guiOutputGrafic.isSelected(),
 								guiOutputConfiguration.isSelected(),
 								guiOutputMaterial.isSelected(),
 								guiOutputBuildingInstruction.isSelected(),
 								guiOutputXml.isSelected(),
 								dataProcessing.getInfo(2)));
-						if (!message.equals("")){
-							errorDialog (message);
-						}else{
+						if (!message.equals("")) {
+							errorDialog(message);
+						} else {
 							showInfo(textbundle.getString("output_mainWindow_10"));
 						}
 						return true;
-			        }
-			        public void finished(){
-			        	guiStatus(32);
-			        	hideProgressBarOutputFiles();
-			    	}
-			    };
-			    worker.start();
+					}
+
+					public void finished() {
+						guiStatus(32);
+						hideProgressBarOutputFiles();
+					}
+				};
+				worker.start();
 			}
-		}else if (event.getActionCommand().contains("about")){
+		} else if (event.getActionCommand().contains("about")) {
 			AboutDialog aboutDialog = new AboutDialog(this);
 			aboutDialog = null;
 		}
 	}
 
 	/**
-	 * method:         cutout
-	 * description:    cutout the user defined rectangle
-	 * 				   button: cutout or double click within the rectangle
-	 * @author         Tobias Reichling
+	 * method: cutout
+	 * description: cutout the user defined rectangle
+	 * button: cutout or double click within the rectangle
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void cutout(){
-		if (guiPictureElementTop.isCutout()){
+	public void cutout() {
+		if (guiPictureElementTop.isCutout()) {
 			guiPictureElementTop.removeMouseListener(guiPictureElementTop);
 			guiPictureElementTop.removeMouseMotionListener(guiPictureElementTop);
 			guiStatus(20);
 			dataProcessing.replaceImageByCutout(guiPictureElementTop.getCutoutRectangle());
-			dataProcessing.computeScaleFactor(false, (double)(guiScrollPaneTop.getWidth()-40), (double)((guiSplitPane.getHeight()-guiSplitPane.getDividerLocation()-60)));
+			dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
+					(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
 			guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
 			guiZoomSlider1.setValue(3);
 			guiZoomSlider1Value = 3;
 			guiPictureElementTop.updateUI();
-		}else{
-			errorDialog (textbundle.getString("output_mainWindow_11"));
+		} else {
+			errorDialog(textbundle.getString("output_mainWindow_11"));
 		}
 	}
 
 	/**
-	 * method:         showMosaic
-	 * description:    shows the mosaic (started in tiling thread)
-	 * @author         Tobias Reichling
+	 * method: showMosaic
+	 * description: shows the mosaic (started in tiling thread)
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void showMosaic (){
-		dataProcessing.computeScaleFactor(false, (double)(guiScrollPaneTop.getWidth()-40), (double)((guiSplitPane.getHeight()-guiSplitPane.getDividerLocation()-60)));
+	public void showMosaic() {
+		dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
+				(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
 		guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
-		dataProcessing.computeScaleFactor(true, (double)(guiScrollPaneBottom.getWidth()-40), (double)((guiSplitPane.getHeight()-guiSplitPane.getDividerLocation()-60)));
+		dataProcessing.computeScaleFactor(true, (double) (guiScrollPaneBottom.getWidth() - 40),
+				(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
 		guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true, guiZoomSlider2.getValue()));
 		guiStatus(22);
 		guiPictureElementBottom.updateUI();
-		if (guiStatistic.isSelected()){
-			Enumeration statisticInformation = dataProcessing.getInfo(1);
+		if (guiStatistic.isSelected()) {
+			final Enumeration statisticInformation = dataProcessing.getInfo(1);
 			String statisticInformationString = new String("");
-			while (statisticInformation.hasMoreElements()){
-				statisticInformationString = statisticInformationString + (String)statisticInformation.nextElement() + "\n\r";
+			while (statisticInformation.hasMoreElements()) {
+				statisticInformationString = statisticInformationString + (String) statisticInformation.nextElement()
+						+ "\n\r";
 			}
-			JOptionPane.showMessageDialog(this,statisticInformationString,textbundle.getString("output_mainWindow_12"),JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, statisticInformationString,
+					textbundle.getString("output_mainWindow_12"), JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
 	/**
-	 * method:         disableStatisticButton
-	 * description:    disables statistic if not possible
-	 * @author         Tobias Reichling
+	 * method: disableStatisticButton
+	 * description: disables statistic if not possible
+	 *
+	 * @author Tobias Reichling
 	 */
-	public void disableStatisticButton(){
+	public void disableStatisticButton() {
 		guiStatistic.setSelected(false);
 	}
 
 	/**
-	 * method:         dialogFloydSteinberg
-	 * description:    dialog for choosing colors and threshold
-	 * @author         Tobias Reichling
-	 * @param          possible colors
-	 * @return         vector (colors and threshold)
+	 * method: dialogFloydSteinberg
+	 * description: dialog for choosing colors and threshold
+	 *
+	 * @author Tobias Reichling
+	 * @param possible colors
+	 * @return vector (colors and threshold)
 	 */
-	public Vector dialogFloydSteinberg(Enumeration colors){
-		Vector result = new Vector();
+	public Vector<Object> dialogFloydSteinberg(final Enumeration<ColorObject> colors) {
+		final Vector<Object> result = new Vector<>();
 		FloydSteinbergColorDialog floydSteinbergColorDialog = new FloydSteinbergColorDialog(this, colors);
 		result.add(floydSteinbergColorDialog.getDark());
 		result.add(floydSteinbergColorDialog.getLight());
@@ -513,13 +540,14 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:         dialogPatternDithering
-	 * description:    dialog for setting maximum luminance value distance
-	 * @author         Tobias Reichling
-	 * @return         vector result
+	 * method: dialogPatternDithering
+	 * description: dialog for setting maximum luminance value distance
+	 *
+	 * @author Tobias Reichling
+	 * @return vector result
 	 */
-	public Vector dialogPatternDithering(){
-		Vector result = new Vector();
+	public Vector dialogPatternDithering() {
+		final Vector result = new Vector();
 		PatternDitheringDialog patternDitheringDialog = new PatternDitheringDialog(this);
 		result.add(patternDitheringDialog.getDistance());
 		patternDitheringDialog = null;
@@ -527,243 +555,256 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:         dialogSlicingColor
-	 * description:    dialog for choosing color quantity for slicing
-	 * @author         Tobias Reichling
-	 * @return         color quantity
+	 * method: dialogSlicingColor
+	 * description: dialog for choosing color quantity for slicing
+	 *
+	 * @author Tobias Reichling
+	 * @return color quantity
 	 */
-	public int dialogSlicingColor(){
-		int min = 1;
-		int max = 8;
-		SlicingColorNumberDialog slicingColorNumberDialog = new SlicingColorNumberDialog(this, min, max);
+	public int dialogSlicingColor() {
+		final int min = 1;
+		final int max = 8;
+		final SlicingColorNumberDialog slicingColorNumberDialog = new SlicingColorNumberDialog(this, min, max);
 		return slicingColorNumberDialog.getQuantity();
 	}
 
 	/**
-	 * method:         dialogSlicingThreshold
-	 * description:    dialog for choosing thresholds for slicing
-	 * @author         Tobias Reichling
-	 * @param          colorQuantity
-	 * @param          colors (Enumeration)
-	 * @return         thresholds (vector)
+	 * method: dialogSlicingThreshold
+	 * description: dialog for choosing thresholds for slicing
+	 *
+	 * @author Tobias Reichling
+	 * @param colorQuantity
+	 * @param colors        (Enumeration)
+	 * @return thresholds (vector)
 	 */
-	public Vector dialogSlicingThreshold(int colorQuantity, Enumeration colors){
-		SlicingThresholdDialog slicingThresholdDialog = new SlicingThresholdDialog(this, colorQuantity, colors);
+	public Vector dialogSlicingThreshold(final int colorQuantity, final Enumeration colors) {
+		final SlicingThresholdDialog slicingThresholdDialog = new SlicingThresholdDialog(this, colorQuantity, colors);
 		return slicingThresholdDialog.getSelection();
 	}
 
 	/**
-	 * method:         dialogMoldingOptimisation
-	 * description:    dialog for choosing additinal optimisation methods
-	 * @author         Tobias Reichling
-	 * @param          quantisation (string)
-	 * @return         method (vector)
+	 * method: dialogMoldingOptimisation
+	 * description: dialog for choosing additinal optimisation methods
+	 *
+	 * @author Tobias Reichling
+	 * @param quantisation (string)
+	 * @return method (vector)
 	 */
-	public Vector dialogMoldingOptimisation(int method, String quantisation){
-		MoldingOptimisationDialog moldingOptimisationDialog = new MoldingOptimisationDialog(this, method, quantisation);
+	public Vector<Object> dialogMoldingOptimisation(final int method, final String quantisation) {
+		final MoldingOptimisationDialog moldingOptimisationDialog = new MoldingOptimisationDialog(this, method,
+				quantisation);
 		return moldingOptimisationDialog.getMethod();
 	}
 
 	/**
-	 * method:         dialogStabilityOptimisation
-	 * description:    dialog for choosing additinal optimisation methods
-	 * @author         Tobias Reichling
-	 * @return         Vector: optimisation y/n; border/complete; maximum gap height
+	 * method: dialogStabilityOptimisation
+	 * description: dialog for choosing additinal optimisation methods
+	 *
+	 * @author Tobias Reichling
+	 * @return Vector: optimisation y/n; border/complete; maximum gap height
 	 */
-	public Vector dialogStabilityOptimisation(){
-		StabilityOptimisationDialog stabilityOptimisationDialog = new StabilityOptimisationDialog(this);
+	public Vector dialogStabilityOptimisation() {
+		final StabilityOptimisationDialog stabilityOptimisationDialog = new StabilityOptimisationDialog(this);
 		return stabilityOptimisationDialog.getMethod();
 	}
 
 	/**
-	 * method:         configurationLoad
-	 * description:    loads a configuration
-	 * @author         Tobias Reichling
+	 * method: configurationLoad
+	 * description: loads a configuration
+	 *
+	 * @author Tobias Reichling
 	 */
-	private void configurationLoad(){
-		Vector configurationVector = dataProcessing.getConfiguration();
-		ConfigurationLoadingDialog configurationLoadingDialog = new ConfigurationLoadingDialog(this, configurationVector);
-		if(!configurationLoadingDialog.isCanceled()){
-			switch (configurationLoadingDialog.getSelection()){
-			//new configuration
-			case 1: {
-				ConfigurationNewDialog configurationNewDialog = new ConfigurationNewDialog(this);
-				if(!configurationNewDialog.isCanceled()){
-					Enumeration results = configurationNewDialog.getValues().elements();
-					Configuration configurationNew = new Configuration(
-							configurationNewDialog.getName(),
-							configurationNewDialog.getBasisName(),
-							(Integer)results.nextElement(),
-							(Integer)results.nextElement(),
-							(Double)results.nextElement(),
-							(Integer)results.nextElement(),
-							(Integer)results.nextElement(),
-							configurationNewDialog.getMaterial());
-					ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(this, configurationNew, null);
-					boolean cancel = false;
-					while (!(cancel)){
-						if(!configurationDerivationDialog.isCanceled()){
-							try
-							{
-								dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
-								dataProcessing.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
-								showConfigurationInfo(configurationDerivationDialog.getConfiguration().getName()+".cfg");
-								showInfo(textbundle.getString("output_mainWindow_13") + " "+configurationDerivationDialog.getConfiguration().getName()+".cfg " + textbundle.getString("output_mainWindow_14") + ".");
-								cancel = true;
-								configurationDerivationDialog = null;
+	private void configurationLoad() {
+		final Vector configurationVector = dataProcessing.getConfiguration();
+		ConfigurationLoadingDialog configurationLoadingDialog = new ConfigurationLoadingDialog(this,
+				configurationVector);
+		if (!configurationLoadingDialog.isCanceled()) {
+			switch (configurationLoadingDialog.getSelection()) {
+				// new configuration
+				case 1: {
+					ConfigurationNewDialog configurationNewDialog = new ConfigurationNewDialog(this);
+					if (!configurationNewDialog.isCanceled()) {
+						final Enumeration results = configurationNewDialog.getValues().elements();
+						final Configuration configurationNew = new Configuration(
+								configurationNewDialog.getName(),
+								configurationNewDialog.getBasisName(),
+								(Integer) results.nextElement(),
+								(Integer) results.nextElement(),
+								(Double) results.nextElement(),
+								(Integer) results.nextElement(),
+								(Integer) results.nextElement(),
+								configurationNewDialog.getMaterial());
+						ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(
+								this, configurationNew, null);
+						boolean cancel = false;
+						while (!(cancel)) {
+							if (!configurationDerivationDialog.isCanceled()) {
+								try {
+									dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
+									dataProcessing
+											.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
+									showConfigurationInfo(
+											configurationDerivationDialog.getConfiguration().getName() + ".cfg");
+									showInfo(textbundle.getString("output_mainWindow_13") + " "
+											+ configurationDerivationDialog.getConfiguration().getName() + ".cfg "
+											+ textbundle.getString("output_mainWindow_14") + ".");
+									cancel = true;
+									configurationDerivationDialog = null;
+								} catch (final IOException saveIO) {
+									errorDialog(textbundle.getString("output_mainWindow_15") + ": " + saveIO);
+									configurationDerivationDialog.showDialog();
+								}
 							}
-							catch (IOException saveIO)
-							{
-								errorDialog (textbundle.getString("output_mainWindow_15") + ": "+saveIO);
-								configurationDerivationDialog.showDialog();
-							}
+							cancel = true;
+							configurationDerivationDialog = null;
 						}
-						cancel = true;
-						configurationDerivationDialog = null;
 					}
+					configurationNewDialog = null;
+					break;
 				}
-				configurationNewDialog = null;
-				break;
-			}
-			//derivate configuration
-			case 2: {
-				String file = (String)configurationVector.elementAt(configurationLoadingDialog.getFile());
-				Configuration configurationOld = new Configuration();
-				if (configurationLoadingDialog.getFile()<3){
-					configurationOld = dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile());
-				}else{
-					try{
-						configurationOld = dataProcessing.configurationLoad(file);
+				// derivate configuration
+				case 2: {
+					final String file = (String) configurationVector.elementAt(configurationLoadingDialog.getFile());
+					Configuration configurationOld = new Configuration();
+					if (configurationLoadingDialog.getFile() < 3) {
+						configurationOld = dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile());
+					} else {
+						try {
+							configurationOld = dataProcessing.configurationLoad(file);
 
-					}catch (IOException loadIO){
-						errorDialog (textbundle.getString("output_mainWindow_16") + ": "+loadIO);
-					}
-				}
-				ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(this, null, configurationOld);
-				boolean cancel = false;
-				while (!(cancel)){
-					if(!configurationDerivationDialog.isCanceled()){
-						boolean nameAvailable = false;
-						String name = new String("");
-						for (Enumeration results2 = dataProcessing.getConfiguration().elements(); results2.hasMoreElements(); ) {
-							name = ((String)results2.nextElement());
-							if ((name.substring(0,name.length()-4)).equals(configurationDerivationDialog.getConfiguration().getName())){
-								nameAvailable = true;
-							}
+						} catch (final IOException loadIO) {
+							errorDialog(textbundle.getString("output_mainWindow_16") + ": " + loadIO);
 						}
-						if (nameAvailable){
-							errorDialog (textbundle.getString("output_mainWindow_17"));
-							configurationDerivationDialog.showDialog();
-						}else{
-							try
-							{
-								dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
-								dataProcessing.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
-								showConfigurationInfo(configurationDerivationDialog.getConfiguration().getName()+".cfg");
-								showInfo(textbundle.getString("output_mainWindow_13") + " "+configurationDerivationDialog.getConfiguration().getName()+".cfg  " + textbundle.getString("output_mainWindow_14") + ".");
-								cancel = true;
-								configurationDerivationDialog = null;
+					}
+					ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(
+							this, null, configurationOld);
+					boolean cancel = false;
+					while (!(cancel)) {
+						if (!configurationDerivationDialog.isCanceled()) {
+							boolean nameAvailable = false;
+							String name = new String("");
+							for (final Enumeration results2 = dataProcessing.getConfiguration().elements(); results2
+									.hasMoreElements();) {
+								name = ((String) results2.nextElement());
+								if ((name.substring(0, name.length() - 4))
+										.equals(configurationDerivationDialog.getConfiguration().getName())) {
+									nameAvailable = true;
+								}
 							}
-							catch (IOException speicherIO)
-							{
-								errorDialog (textbundle.getString("output_mainWindow_15") + ": "+speicherIO);
+							if (nameAvailable) {
+								errorDialog(textbundle.getString("output_mainWindow_17"));
 								configurationDerivationDialog.showDialog();
+							} else {
+								try {
+									dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
+									dataProcessing
+											.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
+									showConfigurationInfo(
+											configurationDerivationDialog.getConfiguration().getName() + ".cfg");
+									showInfo(textbundle.getString("output_mainWindow_13") + " "
+											+ configurationDerivationDialog.getConfiguration().getName() + ".cfg  "
+											+ textbundle.getString("output_mainWindow_14") + ".");
+									cancel = true;
+									configurationDerivationDialog = null;
+								} catch (final IOException speicherIO) {
+									errorDialog(textbundle.getString("output_mainWindow_15") + ": " + speicherIO);
+									configurationDerivationDialog.showDialog();
+								}
 							}
+						} else {
+							cancel = true;
+							configurationDerivationDialog = null;
 						}
-					}else{
-						cancel = true;
-						configurationDerivationDialog = null;
 					}
+					break;
 				}
-				break;
-			}
-			//load existing configuration
-			case 3: {
-				String file = (String)configurationVector.elementAt(configurationLoadingDialog.getFile());
-				if (configurationLoadingDialog.getFile()<3){
-					dataProcessing.setCurrentConfiguration(dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile()));
-					showConfigurationInfo(file);
-					showInfo(textbundle.getString("output_mainWindow_13") + " "+file+" " + textbundle.getString("output_mainWindow_18") + ".");
-				}else{
-					try
-					{
-						dataProcessing.setCurrentConfiguration(dataProcessing.configurationLoad(file));
+				// load existing configuration
+				case 3: {
+					final String file = (String) configurationVector.elementAt(configurationLoadingDialog.getFile());
+					if (configurationLoadingDialog.getFile() < 3) {
+						dataProcessing.setCurrentConfiguration(
+								dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile()));
 						showConfigurationInfo(file);
-						showInfo(textbundle.getString("output_mainWindow_13") + " "+file+" " + textbundle.getString("output_mainWindow_18") + ".");
-					}
-					catch (IOException configurationLoadIO)
-					{
-						errorDialog (textbundle.getString("output_mainWindow_19") + ": "+configurationLoadIO);
+						showInfo(textbundle.getString("output_mainWindow_13") + " " + file + " "
+								+ textbundle.getString("output_mainWindow_18") + ".");
+					} else {
+						try {
+							dataProcessing.setCurrentConfiguration(dataProcessing.configurationLoad(file));
+							showConfigurationInfo(file);
+							showInfo(textbundle.getString("output_mainWindow_13") + " " + file + " "
+									+ textbundle.getString("output_mainWindow_18") + ".");
+						} catch (final IOException configurationLoadIO) {
+							errorDialog(textbundle.getString("output_mainWindow_19") + ": " + configurationLoadIO);
+						}
 					}
 				}
-			}
 			}
 		}
 		configurationLoadingDialog = null;
 	}
 
 	/**
-	 * method:         imageLoad
-	 * description:    system dialog for image loading
-	 * @author         Tobias Reichling
-	 * @exception      IOExcepion
+	 * method: imageLoad
+	 * description: system dialog for image loading
+	 *
+	 * @author Tobias Reichling
+	 * @exception IOExcepion
 	 */
-	private void imageLoad()
-	{
-		//system dialog
-		JFileChooser d = new JFileChooser();
-		d.setFileFilter( new FileFilter()
-		{
-			public boolean accept(File f)
-			{
+	private void imageLoad() {
+		// system dialog
+		final JFileChooser d = new JFileChooser();
+		d.setFileFilter(new FileFilter() {
+			public boolean accept(final File f) {
 				return f.isDirectory() || f.getName().toLowerCase().endsWith(".jpg") ||
-				f.getName().toLowerCase().endsWith(".jpeg") || f.getName().toLowerCase().endsWith(".gif") ||
-				f.getName().toLowerCase().endsWith(".png");
+						f.getName().toLowerCase().endsWith(".jpeg") || f.getName().toLowerCase().endsWith(".gif") ||
+						f.getName().toLowerCase().endsWith(".png");
 			}
-			public String getDescription()
-			{
+
+			public String getDescription() {
 				return "*.jpg;*.gif;*.png";
 			}
-		} );
+		});
 		d.showOpenDialog(this);
-		File menuFile = d.getSelectedFile();
-		if (dataProcessing.imageLoad(menuFile))
-		{
+		final File menuFile = d.getSelectedFile();
+		if (dataProcessing.imageLoad(menuFile)) {
 			guiZoomSlider1.setEnabled(true);
-			dataProcessing.computeScaleFactor(false, (double)(guiScrollPaneTop.getWidth()-40), (double)((guiSplitPane.getHeight()-guiSplitPane.getDividerLocation()-60)));
+			dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
+					(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
 			guiZoomSlider1.setValue(3);
 			guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
 			guiPictureElementTop.updateUI();
 			showImageInfo(menuFile.getName());
-			showInfo(textbundle.getString("output_mainWindow_20") + " "+ menuFile.getName() +" " + textbundle.getString("output_mainWindow_18") + ".");
-		}
-		else
-		{
+			showInfo(textbundle.getString("output_mainWindow_20") + " " + menuFile.getName() + " "
+					+ textbundle.getString("output_mainWindow_18") + ".");
+		} else {
 			errorDialog(textbundle.getString("output_mainWindow_21"));
 		}
 	}
 
 	/**
-	 * method:         errorDialog
-	 * description:    shows an error dialog
-	 * @author         Tobias Reichling
-	 * @param          errorMessage
+	 * method: errorDialog
+	 * description: shows an error dialog
+	 *
+	 * @author Tobias Reichling
+	 * @param errorMessage
 	 */
-	public void errorDialog (String errorMessage){
-		JOptionPane.showMessageDialog(this,errorMessage,textbundle.getString("dialog_error_frame"),JOptionPane.ERROR_MESSAGE);
+	public void errorDialog(final String errorMessage) {
+		JOptionPane.showMessageDialog(this, errorMessage, textbundle.getString("dialog_error_frame"),
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
-	 * method:         radioButtonStatus
-	 * description:    synchronisize radio buttons gui and menu
-	 * @author         Tobias Reichling
-	 * @param          groupNumber
-	 * @param          buttonNumber
+	 * method: radioButtonStatus
+	 * description: synchronisize radio buttons gui and menu
+	 *
+	 * @author Tobias Reichling
+	 * @param groupNumber
+	 * @param buttonNumber
 	 */
-	private void radioButtonStatus (int groupNumber, int buttonNumber){
-		switch(groupNumber){
+	private void radioButtonStatus(final int groupNumber, final int buttonNumber) {
+		switch (groupNumber) {
 			case 1: {
-				switch (buttonNumber){
+				switch (buttonNumber) {
 					case 1: {
 						menuAlgorithm11.setSelected(true);
 						guiRadioAlgorithm11.setSelected(true);
@@ -883,11 +924,11 @@ implements ActionListener, ChangeListener
 						guiRadioAlgorithm17.setSelected(true);
 						break;
 					}
-			}
+				}
 				break;
 			}
 			case 2: {
-				switch (buttonNumber){
+				switch (buttonNumber) {
 					case 1: {
 						menuAlgorithm21.setSelected(true);
 						guiRadioAlgorithm21.setSelected(true);
@@ -960,21 +1001,22 @@ implements ActionListener, ChangeListener
 						guiStatistic.setSelected(false);
 						break;
 					}
-			}
+				}
 				break;
 			}
 		}
 	}
 
 	/**
-	 * method:         checkBoxStatus
-	 * description:    synchronisize check boxes gui and menu
-	 * @author         Tobias Reichling
-	 * @param          checkBoxNumber
-	 * @param          reset (true/false)
+	 * method: checkBoxStatus
+	 * description: synchronisize check boxes gui and menu
+	 *
+	 * @author Tobias Reichling
+	 * @param checkBoxNumber
+	 * @param reset          (true/false)
 	 */
-	private void checkBoxStatus (int checkBoxNumber, boolean reset){
-		if (reset){
+	private void checkBoxStatus(final int checkBoxNumber, final boolean reset) {
+		if (reset) {
 			menuGrafic.setSelected(false);
 			guiOutputGrafic.setSelected(false);
 			menuXml.setSelected(false);
@@ -985,8 +1027,7 @@ implements ActionListener, ChangeListener
 			guiOutputBuildingInstruction.setSelected(false);
 			menuMaterial.setSelected(false);
 			guiOutputMaterial.setSelected(false);
-		}
-		else {
+		} else {
 			// 1x = menu
 			// 2x = gui
 			// ------------------
@@ -995,9 +1036,9 @@ implements ActionListener, ChangeListener
 			// x4 = buildingInstruction
 			// x5 = material
 			// x6 = configuration
-			switch (checkBoxNumber){
+			switch (checkBoxNumber) {
 				case 11: {
-					if (menuGrafic.isSelected()){
+					if (menuGrafic.isSelected()) {
 						guiOutputGrafic.setSelected(true);
 					} else {
 						guiOutputGrafic.setSelected(false);
@@ -1005,7 +1046,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 13: {
-					if (menuXml.isSelected()){
+					if (menuXml.isSelected()) {
 						guiOutputXml.setSelected(true);
 					} else {
 						guiOutputXml.setSelected(false);
@@ -1013,7 +1054,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 14: {
-					if (menuBuildingInstruction.isSelected()){
+					if (menuBuildingInstruction.isSelected()) {
 						guiOutputBuildingInstruction.setSelected(true);
 					} else {
 						guiOutputBuildingInstruction.setSelected(false);
@@ -1021,7 +1062,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 15: {
-					if (menuMaterial.isSelected()){
+					if (menuMaterial.isSelected()) {
 						guiOutputMaterial.setSelected(true);
 					} else {
 						guiOutputMaterial.setSelected(false);
@@ -1029,7 +1070,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 16: {
-					if (menuConfiguration.isSelected()){
+					if (menuConfiguration.isSelected()) {
 						guiOutputConfiguration.setSelected(true);
 					} else {
 						guiOutputConfiguration.setSelected(false);
@@ -1037,7 +1078,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 21: {
-					if (guiOutputGrafic.isSelected()){
+					if (guiOutputGrafic.isSelected()) {
 						menuGrafic.setSelected(true);
 					} else {
 						menuGrafic.setSelected(false);
@@ -1045,7 +1086,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 23: {
-					if (guiOutputXml.isSelected()){
+					if (guiOutputXml.isSelected()) {
 						menuXml.setSelected(true);
 					} else {
 						menuXml.setSelected(false);
@@ -1053,7 +1094,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 24: {
-					if (guiOutputBuildingInstruction.isSelected()){
+					if (guiOutputBuildingInstruction.isSelected()) {
 						menuBuildingInstruction.setSelected(true);
 					} else {
 						menuBuildingInstruction.setSelected(false);
@@ -1061,7 +1102,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 25: {
-					if (guiOutputMaterial.isSelected()){
+					if (guiOutputMaterial.isSelected()) {
 						menuMaterial.setSelected(true);
 					} else {
 						menuMaterial.setSelected(false);
@@ -1069,7 +1110,7 @@ implements ActionListener, ChangeListener
 					break;
 				}
 				case 26: {
-					if (guiOutputConfiguration.isSelected()){
+					if (guiOutputConfiguration.isSelected()) {
 						menuConfiguration.setSelected(true);
 					} else {
 						menuConfiguration.setSelected(false);
@@ -1081,34 +1122,35 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:         guiStatus
-	 * description:    changes gui status
-	 * @author         Tobias Reichling
-	 * @param          status
+	 * method: guiStatus
+	 * description: changes gui status
+	 *
+	 * @author Tobias Reichling
+	 * @param status
 	 */
-	public void guiStatus (int status){
-		switch (status){
-			//gui start
+	public void guiStatus(final int status) {
+		switch (status) {
+			// gui start
 			case 10: {
 				dataProcessing.setCurrentConfiguration(null);
-				//sets option panel 1
+				// sets option panel 1
 				guiPanelRightArea.removeAll();
 				guiPanelRightArea.add(guiPanelOptions1, BorderLayout.CENTER);
 				guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
-				//init check boxes
-				checkBoxStatus(0,true);
-				//init zoom sliders
+				// init check boxes
+				checkBoxStatus(0, true);
+				// init zoom sliders
 				guiZoomSlider1.setEnabled(false);
 				guiZoomSlider2.setEnabled(false);
 				guiZoomSlider1.setValue(3);
 				guiZoomSlider2.setValue(3);
 				guiZoomSlider1Value = 3;
 				guiZoomSlider2Value = 3;
-				//init information labels
+				// init information labels
 				showImageInfo("");
 				showConfigurationInfo("");
-				showDimensionInfo(0,0,true);
-				//reset images
+				showDimensionInfo(0, 0, true);
+				// reset images
 				dataProcessing.imageReset();
 				guiPanelTopArea2.removeAll();
 				guiPictureElementTop = new PictureElement(this);
@@ -1117,7 +1159,7 @@ implements ActionListener, ChangeListener
 				guiScrollPaneTop.updateUI();
 				guiPictureElementBottom.setImage(null);
 				guiScrollPaneBottom.updateUI();
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				guiPanelOptions1.updateUI();
 				menuImageLoad.setEnabled(true);
 				menuConfigurationLoad.setEnabled(true);
@@ -1150,24 +1192,25 @@ implements ActionListener, ChangeListener
 				buttonConfigurationLoad.setEnabled(true);
 				menuConfigurationLoad.setEnabled(true);
 				menuImageLoad.setEnabled(true);
-				radioButtonStatus(1,1);
-				radioButtonStatus(2,5);
+				radioButtonStatus(1, 1);
+				radioButtonStatus(2, 5);
 				break;
 			}
-			//image and configuration are loaded
+			// image and configuration are loaded
 			case 11: {
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				menuMosaicDimension.setEnabled(true);
 				buttonMosaicDimension.setEnabled(true);
-				//set information text
+				// set information text
 				showInfo(textbundle.getString("output_mainWindow_22"));
 				break;
 			}
-			//cutout situation
+			// cutout situation
 			case 12: {
-				//set information text
-				showInfo(textbundle.getString("output_mainWindow_23") + ": "+mosaicWidth+" x "+mosaicHeight+". " + textbundle.getString("output_mainWindow_24") + ".");
-				//enable/disable buttons, menu items, etc.
+				// set information text
+				showInfo(textbundle.getString("output_mainWindow_23") + ": " + mosaicWidth + " x " + mosaicHeight + ". "
+						+ textbundle.getString("output_mainWindow_24") + ".");
+				// enable/disable buttons, menu items, etc.
 				buttonCutout.setEnabled(false);
 				buttonImageLoad.setEnabled(false);
 				buttonConfigurationLoad.setEnabled(false);
@@ -1177,32 +1220,32 @@ implements ActionListener, ChangeListener
 				guiStatus(13);
 				break;
 			}
-			//cutout situation - no rectangle available
+			// cutout situation - no rectangle available
 			case 13: {
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				guiZoomSlider1.setEnabled(true);
 				buttonCutout.setEnabled(false);
 				break;
 			}
-			//cutout situation - rectangle available
+			// cutout situation - rectangle available
 			case 14: {
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				guiZoomSlider1.setEnabled(false);
 				buttonCutout.setEnabled(true);
-				//sets information text
+				// sets information text
 				showInfo(textbundle.getString("output_mainWindow_25"));
 				break;
 			}
-			//generate mosaic
+			// generate mosaic
 			case 20: {
-				//sets information text
+				// sets information text
 				showInfo(textbundle.getString("output_mainWindow_26"));
-				//sets option panel 2
+				// sets option panel 2
 				guiPanelRightArea.remove(guiPanelOptions1);
 				guiPanelRightArea.add(guiPanelOptions2, BorderLayout.CENTER);
 				guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
 				guiPanelOptions2.updateUI();
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				guiZoomSlider1.setEnabled(true);
 				menuImageLoad.setEnabled(false);
 				menuConfigurationLoad.setEnabled(false);
@@ -1234,9 +1277,9 @@ implements ActionListener, ChangeListener
 				guiStatistic.setEnabled(false);
 				break;
 			}
-			//disable gui while generating mosaic
-			case 21:{
-				//enable/disable buttons, menu items, etc.
+			// disable gui while generating mosaic
+			case 21: {
+				// enable/disable buttons, menu items, etc.
 				menuAlgorithm11.setEnabled(false);
 				menuAlgorithm12.setEnabled(false);
 				menuAlgorithm13.setEnabled(false);
@@ -1271,11 +1314,11 @@ implements ActionListener, ChangeListener
 				guiStatistic.setEnabled(false);
 				break;
 			}
-			//enable gui after generating mosaic
-			case 22:{
-				//sets information text
+			// enable gui after generating mosaic
+			case 22: {
+				// sets information text
 				showInfo(textbundle.getString("output_mainWindow_27"));
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				buttonOutput.setEnabled(true);
 				guiZoomSlider1.setValue(3);
 				guiZoomSlider1Value = 3;
@@ -1311,24 +1354,24 @@ implements ActionListener, ChangeListener
 				menuMosaicGenerate.setEnabled(true);
 				buttonMosaicGenerate.setEnabled(true);
 				guiThreeDEffect.setEnabled(true);
-				if(!guiRadioAlgorithm25.isSelected()){
+				if (!guiRadioAlgorithm25.isSelected()) {
 					guiStatistic.setEnabled(true);
 				}
 				break;
 			}
-			//output
+			// output
 			case 30: {
-				//sets information text
+				// sets information text
 				showInfo(textbundle.getString("output_mainWindow_28"));
-				//sets option panel 3
+				// sets option panel 3
 				guiPanelRightArea.remove(guiPanelOptions2);
 				guiPanelRightArea.add(guiPanelOptions3, BorderLayout.CENTER);
 				guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				guiZoomSlider1.setEnabled(true);
 				guiZoomSlider2.setEnabled(true);
-				radioButtonStatus(1,1);
-				radioButtonStatus(2,5);
+				radioButtonStatus(1, 1);
+				radioButtonStatus(2, 5);
 				guiPanelOptions3.updateUI();
 				menuImageLoad.setEnabled(false);
 				menuConfigurationLoad.setEnabled(false);
@@ -1357,9 +1400,9 @@ implements ActionListener, ChangeListener
 				guiStatistic.setEnabled(false);
 				break;
 			}
-			//disable gui while generating output documents
+			// disable gui while generating output documents
 			case 31: {
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				guiZoomSlider1.setEnabled(false);
 				guiZoomSlider2.setEnabled(false);
 				menuGrafic.setEnabled(false);
@@ -1376,9 +1419,9 @@ implements ActionListener, ChangeListener
 				buttonDocumentsGenerate.setEnabled(false);
 				break;
 			}
-			//enable gui after generating output documents
+			// enable gui after generating output documents
 			case 32: {
-				//enable/disable buttons, menu items, etc.
+				// enable/disable buttons, menu items, etc.
 				guiZoomSlider1.setEnabled(true);
 				guiZoomSlider2.setEnabled(true);
 				menuGrafic.setEnabled(true);
@@ -1399,75 +1442,83 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:         adjustDividerLocation
-	 * description:    adjust divider location (split pane)
-	 * @author         Tobias Reichling
+	 * method: adjustDividerLocation
+	 * description: adjust divider location (split pane)
+	 *
+	 * @author Tobias Reichling
 	 */
-	private void adjustDividerLocation(){
-		guiSplitPane.setDividerLocation(guiSplitPane.getHeight()/2);
+	private void adjustDividerLocation() {
+		guiSplitPane.setDividerLocation(guiSplitPane.getHeight() / 2);
 	}
 
 	/**
-	 * method:         showImageInfo
-	 * description:    shows the name of the current image
-	 * @author         Tobias Reichling
-	 * @param          fileName
+	 * method: showImageInfo
+	 * description: shows the name of the current image
+	 *
+	 * @author Tobias Reichling
+	 * @param fileName
 	 */
-	private void showImageInfo(String fileName){
-		if (fileName.length() > 18){
-			fileName = fileName.substring(0,15)+"..."+fileName.substring(fileName.length()-3, fileName.length());
+	private void showImageInfo(String fileName) {
+		if (fileName.length() > 18) {
+			fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
 		}
-		guiLabelImage.setText(textbundle.getString("output_mainWindow_20") + ": "+fileName);
+		guiLabelImage.setText(textbundle.getString("output_mainWindow_20") + ": " + fileName);
 	}
 
 	/**
-	 * method:         showConfigurationInfo
-	 * description:    shows the name of the current configuration
-	 * @author         Tobias Reichling
-	 * @param          fileName
+	 * method: showConfigurationInfo
+	 * description: shows the name of the current configuration
+	 *
+	 * @author Tobias Reichling
+	 * @param fileName
 	 */
-	private void showConfigurationInfo(String fileName){
-		if (fileName.length() > 18){
-			fileName = fileName.substring(0,15)+"..."+fileName.substring(fileName.length()-3, fileName.length());
+	private void showConfigurationInfo(String fileName) {
+		if (fileName.length() > 18) {
+			fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
 		}
-		guiLabelConfiguration.setText("CFG: "+fileName);
+		guiLabelConfiguration.setText("CFG: " + fileName);
 	}
 
 	/**
-	 * method:         showDimensionInfo
-	 * description:    shows the current dimensions
-	 * @author         Tobias Reichling
-	 * @param          widthValue
-	 * @param          heightValue
-	 * @param          reset (true/false)
+	 * method: showDimensionInfo
+	 * description: shows the current dimensions
+	 *
+	 * @author Tobias Reichling
+	 * @param widthValue
+	 * @param heightValue
+	 * @param reset       (true/false)
 	 */
-	private void showDimensionInfo(int widthValue, int heightValue, boolean reset){
-		if (reset){
+	private void showDimensionInfo(final int widthValue, final int heightValue, final boolean reset) {
+		if (reset) {
 			guiLabelWidth.setText(textbundle.getString("output_mainWindow_29") + ": ");
 			guiLabelHeight.setText(textbundle.getString("output_mainWindow_30") + ": ");
-		}else{
-			guiLabelWidth.setText(textbundle.getString("output_mainWindow_29") + ": "+ widthValue + " " + textbundle.getString("output_mainWindow_31"));
-			guiLabelHeight.setText(textbundle.getString("output_mainWindow_30") + ": "+ heightValue + " " + textbundle.getString("output_mainWindow_31"));
+		} else {
+			guiLabelWidth.setText(textbundle.getString("output_mainWindow_29") + ": " + widthValue + " "
+					+ textbundle.getString("output_mainWindow_31"));
+			guiLabelHeight.setText(textbundle.getString("output_mainWindow_30") + ": " + heightValue + " "
+					+ textbundle.getString("output_mainWindow_31"));
 		}
 	}
 
 	/**
-	 * method:         showInfo
-	 * description:    shows an information text
-	 * @author         Tobias Reichling
-	 * @param          text
+	 * method: showInfo
+	 * description: shows an information text
+	 *
+	 * @author Tobias Reichling
+	 * @param text
 	 */
-	public void showInfo(String text){
+	public void showInfo(final String text) {
 		guiTextFieldInformation.setText(text);
 	}
 
 	/**
-	 * method:         buildGui
-	 * description:    builds gui
-	 * @author         Tobias Reichling
+	 * method: buildGui
+	 * description: builds gui
+	 *
+	 * @author Tobias Reichling
 	 */
-	private void buildGui(){
-		Container contentPane = this.getContentPane();
+	private void buildGui() {
+		final Container contentPane = this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		guiPanelTopArea = new JPanel(new BorderLayout());
 		guiPanelBottomArea = new JPanel(new BorderLayout());
@@ -1475,54 +1526,58 @@ implements ActionListener, ChangeListener
 		contentPane.add(guiPanelBottomArea, BorderLayout.SOUTH);
 		guiPanelRightArea = new JPanel(new BorderLayout());
 		guiPanelTopArea.add(guiPanelRightArea, BorderLayout.EAST);
-		//image area top
+		// image area top
 		guiPictureElementTop = new PictureElement(this);
-		GridBagLayout top2gbl = new GridBagLayout();
-		GridBagConstraints top2gbc = new GridBagConstraints();
+		final GridBagLayout top2gbl = new GridBagLayout();
+		final GridBagConstraints top2gbc = new GridBagConstraints();
 		top2gbc.anchor = GridBagConstraints.CENTER;
-		top2gbl.setConstraints(guiPictureElementTop,top2gbc);
+		top2gbl.setConstraints(guiPictureElementTop, top2gbc);
 		guiPanelTopArea2 = new JPanel(top2gbl);
 		guiPanelTopArea2.add(guiPictureElementTop);
-		guiScrollPaneTop= new JScrollPane(guiPanelTopArea2, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		guiScrollPaneTop.setMinimumSize(new Dimension(0,0));
+		guiScrollPaneTop = new JScrollPane(guiPanelTopArea2, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		guiScrollPaneTop.setMinimumSize(new Dimension(0, 0));
 		guiScrollPaneTop.setPreferredSize(new Dimension(100, 100));
-		//image area bottom
+		// image area bottom
 		guiPictureElementBottom = new PictureElement(this);
-		GridBagLayout bottom2gbl = new GridBagLayout();
-		GridBagConstraints bottom2gbc = new GridBagConstraints();
+		final GridBagLayout bottom2gbl = new GridBagLayout();
+		final GridBagConstraints bottom2gbc = new GridBagConstraints();
 		bottom2gbc.anchor = GridBagConstraints.CENTER;
-		bottom2gbl.setConstraints(guiPictureElementBottom,bottom2gbc);
+		bottom2gbl.setConstraints(guiPictureElementBottom, bottom2gbc);
 		guiPanelBottomArea2 = new JPanel(bottom2gbl);
 		guiPanelBottomArea2.add(guiPictureElementBottom);
-		guiScrollPaneBottom= new JScrollPane(guiPanelBottomArea2, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		guiScrollPaneBottom.setMinimumSize(new Dimension(0,0));
+		guiScrollPaneBottom = new JScrollPane(guiPanelBottomArea2, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		guiScrollPaneBottom.setMinimumSize(new Dimension(0, 0));
 		guiScrollPaneBottom.setPreferredSize(new Dimension(100, 100));
-		//split pane
-		guiSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,true);
+		// split pane
+		guiSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
 		guiSplitPane.setDividerLocation(0);
 		guiSplitPane.setContinuousLayout(true);
-		TitledBorder imageAreaBorder = BorderFactory.createTitledBorder(textbundle.getString("dialog_mainWindow_border_1"));
+		final TitledBorder imageAreaBorder = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_mainWindow_border_1"));
 		guiSplitPane.setBorder(imageAreaBorder);
-		imageAreaBorder.setTitleColor(new Color(100,100,100));
+		imageAreaBorder.setTitleColor(new Color(100, 100, 100));
 		guiSplitPane.setTopComponent(guiScrollPaneTop);
 		guiSplitPane.setBottomComponent(guiScrollPaneBottom);
 		guiPanelTopArea.add(guiSplitPane, BorderLayout.CENTER);
-		//option panels all
-		TitledBorder optionAreaBorder = BorderFactory.createTitledBorder(textbundle.getString("dialog_mainWindow_border_2"));
-		optionAreaBorder.setTitleColor(new Color(100,100,100));
+		// option panels all
+		final TitledBorder optionAreaBorder = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_mainWindow_border_2"));
+		optionAreaBorder.setTitleColor(new Color(100, 100, 100));
 		buttonMosaicNew = new JButton(textbundle.getString("dialog_mainWindow_button_1"));
-		//option panel 1
+		// option panel 1
 		guiPanelOptions1 = new JPanel(new BorderLayout());
 		guiPanelOptions1.setBorder(optionAreaBorder);
 		guiPanelOptions1Empty = new JPanel();
-		guiPanelOptions1Top = new JPanel(new GridLayout(8,1));
+		guiPanelOptions1Top = new JPanel(new GridLayout(8, 1));
 		buttonImageLoad = new JButton(textbundle.getString("dialog_mainWindow_button_2"));
 		buttonImageLoad.addActionListener(this);
 		buttonImageLoad.setActionCommand("imageload");
 		buttonConfigurationLoad = new JButton(textbundle.getString("dialog_mainWindow_button_3"));
 		buttonConfigurationLoad.addActionListener(this);
 		buttonConfigurationLoad.setActionCommand("configurationload");
-		buttonMosaicDimension  = new JButton(textbundle.getString("dialog_mainWindow_button_4"));
+		buttonMosaicDimension = new JButton(textbundle.getString("dialog_mainWindow_button_4"));
 		buttonMosaicDimension.addActionListener(this);
 		buttonMosaicDimension.setActionCommand("mosaicdimension");
 		buttonCutout = new JButton(textbundle.getString("dialog_mainWindow_button_5"));
@@ -1542,22 +1597,24 @@ implements ActionListener, ChangeListener
 		guiPanelOptions1Top.add(buttonMosaicDimension);
 		guiPanelOptions1Top.add(guiLabelWidth);
 		guiPanelOptions1Top.add(guiLabelHeight);
-		//option panel 2
+		// option panel 2
 		guiPanelOptions2 = new JPanel(new BorderLayout());
 		guiPanelOptions2.setBorder(optionAreaBorder);
-	    if((System.getProperty("os.name").startsWith("Mac"))){
-	    	guiPanelOptions2Top = new JPanel(new GridLayout(14,1,0,4));
-	    }else{
-	    	guiPanelOptions2Top = new JPanel(new GridLayout(14,1,0,0));
-	    }
-		guiPanelOptions2Bottom = new JPanel(new GridLayout(5,1,0,0));
+		if ((System.getProperty("os.name").startsWith("Mac"))) {
+			guiPanelOptions2Top = new JPanel(new GridLayout(14, 1, 0, 4));
+		} else {
+			guiPanelOptions2Top = new JPanel(new GridLayout(14, 1, 0, 0));
+		}
+		guiPanelOptions2Bottom = new JPanel(new GridLayout(5, 1, 0, 0));
 		buttonMosaicGenerate = new JButton(textbundle.getString("dialog_mainWindow_button_6"));
 		buttonMosaicGenerate.setActionCommand("mosaicgenerate");
 		buttonMosaicGenerate.addActionListener(this);
 		guiLabelQuantisation = new JLabel(textbundle.getString("dialog_mainWindow_label_4") + ":");
-		guiLabelQuantisation.setFont(new Font(guiLabelQuantisation.getFont().getFontName(), Font.BOLD, guiLabelQuantisation.getFont().getSize()));
+		guiLabelQuantisation.setFont(new Font(guiLabelQuantisation.getFont().getFontName(), Font.BOLD,
+				guiLabelQuantisation.getFont().getSize()));
 		guiLabelTiling = new JLabel(textbundle.getString("dialog_mainWindow_label_5") + ":");
-		guiLabelTiling.setFont(new Font(guiLabelTiling.getFont().getFontName(), Font.BOLD, guiLabelTiling.getFont().getSize()));
+		guiLabelTiling.setFont(
+				new Font(guiLabelTiling.getFont().getFontName(), Font.BOLD, guiLabelTiling.getFont().getSize()));
 		guiLabelSeparator = new JLabel("");
 		guiGroupQuantisation = new ButtonGroup();
 		guiGroupTiling = new ButtonGroup();
@@ -1602,7 +1659,7 @@ implements ActionListener, ChangeListener
 		guiRadioAlgorithm24.setActionCommand("algorithm24");
 		guiRadioAlgorithm25.setActionCommand("algorithm25");
 		guiRadioAlgorithm25.setSelected(true);
-		Vector guiComboBoxInterpolationsVerfahren = new Vector();
+		final Vector guiComboBoxInterpolationsVerfahren = new Vector();
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_1"));
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_2"));
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_3"));
@@ -1651,11 +1708,11 @@ implements ActionListener, ChangeListener
 		guiPanelOptions2Bottom.add(buttonOutput);
 		guiPanelOptions2.add(guiPanelOptions2Top, BorderLayout.NORTH);
 		guiPanelOptions2.add(guiPanelOptions2Bottom, BorderLayout.SOUTH);
-		//option panel 3
+		// option panel 3
 		guiPanelOptions3 = new JPanel(new BorderLayout());
 		guiPanelOptions3.setBorder(optionAreaBorder);
 		guiPanelOptions3Empty = new JPanel();
-		guiPanelOptions3Top = new JPanel(new GridLayout(8,1));
+		guiPanelOptions3Top = new JPanel(new GridLayout(8, 1));
 		buttonDocumentsGenerate = new JButton(textbundle.getString("dialog_mainWindow_button_8"));
 		buttonDocumentsGenerate.addActionListener(this);
 		buttonDocumentsGenerate.setActionCommand("documentgenerate");
@@ -1687,44 +1744,46 @@ implements ActionListener, ChangeListener
 		guiPanelOptions3Top.add(guiOutputBuildingInstruction);
 		guiPanelOptions3Top.add(guiOutputXml);
 		guiPanelOptions3Top.add(buttonDocumentsGenerate);
-		//zoom area
-		guiPanelZoom = new JPanel(new GridLayout(4,1));
-		TitledBorder zoomAreaBorder = BorderFactory.createTitledBorder(textbundle.getString("dialog_mainWindow_border_3"));
-		zoomAreaBorder.setTitleColor(new Color(100,100,100));
+		// zoom area
+		guiPanelZoom = new JPanel(new GridLayout(4, 1));
+		final TitledBorder zoomAreaBorder = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_mainWindow_border_3"));
+		zoomAreaBorder.setTitleColor(new Color(100, 100, 100));
 		guiPanelZoom.setBorder(zoomAreaBorder);
 		guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
 		guiLabelZoom1 = new JLabel(textbundle.getString("dialog_mainWindow_label_7"));
 		guiLabelZoom2 = new JLabel(textbundle.getString("dialog_mainWindow_label_8"));
-		guiZoomSlider1 = new JSlider(1,7,3);
+		guiZoomSlider1 = new JSlider(1, 7, 3);
 		guiZoomSlider1Value = 3;
 		guiZoomSlider1.setMinorTickSpacing(1);
 		guiZoomSlider1.setPaintTicks(true);
 		guiZoomSlider1.setSnapToTicks(true);
 		guiZoomSlider1.addChangeListener(this);
 		guiZoomSlider1.setFocusable(false);
-		guiZoomSlider2 = new JSlider(1,7,3);
+		guiZoomSlider2 = new JSlider(1, 7, 3);
 		guiZoomSlider2Value = 3;
 		guiZoomSlider2.setMinorTickSpacing(1);
 		guiZoomSlider2.setPaintTicks(true);
 		guiZoomSlider2.setSnapToTicks(true);
 		guiZoomSlider2.addChangeListener(this);
 		guiZoomSlider2.setFocusable(false);
-		Dimension d = new Dimension (210, guiLabelZoom1.getHeight());
+		final Dimension d = new Dimension(210, guiLabelZoom1.getHeight());
 		guiLabelZoom1.setPreferredSize(d);
 		guiLabelZoom2.setPreferredSize(d);
 		guiPanelZoom.add(guiLabelZoom1);
 		guiPanelZoom.add(guiZoomSlider1);
 		guiPanelZoom.add(guiLabelZoom2);
 		guiPanelZoom.add(guiZoomSlider2);
-		//information area
-		guiPanelInformation = new JPanel(new GridLayout(1,1));
+		// information area
+		guiPanelInformation = new JPanel(new GridLayout(1, 1));
 		guiTextFieldInformation = new JTextField();
 		guiTextFieldInformation.setEditable(false);
-		guiTextFieldInformation.setBackground(new Color(255,255,255));
-		guiTextFieldInformation.setForeground(new Color(0,0,150));
+		guiTextFieldInformation.setBackground(new Color(255, 255, 255));
+		guiTextFieldInformation.setForeground(new Color(0, 0, 150));
 		guiPanelBottomArea.add(guiPanelInformation, BorderLayout.CENTER);
-		TitledBorder informationAreaBorder = BorderFactory.createTitledBorder(textbundle.getString("dialog_mainWindow_border_4"));
-		informationAreaBorder.setTitleColor(new Color(100,100,100));
+		final TitledBorder informationAreaBorder = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_mainWindow_border_4"));
+		informationAreaBorder.setTitleColor(new Color(100, 100, 100));
 		guiPanelInformation.setBorder(informationAreaBorder);
 		guiPanelInformation.add(guiTextFieldInformation);
 		guiStatus(10);
@@ -1732,38 +1791,38 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:         osStyle
-	 * description:    look and feel
-	 * @author         Tobias Reichling
+	 * method: osStyle
+	 * description: look and feel
+	 *
+	 * @author Tobias Reichling
 	 */
-	private void osStyle()
-	{
-		String osName = System.getProperty("os.name");
-		if (osName.contains("Windows"))
-		{
+	private void osStyle() {
+		final String osName = System.getProperty("os.name");
+		if (osName.contains("Windows")) {
 			try {
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			SwingUtilities.updateComponentTreeUI(this);
-			} catch (UnsupportedLookAndFeelException e) {
+				SwingUtilities.updateComponentTreeUI(this);
+			} catch (final UnsupportedLookAndFeelException e) {
 				System.err.println(e.toString());
-			} catch (ClassNotFoundException e) {
+			} catch (final ClassNotFoundException e) {
 				System.err.println(e.toString());
-			} catch (InstantiationException e) {
+			} catch (final InstantiationException e) {
 				System.err.println(e.toString());
-			} catch (IllegalAccessException e) {
+			} catch (final IllegalAccessException e) {
 				System.err.println(e.toString());
 			}
 		}
 	}
 
 	/**
-	 * method:         buildMenu
-	 * description:    generate Menu
-	 * @author         Tobias Reichling
+	 * method: buildMenu
+	 * description: generate Menu
+	 *
+	 * @author Tobias Reichling
 	 */
-	private void buildMenu(){
+	private void buildMenu() {
 		menuBar = new JMenuBar();
-		//menuFile
+		// menuFile
 		menuFile = new JMenu(textbundle.getString("dialog_mainWindow_menu_10"));
 		menuNewMosaik = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_11"));
 		menuNewMosaik.addActionListener(this);
@@ -1786,14 +1845,14 @@ implements ActionListener, ChangeListener
 		menuEnd.setActionCommand("exit");
 		menuFile.add(menuEnd);
 		menuBar.add(menuFile);
-		//menuPreprocessing
+		// menuPreprocessing
 		menuPreprocessing = new JMenu(textbundle.getString("dialog_mainWindow_menu_20"));
 		menuMosaicDimension = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_21"));
 		menuMosaicDimension.addActionListener(this);
 		menuMosaicDimension.setActionCommand("mosaicdimension");
 		menuPreprocessing.add(menuMosaicDimension);
 		menuBar.add(menuPreprocessing);
-		//menuMosaik
+		// menuMosaik
 		menuMosaic = new JMenu(textbundle.getString("dialog_mainWindow_menu_30"));
 		menuGroupQuantisation = new ButtonGroup();
 		menuAlgorithm11 = new JRadioButtonMenuItem(textbundle.getString("algorithm_naiveQuantisationRgb"), true);
@@ -1864,7 +1923,7 @@ implements ActionListener, ChangeListener
 		menuMosaicGenerate.setActionCommand("mosaicgenerate");
 		menuMosaic.add(menuMosaicGenerate);
 		menuBar.add(menuMosaic);
-		//menuOutput
+		// menuOutput
 		menuOutput = new JMenu(textbundle.getString("dialog_mainWindow_menu_40"));
 		menuGrafic = new JCheckBoxMenuItem(textbundle.getString("dialog_mainWindow_menu_41"));
 		menuGrafic.addActionListener(this);
@@ -1892,7 +1951,7 @@ implements ActionListener, ChangeListener
 		menuDocumentGenerate.setActionCommand("documentgenerate");
 		menuOutput.add(menuDocumentGenerate);
 		menuBar.add(menuOutput);
-		//menuHelp
+		// menuHelp
 		menuHelp = new JMenu(textbundle.getString("dialog_mainWindow_menu_50"));
 		menuAbout = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_51"));
 		menuAbout.addActionListener(this);
@@ -1903,12 +1962,12 @@ implements ActionListener, ChangeListener
 	}
 
 	/**
-	 * method:         main
-	 * description:    main method of pictobrick
-	 * @author         Tobias Reichling
+	 * method: main
+	 * description: main method of pictobrick
+	 *
+	 * @author Tobias Reichling
 	 */
-	public static void main(String[] args)
-	{
-		MainWindow mainWindow = new MainWindow();
+	public static void main(final String[] args) {
+		final MainWindow mainWindow = new MainWindow();
 	}
 }

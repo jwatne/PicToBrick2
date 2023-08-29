@@ -29,8 +29,8 @@ public class DataProcessor {
 	private final Calculator calculation;
 	private final DataProcessor dataProcessing;
 	private Vector<String> info1, info2;
-	private Vector quantisationInfo;
-	private Vector tilingInfo;
+	private Vector<Object> quantisationInfo;
+	private Vector<Object> tilingInfo;
 	private boolean threeDEffect, statisticOutput;
 	private int quantisationAlgo, tilingAlgo;
 	private NaiveRgbQuantizer naiveQuantisation;
@@ -86,8 +86,9 @@ public class DataProcessor {
 		this.quantisationAlgo = quantisation;
 		dataManagement.generateMosaic(mosaicWidth, mosaicHeight);
 		// Vectors for dialog imput
-		quantisationInfo = new Vector();
-		tilingInfo = new Vector();
+		quantisationInfo = new Vector<>();
+		tilingInfo = new Vector<>();
+
 		// Call dialogs -----------------------------------------------------------
 		switch (quantisationAlgo) {
 			case 1: {
@@ -124,10 +125,9 @@ public class DataProcessor {
 			}
 		}
 		switch (tilingAlgo) {
-			case 1: {
+			case 1:
 				break;
-			}
-			case 2: {
+			case 2:
 				// moldingOptimisation
 				// Optimisation dialog only in combination with the 3 methods below
 				if (quantisationAlgo == 2) {
@@ -141,11 +141,9 @@ public class DataProcessor {
 							textbundle.getString("algorithm_patternDithering"));
 				} else
 					break;
-			}
-			case 3: {
+			case 3:
 				break;
-			}
-			case 4: {
+			case 4:
 				// Stability
 				tilingInfo = mainWindow.dialogStabilityOptimisation();
 				tilingInfo.insertElementAt(quantisationAlgo, 0);
@@ -159,10 +157,8 @@ public class DataProcessor {
 					}
 				}
 				break;
-			}
-			default: {
+			default:
 				break;
-			}
 		}
 		// Algorithms
 		// ----------------------------------------------------------------------------
