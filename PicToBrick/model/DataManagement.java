@@ -7,6 +7,7 @@ import javax.imageio.stream.*;
 import PicToBrick.service.DataProcessor;
 
 import java.util.*;
+import java.util.List;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -187,7 +188,7 @@ public class DataManagement {
 	 * @author Adrian Schuetz
 	 * @return Vector[][]
 	 */
-	public Vector[][] getMosaic() {
+	public List<List<Vector<String>>> getMosaic() {
 		return mosaic.getMosaic();
 	}
 
@@ -198,7 +199,7 @@ public class DataManagement {
 	 * @author Adrian Schuetz
 	 * @return Vector[][]
 	 */
-	public Vector[][] mosaicCopy() {
+	public List<List<Vector<String>>> mosaicCopy() {
 		return mosaic.mosaicCopy();
 	}
 

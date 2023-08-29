@@ -3,6 +3,7 @@ package PicToBrick.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.image.*;
 
@@ -621,7 +622,7 @@ public class DataProcessor {
 	 * @author Adrian Schuetz
 	 * @return Vector[][]
 	 */
-	public Vector[][] getMosaic() {
+	public List<List<Vector<String>>> getMosaic() {
 		return dataManagement.getMosaic();
 	}
 

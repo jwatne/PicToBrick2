@@ -68,8 +68,8 @@ public class CostsOptimizer
 		// run through the image by random - determine element
 		String currentColor = "";
 		Enumeration<ElementObject> sorted;
-		Vector pixel;
-		Vector pixel2;
+		Vector<String> pixel;
+		Vector<String> pixel2;
 		ElementObject currentElement;
 		boolean elementSet = false;
 		Vector<Integer> elementCoords;
@@ -90,7 +90,7 @@ public class CostsOptimizer
 			colorRow = (Integer) coordsEnum.nextElement();
 			colorColumn = (Integer) coordsEnum.nextElement();
 			// pixel of the current position
-			pixel = mosaic.getMosaic()[colorRow][colorColumn];
+			pixel = mosaic.getMosaic().get(colorRow).get(colorColumn);
 
 			// if the pixel is not allready covered by an element
 			if (pixel.size() == 1) {
@@ -105,26 +105,26 @@ public class CostsOptimizer
 						&& (colorColumn > 0)
 						&& (colorColumn < mosaicWidth - 1)
 						// top: vector contains a object which is not the current color
-						&& (((mosaic.getMosaic()[colorRow - 1][colorColumn].size() == 1)
-								&& !(((String) (mosaic.getMosaic()[colorRow - 1][colorColumn].get(0)))
+						&& (((mosaic.getMosaic().get(colorRow - 1).get(colorColumn).size() == 1)
+								&& !(((String) (mosaic.getMosaic().get(colorRow - 1).get(colorColumn).get(0)))
 										.equals(currentColor)))
 								// or vector is empty or 2 objects (pixel is covered)
-								|| (mosaic.getMosaic()[colorRow - 1][colorColumn].size() != 1))
+								|| (mosaic.getMosaic().get(colorRow - 1).get(colorColumn).size() != 1))
 						// bottom:
-						&& (((mosaic.getMosaic()[colorRow + 1][colorColumn].size() == 1)
-								&& !(((String) (mosaic.getMosaic()[colorRow + 1][colorColumn].get(0)))
+						&& (((mosaic.getMosaic().get(colorRow + 1).get(colorColumn).size() == 1)
+								&& !(((String) (mosaic.getMosaic().get(colorRow + 1).get(colorColumn).get(0)))
 										.equals(currentColor)))
-								|| (mosaic.getMosaic()[colorRow + 1][colorColumn].size() != 1))
+								|| (mosaic.getMosaic().get(colorRow + 1).get(colorColumn).size() != 1))
 						// right:
-						&& (((mosaic.getMosaic()[colorRow][colorColumn + 1].size() == 1)
-								&& !(((String) (mosaic.getMosaic()[colorRow][colorColumn + 1].get(0)))
+						&& (((mosaic.getMosaic().get(colorRow).get(colorColumn + 1).size() == 1)
+								&& !(((String) (mosaic.getMosaic().get(colorRow).get(colorColumn + 1).get(0)))
 										.equals(currentColor)))
-								|| (mosaic.getMosaic()[colorRow][colorColumn + 1].size() != 1))
+								|| (mosaic.getMosaic().get(colorRow).get(colorColumn + 1).size() != 1))
 						// left:
-						&& (((mosaic.getMosaic()[colorRow][colorColumn - 1].size() == 1)
-								&& !(((String) (mosaic.getMosaic()[colorRow][colorColumn - 1].get(0)))
+						&& (((mosaic.getMosaic().get(colorRow).get(colorColumn - 1).size() == 1)
+								&& !(((String) (mosaic.getMosaic().get(colorRow).get(colorColumn - 1).get(0)))
 										.equals(currentColor)))
-								|| (mosaic.getMosaic()[colorRow][colorColumn - 1].size() != 1))) {
+								|| (mosaic.getMosaic().get(colorRow).get(colorColumn - 1).size() != 1))) {
 					// set current element to basis element
 					currentElement = configuration.getElement(configuration.getBasisName());
 					// set mosaic element (color and element)
@@ -180,8 +180,8 @@ public class CostsOptimizer
 													elementTop = elementRow;
 												}
 
-												pixel2 = mosaic.getMosaic()[(colorRow + elementRow)
-														- top][(colorColumn + elementColumn) - left];
+												pixel2 = mosaic.getMosaic().get((colorRow + elementRow)
+														- top).get((colorColumn + elementColumn) - left);
 
 												if (!pixel2.isEmpty()) {
 													if (!((String) (pixel2.get(0))).equals(currentColor)) {
