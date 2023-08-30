@@ -1,7 +1,5 @@
 package PicToBrick.service;
 
-import java.util.Enumeration;
-import java.util.Random;
 import javax.swing.*;
 
 import PicToBrick.model.ColorObject;
@@ -20,7 +18,6 @@ import java.util.*;
  */
 public class MoldingOptimizer
 		implements Tiler {
-
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	private final DataProcessor dataProcessing;
 	private int percent = 0;
@@ -35,7 +32,7 @@ public class MoldingOptimizer
 	private int pixelCount;
 	private int pixelCounter;
 	private Configuration configuration;
-	private final Vector dialogSelection;
+	private final Vector<Object> dialogSelection;
 	private int optimisationMethod;
 	private int pixelColorChanges;
 
@@ -49,7 +46,7 @@ public class MoldingOptimizer
 	 * @param Vector        dialogSelection
 	 */
 	public MoldingOptimizer(final DataProcessor dataProcessing, final Calculator calculation,
-			final Vector dialogSelection) {
+			final Vector<Object> dialogSelection) {
 		this.dataProcessing = dataProcessing;
 		this.dialogSelection = dialogSelection;
 	}

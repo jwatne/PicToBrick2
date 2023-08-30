@@ -289,32 +289,33 @@ public class OutputFileGenerator {
 	 * @return message error
 	 */
 	public String generateDocuments(final boolean grafic, final boolean configuration, final boolean material,
-			final boolean instruction, final boolean xml, final Enumeration infos) {
+			final boolean instruction, final boolean xml, final Enumeration<String> infos) {
 		String error = new String("");
 		// index.html
 		final StringBuffer index = new StringBuffer();
 		index.append(head);
 		index.append(index_menu_start);
+
 		if (grafic) {
 			index.append(index_menu_grafic);
 		}
-		;
+
 		if (configuration) {
 			index.append(index_menu_configuration);
 		}
-		;
+
 		if (material) {
 			index.append(index_menu_material);
 		}
-		;
+
 		if (instruction) {
 			index.append(index_menu_instruction);
 		}
-		;
+
 		if (xml) {
 			index.append(index_menu_xml);
 		}
-		;
+
 		index.append(index_menu_additional);
 		index.append(projectname);
 		index.append(project);
@@ -329,27 +330,29 @@ public class OutputFileGenerator {
 		index.append((width2 / 100) + textbundle.getString("output_decimalPoint") + (width2 % 100) + " x "
 				+ (height2 / 100) + textbundle.getString("output_decimalPoint") + (height2 % 100));
 		index.append(index_content_project_4);
+
 		if (grafic) {
 			index.append(index_content_grafic);
 		}
-		;
+
 		if (configuration) {
 			index.append(index_content_configuration);
 		}
-		;
+
 		if (material) {
 			index.append(index_content_material);
 		}
-		;
+
 		if (instruction) {
 			index.append(index_content_instruction);
 		}
-		;
+
 		if (xml) {
 			index.append(index_content_xml);
 		}
-		;
+
 		index.append(end);
+
 		if (!(dataProcessing.generateUTFOutput(index.toString(), "index.html", false))) {
 			error = error + "index.html " + textbundle.getString("output_outputFiles_38") + ".\n\r";
 		}
@@ -964,6 +967,7 @@ public class OutputFileGenerator {
 
 		// additional.html
 		final StringBuffer additionalString = new StringBuffer();
+
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
@@ -972,33 +976,36 @@ public class OutputFileGenerator {
 			});
 		} catch (final Exception e) {
 		}
+
 		additionalString.append(head);
 		additionalString.append(menu_start);
+
 		if (grafic) {
 			additionalString.append(menu_grafic);
 		}
-		;
+
 		if (configuration) {
 			additionalString.append(menu_configuration);
 		}
-		;
+
 		if (material) {
 			additionalString.append(menu_material);
 		}
-		;
+
 		if (instruction) {
 			additionalString.append(menu_instruction);
 		}
-		;
+
 		if (xml) {
 			additionalString.append(menu_xml);
 		}
-		;
+
 		additionalString.append(menu_additional);
 		additionalString.append(projectname);
 		additionalString.append(project);
 		additionalString.append(project_end);
 		additionalString.append(additional_start);
+
 		if (!infos.hasMoreElements()) {
 			additionalString.append(textbundle.getString("output_outputFiles_43"));
 			additionalString.append(additional_cell_end);
@@ -1008,10 +1015,13 @@ public class OutputFileGenerator {
 				additionalString.append(additional_cell_end);
 			}
 		}
+
 		additionalString.append(end);
+
 		if (!(dataProcessing.generateUTFOutput(additionalString.toString(), "additional.html", true))) {
 			error = error + "additional.html " + textbundle.getString("output_outputFiles_38") + ".\n\r";
 		}
+
 		return error;
 	}
 }

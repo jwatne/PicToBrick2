@@ -91,39 +91,32 @@ public class DataProcessor {
 
 		// Call dialogs -----------------------------------------------------------
 		switch (quantisationAlgo) {
-			case 1: {
+			case 1:
 				break;
-			}
-			case 2: {
+			case 2:
 				// FloydSteinberg
 				quantisationInfo = mainWindow
 						.dialogFloydSteinberg(dataManagement.getCurrentConfiguration().getAllColors());
 				break;
-			}
-			case 3: {
+			case 3:
 				break;
-			}
-			case 4: {
+			case 4:
 				// Pattern dithering
 				quantisationInfo = mainWindow.dialogPatternDithering();
 				break;
-			}
-			case 5: {
+			case 5:
 				break;
-			}
-			case 6: {
+			case 6:
 				// Slicing
 				quantisationInfo = mainWindow.dialogSlicingThreshold(mainWindow.dialogSlicingColor(),
 						dataManagement.getCurrentConfiguration().getAllColors());
 				break;
-			}
-			case 7: {
+			case 7:
 				break;
-			}
-			default: {
+			default:
 				break;
-			}
 		}
+
 		switch (tilingAlgo) {
 			case 1:
 				break;
@@ -147,19 +140,23 @@ public class DataProcessor {
 				// Stability
 				tilingInfo = mainWindow.dialogStabilityOptimisation();
 				tilingInfo.insertElementAt(quantisationAlgo, 0);
+
 				if (quantisationAlgo == 2) {
 					tilingInfo.add(quantisationInfo.elementAt(0));
 					tilingInfo.add(quantisationInfo.elementAt(1));
 				} else if (quantisationAlgo == 6) {
-					final Enumeration quantisationInfoEnum = quantisationInfo.elements();
+					final Enumeration<Object> quantisationInfoEnum = quantisationInfo.elements();
+
 					while (quantisationInfoEnum.hasMoreElements()) {
 						tilingInfo.add(quantisationInfoEnum.nextElement());
 					}
 				}
+
 				break;
 			default:
 				break;
 		}
+
 		// Algorithms
 		// ----------------------------------------------------------------------------
 		mainWindow.refreshProgressBarAlgorithm(0, 1);
@@ -277,7 +274,7 @@ public class DataProcessor {
 		final SwingWorker worker = new SwingWorker() {
 			public Object construct() {
 				switch (tilingAlgo) {
-					case 1: {
+					case 1:
 						elementSizeOptimisation = new ElementSizeOptimizer(dataProcessing, calculation);
 						elementSizeOptimisation.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
@@ -313,14 +310,14 @@ public class DataProcessor {
 							}
 						}
 						break;
-					}
-					case 2: {
+					case 2:
 						// Copy the mosaic for statistic evaluation
 						if (statisticOutput) {
 							statisticMosaic = new Mosaic(dataManagement.getMosaicWidth(),
 									dataManagement.getMosaicHeight(), dataManagement);
 							statisticMosaic.setMosaic(dataManagement.mosaicCopy());
 						}
+
 						// now the real algorithm
 						moldingOptimisation = new MoldingOptimizer(dataProcessing, calculation, tilingInfo);
 						moldingOptimisation.tiling(dataManagement.getMosaicWidth(),
@@ -329,11 +326,13 @@ public class DataProcessor {
 								dataManagement.getMosaicInstance(),
 								false);
 						moldingOptimisation = null;
+
 						// If the user chooses the improved molding optimisation:
 						// Statistic evaluation with molding optimisation (without improvements)
 						// else statistic evaluation with element size optimisation
 						if (statisticOutput) {
 							dataProcessing.setInfo(textbundle.getString("output_dataProcessing_1") + ":", 3);
+
 							if (tilingInfo.isEmpty() || ((String) tilingInfo.elementAt(0)).equals("no")) {
 								// Element size optimisation
 								elementSizeOptimisation = new ElementSizeOptimizer(dataProcessing, calculation);
@@ -345,7 +344,7 @@ public class DataProcessor {
 								elementSizeOptimisation = null;
 							} else {
 								// Molding optimisation (without improvements)
-								final Vector no = new Vector();
+								final Vector<Object> no = new Vector<>();
 								no.add("no");
 								moldingOptimisation = new MoldingOptimizer(dataProcessing, calculation, no);
 								moldingOptimisation.tiling(dataManagement.getMosaicWidth(),
@@ -356,15 +355,16 @@ public class DataProcessor {
 								moldingOptimisation = null;
 							}
 						}
+
 						break;
-					}
-					case 3: {
+					case 3:
 						// Copy the mosaic for statistic evaluation
 						if (statisticOutput) {
 							statisticMosaic = new Mosaic(dataManagement.getMosaicWidth(),
 									dataManagement.getMosaicHeight(), dataManagement);
 							statisticMosaic.setMosaic(dataManagement.mosaicCopy());
 						}
+
 						costsOptimisation = new CostsOptimizer(dataProcessing, calculation);
 						costsOptimisation.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
@@ -384,8 +384,7 @@ public class DataProcessor {
 							elementSizeOptimisation = null;
 						}
 						break;
-					}
-					case 4: {
+					case 4:
 						// Only print statistic if improvements are selected
 						if (statisticOutput) {
 							// Copy the mosaic for statistic evaluation
@@ -418,7 +417,7 @@ public class DataProcessor {
 						stabilityOptimisation = null;
 						// statistic only for whole image improvements
 						if (statisticOutput && !((Boolean) tilingInfo.elementAt(2))) {
-							final Vector noOptimisation = new Vector();
+							final Vector<Object> noOptimisation = new Vector<>();
 							noOptimisation.add(0);
 							noOptimisation.add(false);
 							noOptimisation.add(false);
@@ -432,8 +431,7 @@ public class DataProcessor {
 							stabilityOptimisation = null;
 						}
 						break;
-					}
-					case 5: {
+					case 5:
 						basicElementsOnly = new BasicElementsOnlyTiler(dataProcessing, calculation);
 						basicElementsOnly.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
@@ -443,11 +441,10 @@ public class DataProcessor {
 						basicElementsOnly = null;
 						// no statistic evaluation
 						break;
-					}
-					default: {
+					default:
 						break;
-					}
 				}
+
 				return true;
 			}
 
@@ -676,7 +673,7 @@ public class DataProcessor {
 	 * @return message (error/sucess)
 	 */
 	public String generateDocuments(final boolean image, final boolean configuration, final boolean material,
-			final boolean instruction, final boolean xml, final Enumeration infos) {
+			final boolean instruction, final boolean xml, final Enumeration<String> infos) {
 		outputFiles.setProject(dataManagement.generateFolderOutput());
 		return outputFiles.generateDocuments(image, configuration, material, instruction, xml, infos);
 	}
@@ -861,7 +858,7 @@ public class DataProcessor {
 	 * @author Adrian Schuetz
 	 * @return vector with possible configurations
 	 */
-	public Vector getConfiguration() {
+	public Vector<String> getConfiguration() {
 		return dataManagement.getConfiguration();
 	}
 

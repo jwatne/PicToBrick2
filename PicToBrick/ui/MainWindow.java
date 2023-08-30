@@ -67,7 +67,7 @@ public class MainWindow
 	private PictureElement guiPictureElementTop, guiPictureElementBottom;
 	private JLabel guiLabelImage, guiLabelConfiguration, guiLabelWidth, guiLabelHeight, guiLabelZoom1, guiLabelZoom2;
 	private JLabel guiLabelQuantisation, guiLabelTiling, guiLabelOutput, guiLabelSeparator;
-	private JComboBox guiComboBoxInterpolation;
+	private JComboBox<Vector<String>> guiComboBoxInterpolation;
 	private JSplitPane guiSplitPane;
 	private JScrollPane guiScrollPaneTop, guiScrollPaneBottom;
 	private JTextField guiTextFieldInformation;
@@ -546,8 +546,8 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 * @return vector result
 	 */
-	public Vector dialogPatternDithering() {
-		final Vector result = new Vector();
+	public Vector<Object> dialogPatternDithering() {
+		final Vector<Object> result = new Vector<>();
 		PatternDitheringDialog patternDitheringDialog = new PatternDitheringDialog(this);
 		result.add(patternDitheringDialog.getDistance());
 		patternDitheringDialog = null;
@@ -577,7 +577,7 @@ public class MainWindow
 	 * @param colors        (Enumeration)
 	 * @return thresholds (vector)
 	 */
-	public Vector dialogSlicingThreshold(final int colorQuantity, final Enumeration colors) {
+	public Vector<Object> dialogSlicingThreshold(final int colorQuantity, final Enumeration colors) {
 		final SlicingThresholdDialog slicingThresholdDialog = new SlicingThresholdDialog(this, colorQuantity, colors);
 		return slicingThresholdDialog.getSelection();
 	}
@@ -603,7 +603,7 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 * @return Vector: optimisation y/n; border/complete; maximum gap height
 	 */
-	public Vector dialogStabilityOptimisation() {
+	public Vector<Object> dialogStabilityOptimisation() {
 		final StabilityOptimisationDialog stabilityOptimisationDialog = new StabilityOptimisationDialog(this);
 		return stabilityOptimisationDialog.getMethod();
 	}
@@ -1659,7 +1659,7 @@ public class MainWindow
 		guiRadioAlgorithm24.setActionCommand("algorithm24");
 		guiRadioAlgorithm25.setActionCommand("algorithm25");
 		guiRadioAlgorithm25.setSelected(true);
-		final Vector guiComboBoxInterpolationsVerfahren = new Vector();
+		final Vector<String> guiComboBoxInterpolationsVerfahren = new Vector<>();
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_1"));
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_2"));
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_3"));
