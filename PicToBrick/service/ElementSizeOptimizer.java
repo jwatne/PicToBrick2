@@ -1,14 +1,15 @@
 package PicToBrick.service;
 
 import java.util.Enumeration;
-import javax.swing.*;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
+import javax.swing.SwingUtilities;
 
 import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
 import PicToBrick.model.ElementObject;
 import PicToBrick.model.Mosaic;
-
-import java.util.*;
 
 /**
  * class: ElementSizeOptimizer
@@ -64,24 +65,27 @@ public class ElementSizeOptimizer
 		this.statisticOutput = statistic;
 		referenceValue = (mosaicWidth * mosaicHeight) / 100;
 		if (referenceValue == 0) {
+
 			referenceValue = 1;
 		}
+
 		// if the algorithm runs in the statistic mode
 		// some arrays must be initialisized
 		if (statistic && dataProcessing.getTilingAlgorithm() == 2) {
 			moldingInit(configuration);
 		}
+
 		// build vector of all elements
-		final Vector elementsSorted = sortElementsBySize(configuration.getAllElements());
+		final Vector<ElementObject> elementsSorted = sortElementsBySize(configuration.getAllElements());
 		// scan the mosaic per random coordinates
 		// compute fitting element for each pixel
 		String currentColor = "";
-		Enumeration sorted;
+		Enumeration<ElementObject> sorted;
 		Vector<String> pixel;
 		Vector<String> pixel2;
 		ElementObject currentElement;
 		boolean elementSet = false;
-		Vector elementCoords;
+		Vector<Integer> elementCoords;
 		// coordinates / position where the element will be set in the mosaic
 		int left = 0;
 		int top = 0;
@@ -91,8 +95,8 @@ public class ElementSizeOptimizer
 		// current coordinates in the mosaic
 		int colorRow, colorColumn;
 		// compute random coordinates
-		final Vector coords = calculation.randomCoordinates(mosaicWidth, mosaicHeight);
-		final Enumeration coordsEnum = coords.elements();
+		final Vector<Integer> coords = calculation.randomCoordinates(mosaicWidth, mosaicHeight);
+		final Enumeration<Integer> coordsEnum = coords.elements();
 
 		// scan the mosaic per random coordinates
 		while (coordsEnum.hasMoreElements()) {
@@ -143,6 +147,7 @@ public class ElementSizeOptimizer
 					mosaic.setElement(colorRow, colorColumn, currentElement.getName(), true);
 					elements++;
 					elementCounter++;
+
 					// if the algorithm runs in the statistic mode (with molding optimisation)
 					// we have to count the used elements or the costs
 					if (statistic && dataProcessing.getTilingAlgorithm() == 2) {
@@ -155,17 +160,20 @@ public class ElementSizeOptimizer
 					// build a size-sorted enumeration of all alements
 					sorted = elementsSorted.elements();
 					elementSet = false;
+
 					while (sorted.hasMoreElements() && !elementSet) {
 						currentElement = (ElementObject) sorted.nextElement();
 						// compute random coordinates for the element matrix
 						elementCoords = calculation.randomCoordinates(currentElement.getWidth(),
 								currentElement.getHeight());
-						final Enumeration elementCoordsEnum = elementCoords.elements();
+						final Enumeration<Integer> elementCoordsEnum = elementCoords.elements();
+
 						while (elementCoordsEnum.hasMoreElements() && !elementSet) {
 							// compute the position of the element matrix
 							// for testing the element with the current mosaic position
 							top = (Integer) elementCoordsEnum.nextElement();
 							left = (Integer) elementCoordsEnum.nextElement();
+
 							// test only if the the computet position in the element matrix
 							// is "true"
 							if (currentElement.getMatrix()[top][left]) {
@@ -435,6 +443,7 @@ public class ElementSizeOptimizer
 				return x;
 			}
 		}
+
 		return -1;
 	}
 
@@ -446,15 +455,18 @@ public class ElementSizeOptimizer
 	 * @param configuration
 	 */
 	private void moldingInit(final Configuration configuration) {
-		final Enumeration colorEnum = configuration.getAllColors();
+		final Enumeration<ColorObject> colorEnum = configuration.getAllColors();
 		final int colorCount = configuration.getQuantityColors();
 		// init array color
 		colorArray = new String[colorCount];
+
 		for (int i = 0; i < colorCount; i++) {
 			colorArray[i] = ((ColorObject) colorEnum.nextElement()).getName();
 		}
+
 		// init array element counter
 		elementArray = new int[colorCount][5];
+
 		for (int j = 0; j < colorCount; j++) {
 			elementArray[j][0] = 0; // 0 => 1x1
 			elementArray[j][1] = 0; // 1 => 1x2
@@ -472,24 +484,28 @@ public class ElementSizeOptimizer
 	 * @param elementsUnsorted
 	 * @return elementsSorted
 	 */
-	private Vector sortElementsBySize(final Enumeration elementsUnsorted) {
+	private Vector<ElementObject> sortElementsBySize(final Enumeration<ElementObject> elementsUnsorted) {
 		int size = 0;
 		boolean included = false;
 		int position;
 		ElementObject supportElement;
-		final Vector elementsSorted = new Vector();
+		final Vector<ElementObject> elementsSorted = new Vector<>();
+
 		// sort element (by size)
 		while (elementsUnsorted.hasMoreElements()) {
 			supportElement = ((ElementObject) elementsUnsorted.nextElement());
+
 			if (elementsSorted.size() == 0) {
 				elementsSorted.add(supportElement);
 			} else {
 				size = computeElementSize(supportElement);
 				position = 0;
 				included = false;
-				final Enumeration supportEnum = elementsSorted.elements();
+				final Enumeration<ElementObject> supportEnum = elementsSorted.elements();
+
 				while (supportEnum.hasMoreElements() && !included) {
 					final ElementObject anotherElement = (ElementObject) supportEnum.nextElement();
+
 					if (size >= computeElementSize(anotherElement)) {
 						elementsSorted.add(position, supportElement);
 						included = true;
@@ -497,11 +513,13 @@ public class ElementSizeOptimizer
 						position++;
 					}
 				}
+
 				if (!included) {
 					elementsSorted.add(supportElement);
 				}
 			}
 		}
+
 		return elementsSorted;
 	}
 
