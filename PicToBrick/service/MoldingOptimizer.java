@@ -224,34 +224,34 @@ public class MoldingOptimizer
 								final Enumeration<ElementObject> criticalElements4 = computeElements(4, 2, 2);
 
 								while (criticalElements4.hasMoreElements()) {
-									criticalElements.add((ElementObject) criticalElements4.nextElement());
+									criticalElements.add(criticalElements4.nextElement());
 								}
 							}
 
 							// corner element
 							if (elementArrayOptimisation[currentColorNumber][3] == 1) {
-								final Enumeration criticalElements3 = computeElements(3, 2, 2);
+								final Enumeration<ElementObject> criticalElements3 = computeElements(3, 2, 2);
 
 								while (criticalElements3.hasMoreElements()) {
-									criticalElements.add((ElementObject) criticalElements3.nextElement());
+									criticalElements.add(criticalElements3.nextElement());
 								}
 							}
 
 							// 1x3 element
 							if (elementArrayOptimisation[currentColorNumber][2] == 1) {
-								final Enumeration criticalElements2 = computeElements(3, 1, 3);
+								final Enumeration<ElementObject> criticalElements2 = computeElements(3, 1, 3);
 
 								while (criticalElements2.hasMoreElements()) {
-									criticalElements.add((ElementObject) criticalElements2.nextElement());
+									criticalElements.add(criticalElements2.nextElement());
 								}
 							}
 
 							// 1x2 element
 							if (elementArrayOptimisation[currentColorNumber][1] == 1) {
-								final Enumeration criticalElements1 = computeElements(2, 1, 2);
+								final Enumeration<ElementObject> criticalElements1 = computeElements(2, 1, 2);
 
 								while (criticalElements1.hasMoreElements()) {
-									criticalElements.add((ElementObject) criticalElements1.nextElement());
+									criticalElements.add(criticalElements1.nextElement());
 								}
 							}
 
@@ -259,17 +259,19 @@ public class MoldingOptimizer
 							// for each element we check, if we can used it in the
 							// mosaic with a maximal re-coloring of 1 pixel
 							if (criticalElements.size() > 0) {
-								final Enumeration criticalElementsEnum = criticalElements.elements();
+								final Enumeration<ElementObject> criticalElementsEnum = criticalElements.elements();
 
 								while (criticalElementsEnum.hasMoreElements() && !elementSet) {
-									currentElement = (ElementObject) criticalElementsEnum.nextElement();
+									currentElement = criticalElementsEnum.nextElement();
 									// find the left element in the top row
 									left = -1;
+
 									for (int i = 0; i < currentElement.getWidth(); i++) {
 										if (currentElement.getMatrix()[0][i] && left == -1) {
 											left = i;
 										}
 									}
+
 									// check mosaic borders
 									// bottom
 									if (((colorRow + currentElement.getHeight() - 1) < mosaicHeight)
@@ -341,7 +343,7 @@ public class MoldingOptimizer
 							// the normal algorithm is used here:
 							// scan sorted element vector and check for each element
 						while (sorted.hasMoreElements() && !elementSet) {
-							currentElement = (ElementObject) sorted.nextElement();
+							currentElement = sorted.nextElement();
 							// find the left position in the top row of the element matrix
 							left = -1;
 
@@ -434,6 +436,7 @@ public class MoldingOptimizer
 	 */
 	private int computeElementSize(final ElementObject element) {
 		int result = 0;
+
 		for (int row = 0; row < element.getHeight(); row++) {
 			for (int column = 0; column < element.getWidth(); column++) {
 				if (element.getMatrix()[row][column]) {
@@ -441,6 +444,7 @@ public class MoldingOptimizer
 				}
 			}
 		}
+
 		return result;
 	}
 
@@ -452,9 +456,9 @@ public class MoldingOptimizer
 	 * @param elementsUnsorted
 	 * @return elementsSorted
 	 */
-	private Vector<ElementObject> sortElementsByAvailability(final Enumeration elementsUnsorted) {
+	private Vector<ElementObject> sortElementsByAvailability(final Enumeration<ElementObject> elementsUnsorted) {
 		// vector init
-		final Vector elementsSorted = new Vector();
+		final Vector<ElementObject> elementsSorted = new Vector<>();
 		// array init
 		final double[] referenceValues = new double[5];
 		// -------------------
@@ -502,8 +506,10 @@ public class MoldingOptimizer
 		boolean included = false;
 		int position;
 		ElementObject supportElement;
+
 		while (elementsUnsorted.hasMoreElements()) {
-			supportElement = ((ElementObject) elementsUnsorted.nextElement());
+			supportElement = elementsUnsorted.nextElement();
+
 			// if the sorted vector is empty, add the next element ...
 			if (elementsSorted.size() == 0) {
 				elementsSorted.add(supportElement);
@@ -512,9 +518,11 @@ public class MoldingOptimizer
 				// it accordingly into the vector
 				position = 0;
 				included = false;
-				final Enumeration supportEnum = elementsSorted.elements();
+				final Enumeration<ElementObject> supportEnum = elementsSorted.elements();
+
 				while (supportEnum.hasMoreElements() && !included) {
-					final ElementObject anotherElement = (ElementObject) supportEnum.nextElement();
+					final ElementObject anotherElement = supportEnum.nextElement();
+
 					if (referenceValues[computeElementNumber(supportElement)] >= referenceValues[computeElementNumber(
 							anotherElement)]) {
 						elementsSorted.add(position, supportElement);
@@ -523,11 +531,13 @@ public class MoldingOptimizer
 						position++;
 					}
 				}
+
 				if (!included) {
 					elementsSorted.add(supportElement);
 				}
 			}
 		}
+
 		return elementsSorted;
 	}
 
@@ -547,7 +557,7 @@ public class MoldingOptimizer
 		final Enumeration<ElementObject> allElements = configuration.getAllElements();
 
 		while (allElements.hasMoreElements()) {
-			element = (ElementObject) allElements.nextElement();
+			element = allElements.nextElement();
 
 			// check width and height ...
 			if (element.getWidth() == width && element.getHeight() == height) {
@@ -814,6 +824,7 @@ public class MoldingOptimizer
 	 */
 	private int computeElementNumber(final ElementObject supportElement) {
 		int counter = 0;
+
 		for (int row = 0; row < supportElement.getHeight(); row++) {
 			for (int column = 0; column < supportElement.getWidth(); column++) {
 				if (supportElement.getMatrix()[row][column]) {
@@ -821,26 +832,22 @@ public class MoldingOptimizer
 				}
 			}
 		}
+
 		switch (counter) {
-			case 1: {
+			case 1:
 				return 0;
-			}
-			case 2: {
+			case 2:
 				return 1;
-			}
-			case 3: {
+			case 3:
 				if (supportElement.getWidth() == 2) {
 					return 3;
 				} else {
 					return 2;
 				}
-			}
-			case 4: {
+			case 4:
 				return 4;
-			}
-			default: {
+			default:
 				return -1;
-			}
 		}
 	}
 
@@ -855,14 +862,19 @@ public class MoldingOptimizer
 	 */
 	private boolean consistencyCheck(final Configuration ministeckSystem, final Configuration configuration) {
 		// elementsvektoren erstellen
-		final Vector systemConf = new Vector();
-		final Vector currentConf = new Vector();
-		for (final Enumeration systemEnum = ministeckSystem.getAllElements(); systemEnum.hasMoreElements();) {
-			systemConf.add((ElementObject) systemEnum.nextElement());
+		final Vector<ElementObject> systemConf = new Vector<>();
+		final Vector<ElementObject> currentConf = new Vector<>();
+
+		for (final Enumeration<ElementObject> systemEnum = ministeckSystem.getAllElements(); systemEnum
+				.hasMoreElements();) {
+			systemConf.add(systemEnum.nextElement());
 		}
-		for (final Enumeration currentEnum = configuration.getAllElements(); currentEnum.hasMoreElements();) {
-			currentConf.add((ElementObject) currentEnum.nextElement());
+
+		for (final Enumeration<ElementObject> currentEnum = configuration.getAllElements(); currentEnum
+				.hasMoreElements();) {
+			currentConf.add(currentEnum.nextElement());
 		}
+
 		// not valid if the two vectors have different size!
 		if (!(systemConf.size() == currentConf.size())) {
 			return false;
@@ -871,25 +883,30 @@ public class MoldingOptimizer
 			boolean[][] systemMatrix;
 			int systemWidth, systemHeight;
 			ElementObject supportElement;
-			for (final Enumeration systemMatrixEnum = systemConf.elements(); systemMatrixEnum.hasMoreElements();) {
-				supportElement = ((ElementObject) systemMatrixEnum.nextElement());
+
+			for (final Enumeration<ElementObject> systemMatrixEnum = systemConf.elements(); systemMatrixEnum
+					.hasMoreElements();) {
+				supportElement = (systemMatrixEnum.nextElement());
 				systemMatrix = supportElement.getMatrix();
 				systemWidth = supportElement.getWidth();
 				systemHeight = supportElement.getHeight();
 				counter = 0;
 				// check each element from vector 1 to each element from vector 2
 				boolean found = false;
+
 				while ((counter < currentConf.size()) && (!found)) {
-					if ((systemWidth == ((ElementObject) currentConf.get(counter)).getWidth()) &&
-							(systemHeight == ((ElementObject) currentConf.get(counter)).getHeight())) {
-						if (elementEqual(((ElementObject) currentConf.get(counter)).getMatrix(), systemMatrix,
+					if ((systemWidth == (currentConf.get(counter)).getWidth()) &&
+							(systemHeight == (currentConf.get(counter)).getHeight())) {
+						if (elementEqual((currentConf.get(counter)).getMatrix(), systemMatrix,
 								systemWidth, systemHeight)) {
 							found = true;
 							currentConf.remove(counter);
 						}
 					}
+
 					counter++;
 				}
+
 				if (!found) {
 					return false;
 				}
