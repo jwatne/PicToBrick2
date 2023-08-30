@@ -21,7 +21,7 @@ public class FloydSteinbergQuantizer
 		implements Quantizer {
 	private final DataProcessor dataProcessing;
 	private final Calculator calculation;
-	private final Vector selection;
+	private final Vector<Object> selection;
 	private int percent = 0;
 	private int rows = 0;
 	private int mosaicRow;
@@ -35,7 +35,7 @@ public class FloydSteinbergQuantizer
 	 * @param selection
 	 */
 	public FloydSteinbergQuantizer(final DataProcessor dataProcessing, final Calculator calculation,
-			final Vector selection) {
+			final Vector<Object> selection) {
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 		this.selection = selection;
