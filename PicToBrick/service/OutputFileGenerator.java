@@ -21,229 +21,217 @@ public class OutputFileGenerator {
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 
 	// ############################## all
-	private final static String head = new String(
-			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<title>PicToBrick</title>\r\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\r\n<style type=\"text/css\">\r\n#menu {\r\nleft:0;\r\ntop:10;\r\nwidth:200px;\r\nposition:absolute;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nmargin-left:0;\r\nmargin-top:0;\r\nmargin-right:0;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#content {\r\nmargin-top:0px;\r\nmargin-left:200px;\r\nmargin-right:0px;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#headline {\r\nfont-size:x-large;\r\n}\r\na:link {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:visited {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:hover {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\na:active {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\ntd {\r\npadding-right:10px;\r\npadding-left:10px;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n");
-	private final static String end = new String("<br />\r\n</div>\r\n</body>\r\n</html>");
-	private final static String projectname = new String(
-			"</ul>\r\n</div>\r\n<div id=\"content\">\r\n<p>\r\n<strong>PicToBrick - "
-					+ textbundle.getString("output_outputFiles_1")
-					+ "</strong>\r\n</p>\r\n<p id=\"headline\">\r\n<strong>"
-					+ textbundle.getString("output_outputFiles_2") + ": ");
+	private final static String head = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<title>PicToBrick</title>\r\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\r\n<style type=\"text/css\">\r\n#menu {\r\nleft:0;\r\ntop:10;\r\nwidth:200px;\r\nposition:absolute;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nmargin-left:0;\r\nmargin-top:0;\r\nmargin-right:0;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#content {\r\nmargin-top:0px;\r\nmargin-left:200px;\r\nmargin-right:0px;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#headline {\r\nfont-size:x-large;\r\n}\r\na:link {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:visited {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:hover {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\na:active {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\ntd {\r\npadding-right:10px;\r\npadding-left:10px;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n";
+	private final static String end = "<br />\r\n</div>\r\n</body>\r\n</html>";
+	private final static String projectname = "</ul>\r\n</div>\r\n<div id=\"content\">\r\n<p>\r\n<strong>PicToBrick - "
+			+ textbundle.getString("output_outputFiles_1")
+			+ "</strong>\r\n</p>\r\n<p id=\"headline\">\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_2") + ": ";
 
 	// ############################## all without index.html
-	private final static String menu_start = new String(
-			"<div id=\"menu\">\r\n<ul>\r\n<li>\r\n<a href=\"../index.html\">\r\n"
-					+ textbundle.getString("output_outputFiles_3") + "\r\n</a>\r\n</li>\r\n");
-	private final static String menu_grafic = new String("<li>\r\n<a href=\"grafic.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_4") + "\r\n</a>\r\n</li>\r\n");
-	private final static String menu_configuration = new String("<li>\r\n<a href=\"configuration.html\">\r\n"
+	private final static String menu_start = "<div id=\"menu\">\r\n<ul>\r\n<li>\r\n<a href=\"../index.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_3") + "\r\n</a>\r\n</li>\r\n";
+	private final static String menu_grafic = "<li>\r\n<a href=\"grafic.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_4") + "\r\n</a>\r\n</li>\r\n";
+	private final static String menu_configuration = "<li>\r\n<a href=\"configuration.html\">\r\n"
 			+ textbundle.getString("output_outputFiles_5") + "\r\n</a>\r\n<ul>\r\n<li>\r\n<a href=\"colors.html\">\r\n"
 			+ textbundle.getString("output_outputFiles_6")
 			+ "\r\n</a>\r\n</li>\r\n<li>\r\n<a href=\"elements.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_7") + "\r\n</a>\r\n</li>\r\n</ul>\r\n</li>\r\n");
-	private final static String menu_material = new String("<li>\r\n<a href=\"billofmaterial.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_8") + "\r\n</a>\r\n</li>\r\n");
-	private final static String menu_instruction = new String("<li>\r\n<a href=\"buildinginstruction.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_9") + "\r\n</a>\r\n</li>\r\n");
-	private final static String menu_xml = new String("<li>\r\n<a href=\"xml.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_10") + "\r\n</a>\r\n</li>\r\n");
-	private final static String menu_additional = new String("<li>\r\n<a href=\"additional.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_11") + "\r\n</a>\r\n</li>\r\n");
+			+ textbundle.getString("output_outputFiles_7") + "\r\n</a>\r\n</li>\r\n</ul>\r\n</li>\r\n";
+	private final static String menu_material = "<li>\r\n<a href=\"billofmaterial.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_8") + "\r\n</a>\r\n</li>\r\n";
+	private final static String menu_instruction = "<li>\r\n<a href=\"buildinginstruction.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_9") + "\r\n</a>\r\n</li>\r\n";
+	private final static String menu_xml = "<li>\r\n<a href=\"xml.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_10") + "\r\n</a>\r\n</li>\r\n";
+	private final static String menu_additional = "<li>\r\n<a href=\"additional.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_11") + "\r\n</a>\r\n</li>\r\n";
 	// ---------->all:projectname
-	private final static String project_end = new String("</strong>\r\n</p>\r\n");
+	private final static String project_end = "</strong>\r\n</p>\r\n";
 
 	// ############################## index.html
 	// ---------->all:head
-	private final static String index_menu_start = new String(
-			"<div id=\"menu\">\r\n<ul>\r\n<li>\r\n<a href=\"index.html\">\r\n"
-					+ textbundle.getString("output_outputFiles_3") + "\r\n</a>\r\n</li>\r\n");
-	private final static String index_menu_grafic = new String("<li>\r\n<a href=\"data/grafic.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_4") + "\r\n</a>\r\n</li>\r\n");
-	private final static String index_menu_configuration = new String(
-			"<li>\r\n<a href=\"data/configuration.html\">\r\n" + textbundle.getString("output_outputFiles_5")
-					+ "\r\n</a>\r\n<ul>\r\n<li>\r\n<a href=\"data/colors.html\">\r\n"
-					+ textbundle.getString("output_outputFiles_6")
-					+ "\r\n</a>\r\n</li>\r\n<li>\r\n<a href=\"data/elements.html\">\r\n"
-					+ textbundle.getString("output_outputFiles_7") + "\r\n</a>\r\n</li>\r\n</ul>\r\n</li>\r\n");
-	private final static String index_menu_material = new String("<li>\r\n<a href=\"data/billofmaterial.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_8") + "\r\n</a>\r\n</li>\r\n");
-	private final static String index_menu_instruction = new String(
-			"<li>\r\n<a href=\"data/buildinginstruction.html\">\r\n" + textbundle.getString("output_outputFiles_9")
-					+ "\r\n</a>\r\n</li>\r\n");
-	private final static String index_menu_xml = new String("<li>\r\n<a href=\"data/xml.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_10") + "\r\n</a>\r\n</li>\r\n");
-	private final static String index_menu_additional = new String("<li>\r\n<a href=\"data/additional.html\">\r\n"
-			+ textbundle.getString("output_outputFiles_11") + "\r\n</a>\r\n</li>\r\n");
+	private final static String index_menu_start = "<div id=\"menu\">\r\n<ul>\r\n<li>\r\n<a href=\"index.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_3") + "\r\n</a>\r\n</li>\r\n";
+	private final static String index_menu_grafic = "<li>\r\n<a href=\"data/grafic.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_4") + "\r\n</a>\r\n</li>\r\n";
+	private final static String index_menu_configuration = "<li>\r\n<a href=\"data/configuration.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_5")
+			+ "\r\n</a>\r\n<ul>\r\n<li>\r\n<a href=\"data/colors.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_6")
+			+ "\r\n</a>\r\n</li>\r\n<li>\r\n<a href=\"data/elements.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_7") + "\r\n</a>\r\n</li>\r\n</ul>\r\n</li>\r\n";
+	private final static String index_menu_material = "<li>\r\n<a href=\"data/billofmaterial.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_8") + "\r\n</a>\r\n</li>\r\n";
+	private final static String index_menu_instruction = "<li>\r\n<a href=\"data/buildinginstruction.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_9")
+			+ "\r\n</a>\r\n</li>\r\n";
+	private final static String index_menu_xml = "<li>\r\n<a href=\"data/xml.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_10") + "\r\n</a>\r\n</li>\r\n";
+	private final static String index_menu_additional = "<li>\r\n<a href=\"data/additional.html\">\r\n"
+			+ textbundle.getString("output_outputFiles_11") + "\r\n</a>\r\n</li>\r\n";
 	// ---------->projectname
-	private final static String index_content_project_2 = new String("</strong>\r\n</p>\r\n<p>\r\n<strong>"
-			+ textbundle.getString("output_outputFiles_12") + ":</strong>\r\n<br />\r\n");
+	private final static String index_content_project_2 = "</strong>\r\n</p>\r\n<p>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_12") + ":</strong>\r\n<br />\r\n";
 	// ---------->width x height
-	private final static String index_content_project_3 = new String(
-			" " + textbundle.getString("output_outputFiles_13") + "\r\n<br />\r\n");
+	private final static String index_content_project_3 = " " + textbundle.getString("output_outputFiles_13")
+			+ "\r\n<br />\r\n";
 	// ---------->width x height
-	private final static String index_content_project_4 = new String(" mm\r\n<br />\r\n</p>\r\n");
-	private final static String index_content_grafic = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_4") + "</strong><br />\r\n"
-					+ textbundle.getString("output_outputFiles_14") + "\r\n</p>\r\n");
-	private final static String index_content_configuration = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_5") + "</strong><br />\r\n"
-					+ textbundle.getString("output_outputFiles_15") + "\r\n</p>\r\n");
-	private final static String index_content_material = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_8") + "</strong><br />\r\n"
-					+ textbundle.getString("output_outputFiles_16") + "\r\n</p>\r\n");
-	private final static String index_content_instruction = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_9") + "</strong><br />\r\n"
-					+ textbundle.getString("output_outputFiles_17") + "\r\n</p>\r\n");
-	private final static String index_content_xml = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_10") + "</strong><br />\r\n"
-					+ textbundle.getString("output_outputFiles_18") + "\r\n</p>\r\n");
+	private final static String index_content_project_4 = " mm\r\n<br />\r\n</p>\r\n";
+	private final static String index_content_grafic = "<p>\r\n<strong>" + textbundle.getString("output_outputFiles_4")
+			+ "</strong><br />\r\n"
+			+ textbundle.getString("output_outputFiles_14") + "\r\n</p>\r\n";
+	private final static String index_content_configuration = "<p>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_5") + "</strong><br />\r\n"
+			+ textbundle.getString("output_outputFiles_15") + "\r\n</p>\r\n";
+	private final static String index_content_material = "<p>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_8") + "</strong><br />\r\n"
+			+ textbundle.getString("output_outputFiles_16") + "\r\n</p>\r\n";
+	private final static String index_content_instruction = "<p>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_9") + "</strong><br />\r\n"
+			+ textbundle.getString("output_outputFiles_17") + "\r\n</p>\r\n";
+	private final static String index_content_xml = "<p>\r\n<strong>" + textbundle.getString("output_outputFiles_10")
+			+ "</strong><br />\r\n"
+			+ textbundle.getString("output_outputFiles_18") + "\r\n</p>\r\n";
 	// ---------->all:end
 
 	// ############################## grafic.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String grafic_start = new String("<p>\r\n<strong>"
+	private final static String grafic_start = "<p>\r\n<strong>"
 			+ textbundle.getString("output_outputFiles_4") + "</strong><br />\r\n"
-			+ textbundle.getString("output_outputFiles_19") + "\r\n</p>\r\n<p>\r\n<img src=\"mosaic.jpg\" width=\"");
+			+ textbundle.getString("output_outputFiles_19") + "\r\n</p>\r\n<p>\r\n<img src=\"mosaic.jpg\" width=\"";
 	// ---------->image width
-	private final static String grafic_height = new String("\" height=\"");
+	private final static String grafic_height = "\" height=\"";
 	// ---------->image height
-	private final static String grafic_print_width = new String(
-			"\" alt=\"mosaic\" />\r\n</p>\r\n<p>\r\n<a href=\"mosaic.jpg\">\r\n"
-					+ textbundle.getString("output_outputFiles_20") + "\r\n</a>\r\n</p>\r\n<p>\r\n"
-					+ textbundle.getString("output_outputFiles_21") + " ");
+	private final static String grafic_print_width = "\" alt=\"mosaic\" />\r\n</p>\r\n<p>\r\n<a href=\"mosaic.jpg\">\r\n"
+			+ textbundle.getString("output_outputFiles_20") + "\r\n</a>\r\n</p>\r\n<p>\r\n"
+			+ textbundle.getString("output_outputFiles_21") + " ";
 	// ---------->image print_width
-	private final static String grafic_end = new String(
-			" " + textbundle.getString("output_outputFiles_22") + "\r\n</p>\r\n");
+	private final static String grafic_end = " " + textbundle.getString("output_outputFiles_22") + "\r\n</p>\r\n";
 	// ---------->all:end
 
 	// ############################## configuration.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String configuration_start = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_5") + "</strong><br />\r\n</p>\r\n");
-	private final static String configuration_name = new String(
-			"<p>\r\n" + textbundle.getString("output_outputFiles_23") + ": ");
+	private final static String configuration_start = "<p>\r\n<strong>" + textbundle.getString("output_outputFiles_5")
+			+ "</strong><br />\r\n</p>\r\n";
+	private final static String configuration_name = "<p>\r\n" + textbundle.getString("output_outputFiles_23") + ": ";
 	// ---------->configuration name
-	private final static String configuration_basis_name = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_24") + ": ");
+	private final static String configuration_basis_name = "\r\n<br />\r\n"
+			+ textbundle.getString("output_outputFiles_24") + ": ";
 	// ---------->basis name
-	private final static String configuration_basis_width = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_25") + ": ");
+	private final static String configuration_basis_width = "\r\n<br />\r\n"
+			+ textbundle.getString("output_outputFiles_25") + ": ";
 	// ---------->basis width
-	private final static String configuration_basis_height = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_26") + ": ");
+	private final static String configuration_basis_height = "\r\n<br />\r\n"
+			+ textbundle.getString("output_outputFiles_26") + ": ";
 	// ---------->basis height
-	private final static String configuration_basis_widthmm = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_27") + ": ");
+	private final static String configuration_basis_widthmm = "\r\n<br />\r\n"
+			+ textbundle.getString("output_outputFiles_27") + ": ";
 	// ---------->basis width mm
-	private final static String configuration_end = new String("\r\n</p>\r\n<p>\r\n"
+	private final static String configuration_end = "\r\n</p>\r\n<p>\r\n"
 			+ textbundle.getString("output_outputFiles_28") + " <a href=\"colors.html\">"
 			+ textbundle.getString("output_outputFiles_6") + "</a> " + textbundle.getString("output_outputFiles_29")
 			+ " <a href=\"elements.html\">" + textbundle.getString("output_outputFiles_7") + "</a> "
-			+ textbundle.getString("output_outputFiles_30") + ".\r\n</p>\r\n");
+			+ textbundle.getString("output_outputFiles_30") + ".\r\n</p>\r\n";
 	// ---------->all:end
 
 	// ############################## elements.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String element_start = new String("<p>\r\n<strong>"
-			+ textbundle.getString("output_outputFiles_7") + "</strong>\r\n<br />\r\n</p>\r\n<table>\r\n");
-	private final static String element_cell_start = new String("<tr>\r\n<td>\r\n");
+	private final static String element_start = "<p>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_7") + "</strong>\r\n<br />\r\n</p>\r\n<table>\r\n";
+	private final static String element_cell_start = "<tr>\r\n<td>\r\n";
 	// <img src="XXX.jpg" width="432" height="144" alt="mosaic" />
-	private final static String element_name = new String(
-			"\r\n</td>\r\n<td>\r\n<strong>" + textbundle.getString("output_outputFiles_31") + ":</strong> ");
+	private final static String element_name = "\r\n</td>\r\n<td>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_31") + ":</strong> ";
 	// ---------->name
-	private final static String element_width = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_32") + ": ");
+	private final static String element_width = "\r\n<br />\r\n" + textbundle.getString("output_outputFiles_32") + ": ";
 	// ---------->width
-	private final static String element_height = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_33") + ": ");
+	private final static String element_height = "\r\n<br />\r\n" + textbundle.getString("output_outputFiles_33")
+			+ ": ";
 	// ---------->height
-	private final static String element_stability = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_34") + ": ");
+	private final static String element_stability = "\r\n<br />\r\n" + textbundle.getString("output_outputFiles_34")
+			+ ": ";
 	// ---------->stability
-	private final static String element_costs = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_35") + ": ");
+	private final static String element_costs = "\r\n<br />\r\n" + textbundle.getString("output_outputFiles_35") + ": ";
 	// ---------->costs
-	private final static String element_cell_end = new String("\r\n</td>\r\n</tr>\r\n");
-	private final static String element_end = new String("</table>\r\n");
+	private final static String element_cell_end = "\r\n</td>\r\n</tr>\r\n";
+	private final static String element_end = "</table>\r\n";
 	// ---------->all:end
 
 	// ############################## colors.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String color_start = new String("<p>\r\n<strong>"
-			+ textbundle.getString("output_outputFiles_6") + "</strong><br />\r\n</p>\r\n<table>\r\n");
-	private final static String color_cell_start = new String("<tr>\r\n<td>\r\n<img src=\"");
+	private final static String color_start = "<p>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_6") + "</strong><br />\r\n</p>\r\n<table>\r\n";
+	private final static String color_cell_start = "<tr>\r\n<td>\r\n<img src=\"";
 	// ---------->file name image
-	private final static String color_image = new String(
-			".jpg\" width=\"300\" height=\"50\" alt=\"color\" />\r\n</td>\r\n<td>\r\n");
+	private final static String color_image = ".jpg\" width=\"300\" height=\"50\" alt=\"color\" />\r\n</td>\r\n<td>\r\n";
 	// ---------->color name
-	private final static String color_info = new String(
-			"\r\n<br />\r\n" + textbundle.getString("output_outputFiles_36") + ": ");
+	private final static String color_info = "\r\n<br />\r\n" + textbundle.getString("output_outputFiles_36") + ": ";
 	// ---------->rgb
-	private final static String color_cell_end = new String("\r\n</td>\r\n</tr>\r\n");
-	private final static String color_end = new String("</table>\r\n");
+	private final static String color_cell_end = "\r\n</td>\r\n</tr>\r\n";
+	private final static String color_end = "</table>\r\n";
 	// ---------->all:end
 
 	// ############################## billofmaterial.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String material_start = new String("<p>\r\n<strong>"
-			+ textbundle.getString("output_outputFiles_8") + "</strong><br />\r\n</p>\r\n<table>\r\n");
-	private final static String material_row_start = new String("<tr>\r\n<td>\r\n");
+	private final static String material_start = "<p>\r\n<strong>"
+			+ textbundle.getString("output_outputFiles_8") + "</strong><br />\r\n</p>\r\n<table>\r\n";
+	private final static String material_row_start = "<tr>\r\n<td>\r\n";
 	// ---------->color
-	private final static String material_between = new String("\r\n</td>\r\n<td>\r\n");
+	private final static String material_between = "\r\n</td>\r\n<td>\r\n";
 	// ---------->element
 	// -----------material_between
 	// ---------->quantity + " piece"
-	private final static String material_row_end = new String("\r\n</td>\r\n</tr>\r\n");
-	private final static String material_end = new String("</table>\r\n");
+	private final static String material_row_end = "\r\n</td>\r\n</tr>\r\n";
+	private final static String material_end = "</table>\r\n";
 	// ---------->all:end
 
 	// ############################## buildinginstruction.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String instruction_start = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_9") + "</strong><br />\r\n</p>\r\n<ul>\r\n");
-	private final static String instruction_cell_start = new String("<li>\r\n");
+	private final static String instruction_start = "<p>\r\n<strong>" + textbundle.getString("output_outputFiles_9")
+			+ "</strong><br />\r\n</p>\r\n<ul>\r\n";
+	private final static String instruction_cell_start = "<li>\r\n";
 	// ---------->row x, column y: name, color
-	private final static String instruction_cell_end = new String("\r\n</li>\r\n");
-	private final static String instruction_end = new String("</ul>\r\n");
+	private final static String instruction_cell_end = "\r\n</li>\r\n";
+	private final static String instruction_end = "</ul>\r\n";
 	// ---------->all:end
 
 	// ############################## xml.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String xml_all = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_10") + "</strong><br />\r\n</p>\r\n<p>\r\n"
-					+ textbundle.getString("output_outputFiles_18") + "\r\n</p>\r\n<p>\r\n<a href=\"mosaic.xml\">\r\n"
-					+ textbundle.getString("output_outputFiles_37") + "\r\n</a>\r\n</p>");
+	private final static String xml_all = "<p>\r\n<strong>" + textbundle.getString("output_outputFiles_10")
+			+ "</strong><br />\r\n</p>\r\n<p>\r\n"
+			+ textbundle.getString("output_outputFiles_18") + "\r\n</p>\r\n<p>\r\n<a href=\"mosaic.xml\">\r\n"
+			+ textbundle.getString("output_outputFiles_37") + "\r\n</a>\r\n</p>";
 	// ---------->all:end
 
 	// ############################## mosaic.xml
-	private final static String xml_document_start1 = new String(
-			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<project name=\"");
+	private final static String xml_document_start1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<project name=\"";
 	// ---------->projectname
-	private final static String xml_document_start2 = new String("\">");
-	private final static String xml_document_row_start = new String("<row>\r\n");
-	private final static String xml_document_element_start = new String("<unit>\r\n<element>\r\n");
+	private final static String xml_document_start2 = "\">";
+	private final static String xml_document_row_start = "<row>\r\n";
+	private final static String xml_document_element_start = "<unit>\r\n<element>\r\n";
 	// ---------->element
-	private final static String xml_document_element_center = new String("\r\n</element>\r\n<color>\r\n");
+	private final static String xml_document_element_center = "\r\n</element>\r\n<color>\r\n";
 	// ---------->color
-	private final static String xml_document_element_end = new String("\r\n</color>\r\n</unit>\r\n");
-	private final static String xml_document_element_empty = new String("<unit />\r\n");
-	private final static String xml_document_row_end = new String("</row>\r\n");
-	private final static String xml_document_end = new String("</project>\r\n");
+	private final static String xml_document_element_end = "\r\n</color>\r\n</unit>\r\n";
+	private final static String xml_document_element_empty = "<unit />\r\n";
+	private final static String xml_document_row_end = "</row>\r\n";
+	private final static String xml_document_end = "</project>\r\n";
 
 	// ############################## additional.html
 	// ---------->all:head
 	// ---------->all without index: from menu_start till project_end
-	private final static String additional_start = new String(
-			"<p>\r\n<strong>" + textbundle.getString("output_outputFiles_11") + "</strong><br />\r\n</p>\r\n");
+	private final static String additional_start = "<p>\r\n<strong>" + textbundle.getString("output_outputFiles_11")
+			+ "</strong><br />\r\n</p>\r\n";
 	// ---------->inelementation
-	private final static String additional_cell_end = new String("\r\n<br />\r\n");
+	private final static String additional_cell_end = "\r\n<br />\r\n";
 	// ---------->all:end
 
 	private String project;
@@ -290,7 +278,7 @@ public class OutputFileGenerator {
 	 */
 	public String generateDocuments(final boolean grafic, final boolean configuration, final boolean material,
 			final boolean instruction, final boolean xml, final Enumeration<String> infos) {
-		String error = new String("");
+		String error = "";
 		// index.html
 		final StringBuffer index = new StringBuffer();
 		index.append(head);
@@ -416,12 +404,15 @@ public class OutputFileGenerator {
 			}
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
+
 					public void run() {
 						dataProcessing.animateGraficProgressBarOutputFiles(false);
 						dataProcessing.refreshProgressBarOutputFiles(100, 1);
 					}
 				});
-			} catch (final Exception e) {
+			} catch (
+
+			final Exception e) {
 			}
 		}
 
@@ -464,7 +455,8 @@ public class OutputFileGenerator {
 			configurationString.append(configuration_basis_height);
 			configurationString.append(dataProcessing.getCurrentConfiguration().getBasisHeight());
 			configurationString.append(configuration_basis_widthmm);
-			final int widthMM = (int) (100 * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()));
+			final int widthMM = (int) (100 * (dataProcessing.getCurrentConfiguration()
+					.getBasisWidthMM()));
 			configurationString.append((widthMM / 100) + textbundle.getString("output_decimalPoint") + (widthMM % 100));
 			configurationString.append(configuration_end);
 			configurationString.append(end);
@@ -475,33 +467,36 @@ public class OutputFileGenerator {
 			// elements.html
 			int width = dataProcessing.getCurrentConfiguration().getBasisWidth();
 			int height = dataProcessing.getCurrentConfiguration().getBasisHeight();
+
 			while (width < 10 || height < 10) {
 				width = width * 2;
 				height = height * 2;
 			}
+
 			final StringBuffer elementsString = new StringBuffer();
 			elementsString.append(head);
 			elementsString.append(menu_start);
+
 			if (grafic) {
 				elementsString.append(menu_grafic);
 			}
-			;
+
 			if (configuration) {
 				elementsString.append(menu_configuration);
 			}
-			;
+
 			if (material) {
 				elementsString.append(menu_material);
 			}
-			;
+
 			if (instruction) {
 				elementsString.append(menu_instruction);
 			}
-			;
+
 			if (xml) {
 				elementsString.append(menu_xml);
 			}
-			;
+
 			elementsString.append(menu_additional);
 			elementsString.append(projectname);
 			elementsString.append(project);
@@ -513,18 +508,22 @@ public class OutputFileGenerator {
 			BufferedImage elementImage;
 			percent = 0;
 			referenceValue = (dataProcessing.getCurrentConfiguration().getQuantityColorsAndElements()) / 10;
+
 			if (referenceValue == 0) {
 				referenceValue = 1;
 			}
+
 			int counter = 0;
 			int flag1 = 0;
-			for (final Enumeration elementsEnumeration = dataProcessing.getCurrentConfiguration()
+
+			for (final Enumeration<ElementObject> elementsEnumeration = dataProcessing.getCurrentConfiguration()
 					.getAllElements(); elementsEnumeration.hasMoreElements();) {
 				counter++;
 				element = (ElementObject) elementsEnumeration.nextElement();
 				elementsString.append(element_cell_start);
 				matrix = element.getMatrix();
 				matrixNew = new boolean[element.getHeight() + 2][element.getWidth() + 2];
+
 				// add a NULL-border to the element matrix
 				for (int row = 0; row < (element.getHeight() + 2); row++) {
 					for (int column = 0; column < (element.getWidth() + 2); column++) {
@@ -669,7 +668,7 @@ public class OutputFileGenerator {
 			ColorObject color = new ColorObject();
 			int counter2 = 0;
 
-			for (final Enumeration colorsEnumeration = dataProcessing.getCurrentConfiguration()
+			for (final Enumeration<ColorObject> colorsEnumeration = dataProcessing.getCurrentConfiguration()
 					.getAllColors(); colorsEnumeration.hasMoreElements();) {
 				counter2++;
 				color = (ColorObject) colorsEnumeration.nextElement();
@@ -738,13 +737,13 @@ public class OutputFileGenerator {
 			billofmaterialString.append(project);
 			billofmaterialString.append(project_end);
 			billofmaterialString.append(material_start);
-			final Hashtable materialHash = new Hashtable();
-			Enumeration colorsEnumeration = dataProcessing.getCurrentConfiguration().getAllColors();
-			Enumeration elementsEnumeration;
+			final Hashtable<String, Hashtable<String, Integer>> materialHash = new Hashtable<>();
+			Enumeration<ColorObject> colorsEnumeration = dataProcessing.getCurrentConfiguration().getAllColors();
+			Enumeration<ElementObject> elementsEnumeration;
 
 			while (colorsEnumeration.hasMoreElements()) {
 				elementsEnumeration = dataProcessing.getCurrentConfiguration().getAllElements();
-				final Hashtable elementenHash = new Hashtable();
+				final Hashtable<String, Integer> elementenHash = new Hashtable<>();
 
 				while (elementsEnumeration.hasMoreElements()) {
 					elementenHash.put(((ElementObject) elementsEnumeration.nextElement()).getName(), 0);
@@ -763,10 +762,10 @@ public class OutputFileGenerator {
 			for (int row = 0; row < dataProcessing.getMosaicHeight(); row++) {
 				for (int column = 0; column < dataProcessing.getMosaicWidth(); column++) {
 					if (!mosaicMatrix.get(row).get(column).isEmpty()) {
-						elementName = new String((String) mosaicMatrix.get(row).get(column).elementAt(0));
-						colorName = new String((String) mosaicMatrix.get(row).get(column).elementAt(1));
-						quantity = (Integer) (((Hashtable) materialHash.get(colorName)).get(elementName));
-						((Hashtable) materialHash.get(colorName)).put(elementName, (quantity + 1));
+						elementName = mosaicMatrix.get(row).get(column).elementAt(0);
+						colorName = mosaicMatrix.get(row).get(column).elementAt(1);
+						quantity = materialHash.get(colorName).get(elementName);
+						materialHash.get(colorName).put(elementName, (quantity + 1));
 					}
 
 					try {
@@ -789,8 +788,8 @@ public class OutputFileGenerator {
 				elementsEnumeration = dataProcessing.getCurrentConfiguration().getAllElements();
 
 				while (elementsEnumeration.hasMoreElements()) {
-					elementName = ((ElementObject) elementsEnumeration.nextElement()).getName();
-					quantity = (Integer) (((Hashtable) materialHash.get(colorName)).get(elementName));
+					elementName = elementsEnumeration.nextElement().getName();
+					quantity = materialHash.get(colorName).get(elementName);
 
 					if (quantity > 0) {
 						billofmaterialString.append(material_row_start);
