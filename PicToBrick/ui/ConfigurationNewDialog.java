@@ -8,55 +8,55 @@ import java.awt.event.*;
 import java.util.*;
 
 /**
- * class:          ConfigurationNewDialog
- * layer:          Gui (three tier architecture)
- * description:    new configuration dialog
- * @author         Adrian Schuetz
+ * class: ConfigurationNewDialog
+ * layer: Gui (three tier architecture)
+ * description: new configuration dialog
+ *
+ * @author Adrian Schuetz
  */
 public class ConfigurationNewDialog
-extends JDialog
-implements ActionListener, ItemListener
-{
+		extends JDialog
+		implements ActionListener, ItemListener {
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	private boolean cancel = true;
-	private JTextField nameInput;
-	private JTextField basisNameInput;
-	private JTextField basisWidthInput;
-	private JTextField basisHeightInput;
-	private JTextField basisWidthMMInput;
-	private JTextField stabilityInput;
-	private JTextField costsInput;
-	private JComboBox materialBox;
+	private final JTextField nameInput;
+	private final JTextField basisNameInput;
+	private final JTextField basisWidthInput;
+	private final JTextField basisHeightInput;
+	private final JTextField basisWidthMMInput;
+	private final JTextField stabilityInput;
+	private final JTextField costsInput;
+	private final JComboBox<String> materialBox;
 	private String error = "";
 	private int basisWidth = -1, basisHeight = -1;
 	private double basisWidthMM = -1.0;
 	private int stability = -1, costs = -1;
 
 	/**
-	 * method:          ConfigurationNewDialog
-	 * description:     constructor
-	 * @author          Adrian Schuetz
-	 * @param           owner
+	 * method: ConfigurationNewDialog
+	 * description: constructor
+	 *
+	 * @author Adrian Schuetz
+	 * @param owner
 	 */
-	public ConfigurationNewDialog(Frame owner)
-	{
-		super(owner,textbundle.getString("dialog_configurationNew_frame"),true);
-		this.setLocation(100,100);
+	public ConfigurationNewDialog(final Frame owner) {
+		super(owner, textbundle.getString("dialog_configurationNew_frame"), true);
+		this.setLocation(100, 100);
 		this.setResizable(false);
-		JPanel input1 = new JPanel(new GridLayout(1,2,5,5));
-		JPanel input2 = new JPanel(new GridLayout(6,2,5,5));
-		JPanel input3 = new JPanel(new GridLayout(1,2,5,5));
-		JPanel input4 = new JPanel(new BorderLayout());
-		JPanel buttons = new JPanel();
-		JPanel content = new JPanel(new BorderLayout());
-		JLabel nameLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_1") + ": ");
-		JLabel materialLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_2") + ": ");
-		JLabel basisNameLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_3") + ": ");
-		JLabel basisWidthLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_4") + ": ");
-		JLabel basisHeightLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_5") + ": ");
-		JLabel basisWidthMMLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_6") + ": ");
-		JLabel stabilityLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_7") + ": ");
-		JLabel costsLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_8") + ": ");
+		final JPanel input1 = new JPanel(new GridLayout(1, 2, 5, 5));
+		final JPanel input2 = new JPanel(new GridLayout(6, 2, 5, 5));
+		final JPanel input3 = new JPanel(new GridLayout(1, 2, 5, 5));
+		final JPanel input4 = new JPanel(new BorderLayout());
+		final JPanel buttons = new JPanel();
+		final JPanel content = new JPanel(new BorderLayout());
+		final JLabel nameLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_1") + ": ");
+		final JLabel materialLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_2") + ": ");
+		final JLabel basisNameLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_3") + ": ");
+		final JLabel basisWidthLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_4") + ": ");
+		final JLabel basisHeightLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_5") + ": ");
+		final JLabel basisWidthMMLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_6") + ": ");
+		final JLabel stabilityLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_7") + ": ");
+		final JLabel costsLabel = new JLabel(textbundle.getString("dialog_configurationNew_label_8") + ": ");
 		nameInput = new JTextField();
 		basisNameInput = new JTextField();
 		basisWidthInput = new JTextField();
@@ -64,7 +64,7 @@ implements ActionListener, ItemListener
 		basisWidthMMInput = new JTextField();
 		stabilityInput = new JTextField();
 		costsInput = new JTextField();
-		materialBox = new JComboBox();
+		materialBox = new JComboBox<>();
 		materialBox.addItem(textbundle.getString("dialog_configurationNew_combo_1"));
 		materialBox.addItem(textbundle.getString("dialog_configurationNew_combo_2"));
 		materialBox.addItem(textbundle.getString("dialog_configurationNew_combo_3"));
@@ -87,22 +87,25 @@ implements ActionListener, ItemListener
 		input2.add(costsInput);
 		input3.add(materialLabel);
 		input3.add(materialBox);
-		TitledBorder input1Border = BorderFactory.createTitledBorder(textbundle.getString("dialog_configurationNew_border_1"));
+		final TitledBorder input1Border = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_configurationNew_border_1"));
 		input1.setBorder(input1Border);
-		input1Border.setTitleColor(new Color(100,100,100));
-		TitledBorder input2Border = BorderFactory.createTitledBorder(textbundle.getString("dialog_configurationNew_border_2"));
+		input1Border.setTitleColor(new Color(100, 100, 100));
+		final TitledBorder input2Border = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_configurationNew_border_2"));
 		input2.setBorder(input2Border);
-		input2Border.setTitleColor(new Color(100,100,100));
-		TitledBorder input3Border = BorderFactory.createTitledBorder(textbundle.getString("dialog_configurationNew_border_3"));
+		input2Border.setTitleColor(new Color(100, 100, 100));
+		final TitledBorder input3Border = BorderFactory
+				.createTitledBorder(textbundle.getString("dialog_configurationNew_border_3"));
 		input3.setBorder(input3Border);
-		input3Border.setTitleColor(new Color(100,100,100));
+		input3Border.setTitleColor(new Color(100, 100, 100));
 		input4.add(input1, BorderLayout.NORTH);
 		input4.add(input3, BorderLayout.CENTER);
 		input4.add(input2, BorderLayout.SOUTH);
-		JButton ok = new JButton(textbundle.getString("button_ok"));
+		final JButton ok = new JButton(textbundle.getString("button_ok"));
 		ok.addActionListener(this);
 		ok.setActionCommand("ok");
-		JButton cancelButton = new JButton(textbundle.getString("button_cancel"));
+		final JButton cancelButton = new JButton(textbundle.getString("button_cancel"));
 		cancelButton.setActionCommand("cancel");
 		cancelButton.addActionListener(this);
 		buttons.add(ok);
@@ -115,23 +118,25 @@ implements ActionListener, ItemListener
 	}
 
 	/**
-	 * method:          isCanceled
-	 * description:     returns if the dialog is canceled by user or not
-	 * @author          Adrian Schuetz
-	 * @return          true or false
+	 * method: isCanceled
+	 * description: returns if the dialog is canceled by user or not
+	 *
+	 * @author Adrian Schuetz
+	 * @return true or false
 	 */
-	public boolean isCanceled(){
+	public boolean isCanceled() {
 		return cancel;
 	}
 
 	/**
-	 * method:          getValues
-	 * description:     returns the user inputs
-	 * @author          Adrian Schuetz
-	 * @return          user inputs in a vector
+	 * method: getValues
+	 * description: returns the user inputs
+	 *
+	 * @author Adrian Schuetz
+	 * @return user inputs in a vector
 	 */
-	public Vector getValues(){
-		Vector values = new Vector();
+	public Vector<Number> getValues() {
+		final Vector<Number> values = new Vector<>();
 		values.add(basisWidth);
 		values.add(basisHeight);
 		values.add(basisWidthMM);
@@ -141,51 +146,55 @@ implements ActionListener, ItemListener
 	}
 
 	/**
-	 * method:          getName
-	 * description:     returns the user input
-	 * @author          Adrian Schuetz
-	 * @return          name configuration
+	 * method: getName
+	 * description: returns the user input
+	 *
+	 * @author Adrian Schuetz
+	 * @return name configuration
 	 */
-	public String getName(){
-		if (nameInput.getText().endsWith(".cfg")){
-			return nameInput.getText().substring(0,nameInput.getText().length()-4);
-		}else {
+	public String getName() {
+		if (nameInput.getText().endsWith(".cfg")) {
+			return nameInput.getText().substring(0, nameInput.getText().length() - 4);
+		} else {
 			return nameInput.getText();
 		}
 	}
 
 	/**
-	 * method:          getBasisName
-	 * description:     returns the user input
-	 * @author          Adrian Schuetz
-	 * @return          name basis element
+	 * method: getBasisName
+	 * description: returns the user input
+	 *
+	 * @author Adrian Schuetz
+	 * @return name basis element
 	 */
-	public String getBasisName(){
+	public String getBasisName() {
 		return basisNameInput.getText();
 	}
 
 	/**
-	 * method:          getMaterial
-	 * description:     returns the user input
-	 *                  0 = user-defined, 1 = Lego top view, 2 = Lego side view, 3 = Ministeck
-	 * @author          Adrian Schuetz
-	 * @return          material
+	 * method: getMaterial
+	 * description: returns the user input
+	 * 0 = user-defined, 1 = Lego top view, 2 = Lego side view, 3 = Ministeck
+	 *
+	 * @author Adrian Schuetz
+	 * @return material
 	 */
-	public int getMaterial(){
+	public int getMaterial() {
 		return materialBox.getSelectedIndex();
 	}
 
 	/**
-	 * method:          validInputs
-	 * description:     checks the user inputs
-	 * @author          Adrian Schuetz
-	 * @return			true or false
+	 * method: validInputs
+	 * description: checks the user inputs
+	 *
+	 * @author Adrian Schuetz
+	 * @return true or false
 	 */
-	private boolean validInputs(){
+	private boolean validInputs() {
 		error = new String("");
-		if (nameInput.getText().length()==0){
+		if (nameInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_1") + "\n");
-		}else if (nameInput.getText().contains("<")
+		} else if (nameInput.getText().contains("<")
 				|| nameInput.getText().contains(">")
 				|| nameInput.getText().contains("?")
 				|| nameInput.getText().contains("\"")
@@ -193,137 +202,153 @@ implements ActionListener, ItemListener
 				|| nameInput.getText().contains("|")
 				|| nameInput.getText().contains("\\")
 				|| nameInput.getText().contains("/")
-				|| nameInput.getText().contains("*")){
+				|| nameInput.getText().contains("*")) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_2") + "\n");
 		}
-		if (basisNameInput.getText().length()==0){
+
+		if (basisNameInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_3") + "\n");
 		}
-		if (basisWidthInput.getText().length()==0){
+
+		if (basisWidthInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_4") + "\n");
-		}else {
+		} else {
 			try {
-				basisWidth = (new Integer(basisWidthInput.getText()).intValue());
-				if (basisWidth <= 0 || basisWidth > 10){
+				basisWidth = Integer.parseInt(basisWidthInput.getText());
+
+				if (basisWidth <= 0 || basisWidth > 10) {
 					error = error.concat(textbundle.getString("dialog_configurationNew_error_5") + "\n");
 				}
-				} catch(NumberFormatException e) {
-		        	error = error.concat(textbundle.getString("dialog_configurationNew_error_6") + "\n");
-		        }
+			} catch (final NumberFormatException e) {
+				error = error.concat(textbundle.getString("dialog_configurationNew_error_6") + "\n");
+			}
 		}
-		if (basisHeightInput.getText().length()==0){
+
+		if (basisHeightInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_7") + "\n");
-		}else {
+		} else {
 			try {
-				basisHeight = (new Integer(basisHeightInput.getText()).intValue());
-				if (basisHeight <= 0 || basisHeight > 10){
+				basisHeight = Integer.parseInt(basisHeightInput.getText());
+
+				if (basisHeight <= 0 || basisHeight > 10) {
 					error = error.concat(textbundle.getString("dialog_configurationNew_error_8") + "\n");
 				}
-				} catch(NumberFormatException e) {
-		        	error = error.concat(textbundle.getString("dialog_configurationNew_error_9") + "\n");
-		        }
+			} catch (final NumberFormatException e) {
+				error = error.concat(textbundle.getString("dialog_configurationNew_error_9") + "\n");
+			}
 		}
-		if (basisWidthMMInput.getText().length()==0){
+
+		if (basisWidthMMInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_10") + "\n");
-		}else {
+		} else {
 			try {
-				basisWidthMM = (new Double(basisWidthMMInput.getText()).doubleValue());
-				if (basisWidthMM <= 0){
+				basisWidthMM = Double.parseDouble(basisWidthMMInput.getText());
+
+				if (basisWidthMM <= 0) {
 					error = error.concat(textbundle.getString("dialog_configurationNew_error_11") + "\n");
 				}
-				} catch(NumberFormatException e) {
-		        	error = error.concat(textbundle.getString("dialog_configurationNew_error_12") + "\n");
-		        }
+			} catch (final NumberFormatException e) {
+				error = error.concat(textbundle.getString("dialog_configurationNew_error_12") + "\n");
+			}
 		}
-		if (stabilityInput.getText().length()==0){
+
+		if (stabilityInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_13") + "\n");
-		}else {
+		} else {
 
 			try {
-				stability = (new Integer(stabilityInput.getText()).intValue());
-				if (stability <= 0){
+				stability = Integer.parseInt(stabilityInput.getText());
+
+				if (stability <= 0) {
 					error = error.concat(textbundle.getString("dialog_configurationNew_error_14") + "\n");
 				}
-				} catch(NumberFormatException e) {
-		        	error = error.concat(textbundle.getString("dialog_configurationNew_error_15") + "\n");
-		        }
+			} catch (final NumberFormatException e) {
+				error = error.concat(textbundle.getString("dialog_configurationNew_error_15") + "\n");
+			}
 		}
-		if (costsInput.getText().length()==0){
+
+		if (costsInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_16") + "\n");
-		}else {
+		} else {
 			try {
-				costs = (new Integer(costsInput.getText()).intValue());
-				if (costs <= 0){
+				costs = Integer.parseInt(costsInput.getText());
+
+				if (costs <= 0) {
 					error = error.concat(textbundle.getString("dialog_configurationNew_error_17") + "\n");
 				}
-				} catch(NumberFormatException e) {
-		        	error = error.concat(textbundle.getString("dialog_configurationNew_error_18") + "\n");
-		        }
+			} catch (final NumberFormatException e) {
+				error = error.concat(textbundle.getString("dialog_configurationNew_error_18") + "\n");
+			}
 		}
-		if ((basisWidth > 0) && (basisHeight > 0)){
+
+		if ((basisWidth > 0) && (basisHeight > 0)) {
 			int ratio;
-			if (basisWidth > basisHeight){
+
+			if (basisWidth > basisHeight) {
 				ratio = basisWidth / basisHeight;
-			}else{
+			} else {
 				ratio = basisHeight / basisWidth;
 			}
-			if (ratio > 3){
+
+			if (ratio > 3) {
 				error = error.concat(textbundle.getString("dialog_configurationNew_error_19") + "\n");
 			}
 		}
-		if (!(error.equals(""))){
+
+		if (!(error.equals(""))) {
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * method:          actionPerformed
-	 * description:     ActionListener
-	 * @author          Adrian Schuetz
-	 * @param			event
+	 * method: actionPerformed
+	 * description: ActionListener
+	 *
+	 * @author Adrian Schuetz
+	 * @param event
 	 */
-	public void actionPerformed(ActionEvent event)
-	{
-		if (event.getActionCommand().contains("cancel")){
+	public void actionPerformed(final ActionEvent event) {
+		if (event.getActionCommand().contains("cancel")) {
 			this.setVisible(false);
 		}
-		if (event.getActionCommand().contains("ok")){
-			if (validInputs()){
+		if (event.getActionCommand().contains("ok")) {
+			if (validInputs()) {
 				cancel = false;
 				this.setVisible(false);
 			} else {
-				JOptionPane.showMessageDialog(this,error,textbundle.getString("dialog_error_frame"),JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, error, textbundle.getString("dialog_error_frame"),
+						JOptionPane.ERROR_MESSAGE);
 				error = "";
 			}
 		}
 	}
 
 	/**
-	 * method:          itemStateChanged
-	 * description:     ItemChangedListener
-	 * @author          Adrian Schuetz
-	 * @param			event
+	 * method: itemStateChanged
+	 * description: ItemChangedListener
+	 *
+	 * @author Adrian Schuetz
+	 * @param event
 	 */
-	public void itemStateChanged(ItemEvent event)
-	{
-		if (event.getSource() == materialBox){
-			if (materialBox.getSelectedIndex()==0){
+	public void itemStateChanged(final ItemEvent event) {
+		if (event.getSource() == materialBox) {
+			if (materialBox.getSelectedIndex() == 0) {
 				basisWidthInput.setText("");
 				basisHeightInput.setText("");
 				basisWidthMMInput.setText("");
 			}
-			if (materialBox.getSelectedIndex()==1){
+			if (materialBox.getSelectedIndex() == 1) {
 				basisWidthInput.setText("1");
 				basisHeightInput.setText("1");
 				basisWidthMMInput.setText("8.0");
 			}
-			if (materialBox.getSelectedIndex()==2){
+			if (materialBox.getSelectedIndex() == 2) {
 				basisWidthInput.setText("5");
 				basisHeightInput.setText("2");
 				basisWidthMMInput.setText("8.0");
 			}
-			if (materialBox.getSelectedIndex()==3){
+			if (materialBox.getSelectedIndex() == 3) {
 				basisWidthInput.setText("1");
 				basisHeightInput.setText("1");
 				basisWidthMMInput.setText("4.16666");
