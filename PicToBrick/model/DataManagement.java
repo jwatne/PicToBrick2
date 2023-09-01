@@ -4,7 +4,7 @@ import java.io.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 
-import PicToBrick.service.DataProcessor;
+import pictobrick.service.DataProcessor;
 
 import java.util.*;
 import java.util.List;
@@ -54,14 +54,14 @@ public class DataManagement {
 	public DataManagement(final DataProcessor dataProcessing) {
 		this.dataProcessing = dataProcessing;
 		configurations = new Vector<>();
-		configurations.add("PicToBrick_Lego_" + textbundle.getString("output_dataManagement_1") + ".cfg");
-		configurations.add("PicToBrick_Lego_" + textbundle.getString("output_dataManagement_2") + ".cfg");
-		configurations.add("PicToBrick_Ministeck.cfg");
-		this.legoTop = new Configuration("PicToBrick_Lego_" + textbundle.getString("output_dataManagement_1"),
+		configurations.add("pictobrick_Lego_" + textbundle.getString("output_dataManagement_1") + ".cfg");
+		configurations.add("pictobrick_Lego_" + textbundle.getString("output_dataManagement_2") + ".cfg");
+		configurations.add("pictobrick_Ministeck.cfg");
+		this.legoTop = new Configuration("pictobrick_Lego_" + textbundle.getString("output_dataManagement_1"),
 				"Plate_1x1_(3024)", 1, 1, 8.0, 1, 4, 1);
-		this.legoSide = new Configuration("PicToBrick_Lego_" + textbundle.getString("output_dataManagement_2"),
+		this.legoSide = new Configuration("pictobrick_Lego_" + textbundle.getString("output_dataManagement_2"),
 				"Plate_1x1_(3024)", 5, 2, 8.0, 7, 4, 2);
-		this.ministeck = new Configuration("PicToBrick_Ministeck", "Ministeck_1x1", 1, 1, 4.16666, 1, 1, 3);
+		this.ministeck = new Configuration("pictobrick_Ministeck", "Ministeck_1x1", 1, 1, 4.16666, 1, 1, 3);
 		initConfigurationLegoTop();
 		initConfigurationLegoSide();
 		initConfigurationMinisteck();

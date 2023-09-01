@@ -1,7 +1,7 @@
 package pictobrick.service;
 
-import PicToBrick.model.Configuration;
-import PicToBrick.model.Mosaic;
+import pictobrick.model.Configuration;
+import pictobrick.model.Mosaic;
 
 /**
  * interface:        Tiling

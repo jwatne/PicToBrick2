@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.swing.SwingUtilities;
 
-import PicToBrick.service.SwingWorker;
+import pictobrick.service.SwingWorker;
 
 /**
  * class: Mosaic

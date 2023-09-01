@@ -11,10 +11,10 @@ import javax.swing.BorderFactory;
 import javax.swing.border.*;
 import javax.swing.filechooser.FileFilter;
 
-import PicToBrick.model.ColorObject;
-import PicToBrick.model.Configuration;
-import PicToBrick.service.DataProcessor;
-import PicToBrick.service.SwingWorker;
+import pictobrick.model.ColorObject;
+import pictobrick.model.Configuration;
+import pictobrick.service.DataProcessor;
+import pictobrick.service.SwingWorker;
 
 /**
  * class: MainWindow
@@ -81,7 +81,7 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 */
 	public MainWindow() {
-		super("PicToBrick");
+		super("pictobrick");
 		addWindowListener(new WindowClosingAdapter(true));
 		osStyle();
 		dataProcessing = new DataProcessor(this);

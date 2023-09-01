@@ -10,7 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.*;
 import javax.swing.event.*;
 
-import PicToBrick.model.ColorObject;
+import pictobrick.model.ColorObject;
 
 import java.util.*;
 

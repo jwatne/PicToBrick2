@@ -2,8 +2,8 @@ package pictobrick.service;
 
 import javax.swing.*;
 
-import PicToBrick.model.Configuration;
-import PicToBrick.model.Mosaic;
+import pictobrick.model.Configuration;
+import pictobrick.model.Mosaic;
 
 /**
  * class:            BasicElementsOnlyTiler

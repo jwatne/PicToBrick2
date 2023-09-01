@@ -4,9 +4,9 @@ import java.awt.image.*;
 import java.util.Enumeration;
 import javax.swing.*;
 
-import PicToBrick.model.ColorObject;
-import PicToBrick.model.Configuration;
-import PicToBrick.model.Mosaic;
+import pictobrick.model.ColorObject;
+import pictobrick.model.Configuration;
+import pictobrick.model.Mosaic;
 
 /**
  * class: NaiveRgbQuantizer

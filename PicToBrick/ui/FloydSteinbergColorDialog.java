@@ -3,7 +3,7 @@ package pictobrick.ui;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import PicToBrick.model.ColorObject;
+import pictobrick.model.ColorObject;
 
 import javax.swing.BorderFactory;
 import java.awt.*;

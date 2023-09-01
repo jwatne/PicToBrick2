@@ -7,7 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.util.*;
 
-import PicToBrick.model.Lab;
+import pictobrick.model.Lab;
 
 /**
  * class: Calculator

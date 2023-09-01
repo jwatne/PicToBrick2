@@ -4,9 +4,9 @@ import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.border.*;
 
-import PicToBrick.model.ColorObject;
-import PicToBrick.model.Configuration;
-import PicToBrick.model.ElementObject;
+import pictobrick.model.ColorObject;
+import pictobrick.model.Configuration;
+import pictobrick.model.ElementObject;
 
 import java.util.*;
 import java.awt.*;

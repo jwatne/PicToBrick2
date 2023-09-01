@@ -7,7 +7,7 @@ import java.util.*;
 import javax.swing.BorderFactory;
 import javax.swing.border.*;
 
-import PicToBrick.model.Configuration;
+import pictobrick.model.Configuration;
 
 /**
  * class: MosaicSizeDialog

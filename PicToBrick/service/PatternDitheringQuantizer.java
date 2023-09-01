@@ -6,10 +6,10 @@ import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.SwingUtilities;
 
-import PicToBrick.model.ColorObject;
-import PicToBrick.model.Configuration;
-import PicToBrick.model.Lab;
-import PicToBrick.model.Mosaic;
+import pictobrick.model.ColorObject;
+import pictobrick.model.Configuration;
+import pictobrick.model.Lab;
+import pictobrick.model.Mosaic;
 
 /**
  * class: PatternDitheringQuantizer

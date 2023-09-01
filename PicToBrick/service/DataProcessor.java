@@ -9,10 +9,10 @@ import java.awt.image.*;
 
 import javax.swing.SwingUtilities;
 
-import PicToBrick.model.Configuration;
-import PicToBrick.model.DataManagement;
-import PicToBrick.model.Mosaic;
-import PicToBrick.ui.MainWindow;
+import pictobrick.model.Configuration;
+import pictobrick.model.DataManagement;
+import pictobrick.model.Mosaic;
+import pictobrick.ui.MainWindow;
 
 /**
  * class: DataProcessor

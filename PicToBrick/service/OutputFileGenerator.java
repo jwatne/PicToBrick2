@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.image.*;
 import javax.swing.SwingUtilities;
 
-import PicToBrick.model.ColorObject;
-import PicToBrick.model.ElementObject;
+import pictobrick.model.ColorObject;
+import pictobrick.model.ElementObject;
 
 /**
  * class: OutputFileGenerator
@@ -21,9 +21,9 @@ public class OutputFileGenerator {
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 
 	// ############################## all
-	private final static String head = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<title>PicToBrick</title>\r\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\r\n<style type=\"text/css\">\r\n#menu {\r\nleft:0;\r\ntop:10;\r\nwidth:200px;\r\nposition:absolute;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nmargin-left:0;\r\nmargin-top:0;\r\nmargin-right:0;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#content {\r\nmargin-top:0px;\r\nmargin-left:200px;\r\nmargin-right:0px;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#headline {\r\nfont-size:x-large;\r\n}\r\na:link {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:visited {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:hover {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\na:active {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\ntd {\r\npadding-right:10px;\r\npadding-left:10px;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n";
+	private final static String head = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<title>pictobrick</title>\r\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\r\n<style type=\"text/css\">\r\n#menu {\r\nleft:0;\r\ntop:10;\r\nwidth:200px;\r\nposition:absolute;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nmargin-left:0;\r\nmargin-top:0;\r\nmargin-right:0;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#content {\r\nmargin-top:0px;\r\nmargin-left:200px;\r\nmargin-right:0px;\r\npadding-left:10px;\r\npadding-right:10px;\r\npadding-top:0px;\r\nfont-family:Verdana, Arial;\r\nfont-size:small;\r\n}\r\n#headline {\r\nfont-size:x-large;\r\n}\r\na:link {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:visited {\r\ntext-decoration:none;\r\ncolor:blue;\r\n}\r\na:hover {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\na:active {\r\ntext-decoration:underline;\r\ncolor:blue;\r\n}\r\ntd {\r\npadding-right:10px;\r\npadding-left:10px;\r\n}\r\n</style>\r\n</head>\r\n<body>\r\n";
 	private final static String end = "<br />\r\n</div>\r\n</body>\r\n</html>";
-	private final static String projectname = "</ul>\r\n</div>\r\n<div id=\"content\">\r\n<p>\r\n<strong>PicToBrick - "
+	private final static String projectname = "</ul>\r\n</div>\r\n<div id=\"content\">\r\n<p>\r\n<strong>pictobrick - "
 			+ textbundle.getString("output_outputFiles_1")
 			+ "</strong>\r\n</p>\r\n<p id=\"headline\">\r\n<strong>"
 			+ textbundle.getString("output_outputFiles_2") + ": ";
