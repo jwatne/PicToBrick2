@@ -143,7 +143,6 @@ public class OutputFileGenerator {
 	private final static String element_start = "<p>\r\n<strong>"
 			+ textbundle.getString("output_outputFiles_7") + "</strong>\r\n<br />\r\n</p>\r\n<table>\r\n";
 	private final static String element_cell_start = "<tr>\r\n<td>\r\n";
-	// <img src="XXX.jpg" width="432" height="144" alt="mosaic" />
 	private final static String element_name = "\r\n</td>\r\n<td>\r\n<strong>"
 			+ textbundle.getString("output_outputFiles_31") + ":</strong> ";
 	// ---------->name
