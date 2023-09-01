@@ -615,14 +615,16 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 */
 	private void configurationLoad() {
-		final Vector configurationVector = dataProcessing.getConfiguration();
+		final Vector<String> configurationVector = dataProcessing.getConfiguration();
 		ConfigurationLoadingDialog configurationLoadingDialog = new ConfigurationLoadingDialog(this,
 				configurationVector);
+
 		if (!configurationLoadingDialog.isCanceled()) {
 			switch (configurationLoadingDialog.getSelection()) {
 				// new configuration
 				case 1: {
 					ConfigurationNewDialog configurationNewDialog = new ConfigurationNewDialog(this);
+
 					if (!configurationNewDialog.isCanceled()) {
 						final Enumeration results = configurationNewDialog.getValues().elements();
 						final Configuration configurationNew = new Configuration(
