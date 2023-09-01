@@ -279,7 +279,7 @@ public class ElementObjectNewDialog
 	 * @return true or false
 	 */
 	private boolean isInputValid() {
-		error = new String("");
+		error = "";
 
 		if (elementName.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_elementObjectNew_error_1") + "\n");

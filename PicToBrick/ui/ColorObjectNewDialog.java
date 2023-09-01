@@ -135,7 +135,7 @@ implements ActionListener, ChangeListener
 	 * @return          true or false
 	 */
 	private boolean validInput(){
-		error = new String("");
+		error = "";
 		if (colorName.getText().length()==0){
 			error = error.concat(textbundle.getString("dialog_colorObjectNew_error") + "\n");
 		}

@@ -65,7 +65,7 @@ public class SolidRegionsQuantizer
 		this.rows = mosaicHeight;
 		// scale image to mosaic dimensions
 		BufferedImage cutout = calculation.scale(image, mosaicWidth, mosaicHeight, dataProcessing.getInterpolation());
-		String colorName = new String("");
+		String colorName = "";
 		// compute pixelMatrix
 		int[][][] pixelMatrix = calculation.pixelMatrix(cutout);
 		// compute vector of lab colors
@@ -215,7 +215,7 @@ public class SolidRegionsQuantizer
 				// change the current color to this new color
 				if (colorCounter < 2) {
 					int colorCounter2;
-					String newColor = new String("");
+					String newColor = "";
 					int flag = 0;
 					String testColor;
 					for (int windowRow = (rows - 1); windowRow < (rows + 2); windowRow++) {

@@ -191,7 +191,7 @@ public class ConfigurationNewDialog
 	 * @return true or false
 	 */
 	private boolean validInputs() {
-		error = new String("");
+		error = "";
 		if (nameInput.getText().length() == 0) {
 			error = error.concat(textbundle.getString("dialog_configurationNew_error_1") + "\n");
 		} else if (nameInput.getText().contains("<")

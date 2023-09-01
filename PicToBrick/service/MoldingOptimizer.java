@@ -126,7 +126,7 @@ public class MoldingOptimizer
 			// ------------ molding optimisation ------------
 			// flags
 			pixelColorChanges = 0;
-			currentColorName = new String("");
+			currentColorName = "";
 			currentColorNumber = -1;
 			pixelCounter = 0;
 			Vector<String> pixel;

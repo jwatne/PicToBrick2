@@ -90,8 +90,8 @@ public class VectorErrorDiffuser
 		// computing the colors (minimum euklidean distance)
 		// then floyd steinberg error diffusion (error vector)
 		Lab lab1 = new Lab(), lab2, newColor = new Lab(), errorVector;
-		String colorName = new String("");
-		String name = new String("");
+		String colorName = "";
+		String name = "";
 		double difference;
 
 		for (mosaicRow = 0; mosaicRow < mosaicHeight; mosaicRow++) {

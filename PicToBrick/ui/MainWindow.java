@@ -430,19 +430,20 @@ public class MainWindow
 						guiOutputXml.isSelected(),
 						true);
 				showProgressBarOutputFiles();
+
 				// SwingWorker
 				// "construct": all commands are startet in a new thread
 				// "finished": all commands are queued to the gui thread
 				// after finshing aforesaid (construct-)thread
 				final SwingWorker worker = new SwingWorker() {
 					public Object construct() {
-						final String message = new String(dataProcessing.generateDocuments(
+						final String message = dataProcessing.generateDocuments(
 								guiOutputGrafic.isSelected(),
 								guiOutputConfiguration.isSelected(),
 								guiOutputMaterial.isSelected(),
 								guiOutputBuildingInstruction.isSelected(),
 								guiOutputXml.isSelected(),
-								dataProcessing.getInfo(2)));
+								dataProcessing.getInfo(2));
 
 						if (!message.equals("")) {
 							errorDialog(message);

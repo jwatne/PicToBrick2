@@ -62,7 +62,7 @@ public class NaiveLabQuantizer
 		// scale image to mosaic dimensions
 		final BufferedImage cutout = calculation.scale(image, mosaicWidth, mosaicHeight,
 				dataProcessing.getInterpolation());
-		String colorName = new String("");
+		String colorName = "";
 		// compute pixelMatrix
 		final int[][][] pixelMatrix = calculation.pixelMatrix(cutout);
 		// create a vector of all lab colors

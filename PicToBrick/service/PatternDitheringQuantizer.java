@@ -66,10 +66,10 @@ public class PatternDitheringQuantizer
 		final BufferedImage cutout = calculation.scale(image, mosaicWidth, mosaicHeight,
 				dataProcessing.getInterpolation());
 		// 4 colors of the dither pattern (2x2)
-		String colorName1 = new String("");
-		String colorName2 = new String("");
-		String colorName3 = new String("");
-		String colorName4 = new String("");
+		String colorName1 = "";
+		String colorName2 = "";
+		String colorName3 = "";
+		String colorName4 = "";
 		// compute pixelMatrix
 		final int[][][] pixelMatrix = calculation.pixelMatrix(cutout);
 		// lab color vector
