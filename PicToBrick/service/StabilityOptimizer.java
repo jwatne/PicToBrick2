@@ -3,16 +3,17 @@ package PicToBrick.service;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.ResourceBundle;
 import java.util.Vector;
-import javax.swing.*;
+
+import javax.swing.SwingUtilities;
 
 import PicToBrick.model.ColorObject;
 import PicToBrick.model.Configuration;
 import PicToBrick.model.ElementObject;
 import PicToBrick.model.Lab;
 import PicToBrick.model.Mosaic;
-
-import java.util.*;
 
 /**
  * class: StabilityOptimizer
@@ -21,9 +22,7 @@ import java.util.*;
  *
  * @author Adrian Schuetz
  */
-public class StabilityOptimizer
-		implements Tiler {
-
+public class StabilityOptimizer implements Tiler {
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	private final DataProcessor dataProcessing;
 	private final Calculator calculation;
@@ -32,13 +31,13 @@ public class StabilityOptimizer
 	private int colorRow;
 	private boolean[][] borders;
 	private boolean statisticOutput;
-	private final Vector tilingInfo;
+	private final Vector<Object> tilingInfo;
 	private int quantisationAlgo;
 	private boolean optimisation = false;
 	private boolean onlyBorderHandling = true;
 	private int maximumGapHeight = 0;
 	private int colorCount = 0;
-	private final Vector labColors = new Vector();
+	private final Vector<Object> labColors = new Vector<>();
 	private ElementObject doubleElement;
 	private int recoloredElements = 0;
 
@@ -52,7 +51,7 @@ public class StabilityOptimizer
 	 * @param Vector         tilingInfo
 	 */
 	public StabilityOptimizer(final DataProcessor dataProcessing, final Calculator calculation,
-			final Vector tilingInfo) {
+			final Vector<Object> tilingInfo) {
 		this.dataProcessing = dataProcessing;
 		this.calculation = calculation;
 		this.tilingInfo = tilingInfo;
@@ -76,7 +75,7 @@ public class StabilityOptimizer
 			final boolean statistic) {
 		this.statisticOutput = statistic;
 		this.rows = mosaicHeight;
-		final Enumeration tilingInfoEnum = tilingInfo.elements();
+		final Enumeration<Object> tilingInfoEnum = tilingInfo.elements();
 		quantisationAlgo = (Integer) tilingInfoEnum.nextElement();
 
 		// compute colorCount for Floyd-Steinberg 2 colors
@@ -139,7 +138,7 @@ public class StabilityOptimizer
 		}
 
 		// Create vector with elements (sorted by stability)
-		final Vector elementsSorted = sortElementsByStability(configuration.getAllElements());
+		final Vector<ElementObject> elementsSorted = sortElementsByStability(configuration.getAllElements());
 
 		// Consistency check
 		if (!consistencyCheck(configuration) || (optimisation && !consistencyCheckOptimisation(configuration))) {
@@ -202,7 +201,7 @@ public class StabilityOptimizer
 			String currentColor;
 			Vector<String> pixel; // current Pixel
 			Vector<String> pixel2;
-			Enumeration sorted;
+			Enumeration<ElementObject> sorted;
 			// Flag
 			int points = -1;
 			int pointsFlag = -1;
@@ -694,7 +693,7 @@ public class StabilityOptimizer
 	 * @param colorVector
 	 * @return Mischcolor
 	 */
-	private String computeMixedColor(final Lab color1, final Lab color2, final Vector colorVector) {
+	private String computeMixedColor(final Lab color1, final Lab color2, final Vector<Object> colorVector) {
 		// remember best fitting color
 		String newColor = "";
 		// Determine mixed color
@@ -708,7 +707,7 @@ public class StabilityOptimizer
 		double deviation;
 		double smalestDeviation = 500.0;
 
-		for (final Enumeration colorsEnum = colorVector.elements(); colorsEnum.hasMoreElements();) {
+		for (final Enumeration<Object> colorsEnum = colorVector.elements(); colorsEnum.hasMoreElements();) {
 			testColor = (Lab) (colorsEnum.nextElement());
 			testColorName = (String) (colorsEnum.nextElement());
 			deviation = java.lang.Math.sqrt(java.lang.Math.pow(mixedColor.getL() - testColor.getL(), 2.0) +
@@ -830,18 +829,18 @@ public class StabilityOptimizer
 
 	/**
 	 * method: sortElementsByStability
-	 * description: sorts the element vektor by stability
+	 * description: sorts the element Vector by stability
 	 *
 	 * @author Adrian Schuetz
 	 * @param elementsUnsorted
 	 * @return elementsSorted
 	 */
-	private Vector sortElementsByStability(final Enumeration elementsUnsorted) {
+	private Vector<ElementObject> sortElementsByStability(final Enumeration<ElementObject> elementsUnsorted) {
 		int stabi = 0;
 		boolean included = false;
 		int position;
 		ElementObject supportElement;
-		final Vector elementsSorted = new Vector();
+		final Vector<ElementObject> elementsSorted = new Vector<>();
 
 		// Elements sorted by stability
 		while (elementsUnsorted.hasMoreElements()) {
@@ -853,7 +852,7 @@ public class StabilityOptimizer
 				stabi = supportElement.getStability();
 				position = 0;
 				included = false;
-				final Enumeration supportEnum = elementsSorted.elements();
+				final Enumeration<ElementObject> supportEnum = elementsSorted.elements();
 
 				while (supportEnum.hasMoreElements() && !included) {
 					final ElementObject anotherElement = (ElementObject) supportEnum.nextElement();
