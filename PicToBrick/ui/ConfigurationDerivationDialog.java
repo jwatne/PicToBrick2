@@ -286,6 +286,7 @@ public class ConfigurationDerivationDialog
 				}
 			}
 		}
+
 		if (event.getActionCommand().contains("colorDelete")) {
 			if (colorListModel.getSize() > 0) {
 				if (!(configuration
@@ -298,10 +299,12 @@ public class ConfigurationDerivationDialog
 				}
 			}
 		}
+
 		if (event.getActionCommand().contains("elementNew")) {
 			ElementObjectNewDialog newElement = new ElementObjectNewDialog(this, configuration.getBasisWidth(),
 					configuration.getBasisHeight());
 			boolean cancel = false;
+
 			while (!(cancel)) {
 				if (!newElement.isCanceled()) {
 					if (!(configuration.setElement(newElement.getElementName(), newElement.getElementWidth(),
@@ -313,9 +316,11 @@ public class ConfigurationDerivationDialog
 						newElement.showDialog();
 					} else {
 						elementListModel.addElement(newElement.getElementName());
+
 						if (elementListModel.getSize() > 0) {
 							elementList.setSelectedIndex(elementListModel.getSize() - 1);
 						}
+
 						cancel = true;
 						newElement = null;
 					}
