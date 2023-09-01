@@ -69,7 +69,6 @@ implements ActionListener
 		content.add(okPanel, BorderLayout.SOUTH);
 		this.getContentPane().add(content);
 		this.pack();
-		this.setVisible(true);
 	}
 
 	/**

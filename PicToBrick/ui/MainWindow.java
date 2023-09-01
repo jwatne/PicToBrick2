@@ -67,7 +67,7 @@ public class MainWindow
 	private PictureElement guiPictureElementTop, guiPictureElementBottom;
 	private JLabel guiLabelImage, guiLabelConfiguration, guiLabelWidth, guiLabelHeight, guiLabelZoom1, guiLabelZoom2;
 	private JLabel guiLabelQuantisation, guiLabelTiling, guiLabelOutput, guiLabelSeparator;
-	private JComboBox<Vector<String>> guiComboBoxInterpolation;
+	private JComboBox<String> guiComboBoxInterpolation;
 	private JSplitPane guiSplitPane;
 	private JScrollPane guiScrollPaneTop, guiScrollPaneBottom;
 	private JTextField guiTextFieldInformation;
@@ -90,13 +90,14 @@ public class MainWindow
 		buildMenu();
 		buildGui();
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setVisible(true);
+
 		// Check if the minimum of 256MB memory are available
 		if (((Runtime.getRuntime().maxMemory() / 1024) / 1024) < 250) {
 			errorDialog(textbundle.getString("dialog_mainWindow_error_1") + "\r\n" +
 					textbundle.getString("dialog_mainWindow_error_2") + "\r\n" +
 					textbundle.getString("dialog_mainWindow_error_3"));
 		}
+
 		workingDirectory(false);
 	}
 
@@ -108,6 +109,7 @@ public class MainWindow
 	 */
 	public void workingDirectory(final boolean newDirectory) {
 		File wdFile = null;
+
 		if (!newDirectory) {
 			// Load working directory information from filesystem (if available)
 			wdFile = dataProcessing.loadWorkingDirectory();
@@ -344,10 +346,11 @@ public class MainWindow
 		} else if (event.getActionCommand().contains("mosaicgenerate")) {
 			dataProcessing.initInfo();
 			dataProcessing.setInterpolation(guiComboBoxInterpolation.getSelectedIndex() + 1);
-			final int quantisation = (new Integer(
-					guiGroupQuantisation.getSelection().getActionCommand().substring(9, 11)).intValue() - 10);
-			final int tiling = (new Integer(guiGroupTiling.getSelection().getActionCommand().substring(9, 11))
-					.intValue() - 20);
+			final int quantisation = Integer.parseInt(
+					guiGroupQuantisation.getSelection().getActionCommand().substring(9, 11)) - 10;
+			final int tiling = Integer.parseInt(guiGroupTiling.getSelection().getActionCommand().substring(9, 11))
+					- 20;
+
 			if (tiling == 2 && !(dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
 				errorDialog(textbundle.getString("output_mainWindow_6"));
 			} else if (tiling == 4 && ((dataProcessing.getCurrentConfiguration().getMaterial() == 3)
@@ -364,6 +367,7 @@ public class MainWindow
 		} else if (event.getActionCommand().contains("imageload")) {
 			adjustDividerLocation();
 			imageLoad();
+
 			if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
 				guiStatus(11);
 			}
@@ -439,11 +443,13 @@ public class MainWindow
 								guiOutputBuildingInstruction.isSelected(),
 								guiOutputXml.isSelected(),
 								dataProcessing.getInfo(2)));
+
 						if (!message.equals("")) {
 							errorDialog(message);
 						} else {
 							showInfo(textbundle.getString("output_mainWindow_10"));
 						}
+
 						return true;
 					}
 
@@ -452,11 +458,12 @@ public class MainWindow
 						hideProgressBarOutputFiles();
 					}
 				};
+
 				worker.start();
 			}
 		} else if (event.getActionCommand().contains("about")) {
 			AboutDialog aboutDialog = new AboutDialog(this);
-			aboutDialog = null;
+			aboutDialog.setVisible(true);
 		}
 	}
 
@@ -499,13 +506,16 @@ public class MainWindow
 		guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true, guiZoomSlider2.getValue()));
 		guiStatus(22);
 		guiPictureElementBottom.updateUI();
+
 		if (guiStatistic.isSelected()) {
-			final Enumeration statisticInformation = dataProcessing.getInfo(1);
-			String statisticInformationString = new String("");
+			final Enumeration<String> statisticInformation = dataProcessing.getInfo(1);
+			String statisticInformationString = "";
+
 			while (statisticInformation.hasMoreElements()) {
 				statisticInformationString = statisticInformationString + (String) statisticInformation.nextElement()
 						+ "\n\r";
 			}
+
 			JOptionPane.showMessageDialog(this, statisticInformationString,
 					textbundle.getString("output_mainWindow_12"), JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -577,7 +587,7 @@ public class MainWindow
 	 * @param colors        (Enumeration)
 	 * @return thresholds (vector)
 	 */
-	public Vector<Object> dialogSlicingThreshold(final int colorQuantity, final Enumeration colors) {
+	public Vector<Object> dialogSlicingThreshold(final int colorQuantity, final Enumeration<ColorObject> colors) {
 		final SlicingThresholdDialog slicingThresholdDialog = new SlicingThresholdDialog(this, colorQuantity, colors);
 		return slicingThresholdDialog.getSelection();
 	}
@@ -626,7 +636,7 @@ public class MainWindow
 					ConfigurationNewDialog configurationNewDialog = new ConfigurationNewDialog(this);
 
 					if (!configurationNewDialog.isCanceled()) {
-						final Enumeration results = configurationNewDialog.getValues().elements();
+						final Enumeration<Number> results = configurationNewDialog.getValues().elements();
 						final Configuration configurationNew = new Configuration(
 								configurationNewDialog.getName(),
 								configurationNewDialog.getBasisName(),
@@ -639,6 +649,7 @@ public class MainWindow
 						ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(
 								this, configurationNew, null);
 						boolean cancel = false;
+
 						while (!(cancel)) {
 							if (!configurationDerivationDialog.isCanceled()) {
 								try {
@@ -657,42 +668,51 @@ public class MainWindow
 									configurationDerivationDialog.showDialog();
 								}
 							}
+
 							cancel = true;
 							configurationDerivationDialog = null;
 						}
 					}
+
 					configurationNewDialog = null;
 					break;
 				}
+
 				// derivate configuration
 				case 2: {
 					final String file = (String) configurationVector.elementAt(configurationLoadingDialog.getFile());
 					Configuration configurationOld = new Configuration();
+
 					if (configurationLoadingDialog.getFile() < 3) {
 						configurationOld = dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile());
 					} else {
 						try {
 							configurationOld = dataProcessing.configurationLoad(file);
-
 						} catch (final IOException loadIO) {
 							errorDialog(textbundle.getString("output_mainWindow_16") + ": " + loadIO);
 						}
 					}
+
 					ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(
 							this, null, configurationOld);
 					boolean cancel = false;
+
 					while (!(cancel)) {
 						if (!configurationDerivationDialog.isCanceled()) {
 							boolean nameAvailable = false;
-							String name = new String("");
-							for (final Enumeration results2 = dataProcessing.getConfiguration().elements(); results2
-									.hasMoreElements();) {
+							String name = "";
+
+							for (final Enumeration<String> results2 = dataProcessing.getConfiguration()
+									.elements(); results2
+											.hasMoreElements();) {
 								name = ((String) results2.nextElement());
+
 								if ((name.substring(0, name.length() - 4))
 										.equals(configurationDerivationDialog.getConfiguration().getName())) {
 									nameAvailable = true;
 								}
 							}
+
 							if (nameAvailable) {
 								errorDialog(textbundle.getString("output_mainWindow_17"));
 								configurationDerivationDialog.showDialog();
@@ -1665,7 +1685,7 @@ public class MainWindow
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_1"));
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_2"));
 		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_3"));
-		guiComboBoxInterpolation = new JComboBox(guiComboBoxInterpolationsVerfahren);
+		guiComboBoxInterpolation = new JComboBox<>(guiComboBoxInterpolationsVerfahren);
 		guiComboBoxInterpolation.setEditable(false);
 		guiComboBoxInterpolation.setEnabled(true);
 		guiThreeDEffect = new JCheckBox(textbundle.getString("dialog_mainWindow_check_1"));
@@ -1971,5 +1991,6 @@ public class MainWindow
 	 */
 	public static void main(final String[] args) {
 		final MainWindow mainWindow = new MainWindow();
+		mainWindow.setVisible(true);
 	}
 }
