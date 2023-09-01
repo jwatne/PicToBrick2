@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * class: SlicingThresholdDialog
  * layer: Gui (three tier architecture)
- * description: dialog for choosing colors und thresholds
+ * description: dialog for choosing colors and thresholds
  *
  * @author Tobias Reichling
  */
@@ -25,7 +25,7 @@ public class SlicingThresholdDialog
 		extends JDialog
 		implements ActionListener, ChangeListener {
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	private final JComboBox[] colors;
+	private final JComboBox<String>[] colors;
 	private final JSpinner[] thresholdFrom;
 	private final JSpinner[] thresholdTo;
 	private final int colorCount;
@@ -39,7 +39,8 @@ public class SlicingThresholdDialog
 	 * @param colorCount
 	 * @param colorEnum
 	 */
-	public SlicingThresholdDialog(final Frame owner, final int colorCount, final Enumeration colorEnum) {
+	@SuppressWarnings("unchecked")
+	public SlicingThresholdDialog(final Frame owner, final int colorCount, final Enumeration<ColorObject> colorEnum) {
 		super(owner, textbundle.getString("dialog_slicingThreshold_frame"), true);
 		this.setLocation(100, 100);
 		this.setResizable(false);
@@ -52,11 +53,13 @@ public class SlicingThresholdDialog
 		ok.setActionCommand("ok");
 		ok.addActionListener(this);
 		// COLOR FOR DROPDOWNBOX
-		final Vector colorSelection = new Vector();
+		final Vector<String> colorSelection = new Vector<>();
+
 		while (colorEnum.hasMoreElements()) {
-			final ColorObject farbe = (ColorObject) (colorEnum.nextElement());
+			final ColorObject farbe = colorEnum.nextElement();
 			colorSelection.add(farbe.getName());
 		}
+
 		// Array init
 		colors = new JComboBox[colorCount];
 		thresholdFrom = new JSpinner[colorCount];
@@ -64,13 +67,14 @@ public class SlicingThresholdDialog
 		// Gui Block for every color
 		int suggestionValueTo = 0;
 		int suggestionValueFrom = 0;
+
 		for (int i = 0; i < colorCount; i++) {
 			JSpinner fromValue;
 			JSpinner toValue;
 			suggestionValueTo = (int) ((100.0 / colorCount) * (i + 1));
 			suggestionValueFrom = (int) ((100.0 / colorCount) * (i));
 			// GUI Elements
-			final JComboBox colorBox = new JComboBox(colorSelection);
+			final JComboBox<String> colorBox = new JComboBox<>(colorSelection);
 			colorBox.setEditable(false);
 			colorBox.setEnabled(true);
 			final SpinnerNumberModel fromModel = new SpinnerNumberModel(suggestionValueFrom, i, 100 - (colorCount - i),
@@ -78,17 +82,21 @@ public class SlicingThresholdDialog
 			fromValue = new JSpinner(fromModel);
 			fromValue.setEnabled(true);
 			fromValue.addChangeListener(this);
+
 			if (i == 0) {
 				fromValue.setEnabled(false);
 			}
+
 			final SpinnerNumberModel toModel = new SpinnerNumberModel(suggestionValueTo, i + 1,
 					100 - (colorCount - i - 1), 1);
 			toValue = new JSpinner(toModel);
 			toValue.setEnabled(true);
 			toValue.addChangeListener(this);
+
 			if (i == (colorCount - 1)) {
 				toValue.setEnabled(false);
 			}
+
 			final JLabel from = new JLabel(textbundle.getString("dialog_slicingThreshold_label_1") + ":");
 			final JLabel to = new JLabel(textbundle.getString("dialog_slicingThreshold_label_2") + ":");
 			final JPanel selectionColor = new JPanel();
