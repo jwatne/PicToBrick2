@@ -33,7 +33,7 @@ implements ActionListener
 		JPanel content = new JPanel();
 		JPanel information = new JPanel(new GridLayout(4,1,10,10));
 		JPanel information2 = new JPanel(new GridLayout(4,1,3,3));
-		JLabel name = new JLabel("PicToBrick 2.0 - 2023-08-24");
+		JLabel name = new JLabel("PicToBrick 2.0 - 2023-09-01");
 		name.setFont(new Font(name.getFont().getFontName(), Font.BOLD, name.getFont().getSize()));
 		JLabel homepage = new JLabel("http://www.pictobrick.de (" + textbundle.getString("dialog_about_label_5") + ")");
 		JLabel author1 = new JLabel("Tobias Reichling - pictobrick@t-reichling.de");
