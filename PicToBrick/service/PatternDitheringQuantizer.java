@@ -1,4 +1,4 @@
-package PicToBrick.service;
+package pictobrick.service;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

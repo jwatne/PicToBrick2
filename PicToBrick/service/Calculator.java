@@ -1,4 +1,4 @@
-package PicToBrick.service;
+package pictobrick.service;
 
 import java.awt.*;
 import java.awt.Graphics2D;

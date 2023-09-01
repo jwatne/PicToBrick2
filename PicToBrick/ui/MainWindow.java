@@ -1,4 +1,4 @@
-package PicToBrick.ui;
+package pictobrick.ui;
 
 import javax.swing.*;
 import java.awt.event.*;

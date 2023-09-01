@@ -1,4 +1,4 @@
-package PicToBrick.ui;
+package pictobrick.ui;
 
 import java.awt.*;
 import java.awt.image.*;

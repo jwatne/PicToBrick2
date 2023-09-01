@@ -1,4 +1,4 @@
-package PicToBrick.service;
+package pictobrick.service;
 
 import java.util.Enumeration;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-package PicToBrick.service;
+package pictobrick.service;
 
 import PicToBrick.model.Configuration;
 import PicToBrick.model.Mosaic;

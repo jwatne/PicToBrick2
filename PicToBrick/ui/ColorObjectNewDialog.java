@@ -1,4 +1,4 @@
-package PicToBrick.ui;
+package pictobrick.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

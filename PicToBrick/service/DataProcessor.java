@@ -1,4 +1,4 @@
-package PicToBrick.service;
+package pictobrick.service;
 
 import java.io.File;
 import java.io.IOException;

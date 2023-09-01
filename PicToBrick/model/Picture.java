@@ -1,4 +1,4 @@
-package PicToBrick.model;
+package pictobrick.model;
 
 import javax.imageio.ImageIO;
 import java.io.*;
