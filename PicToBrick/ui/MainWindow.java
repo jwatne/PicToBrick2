@@ -735,8 +735,8 @@ public class MainWindow
 			switch (configurationLoadingDialog.getSelection()) {
 				// new configuration
 				case 1:
-
 					ConfigurationNewDialog configurationNewDialog = new ConfigurationNewDialog(this);
+
 					if (!configurationNewDialog.isCanceled()) {
 						final Enumeration<Number> results = configurationNewDialog.getValues().elements();
 						final Configuration configurationNew = new Configuration(
@@ -837,18 +837,19 @@ public class MainWindow
 					break;
 				// load existing configuration
 				case 3:
-					final String file = (String) configurationVector.elementAt(configurationLoadingDialog.getFile());
+					final String existingFile = (String) configurationVector
+							.elementAt(configurationLoadingDialog.getFile());
 					if (configurationLoadingDialog.getFile() < 3) {
 						dataProcessing.setCurrentConfiguration(
 								dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile()));
-						showConfigurationInfo(file);
-						showInfo(textbundle.getString("output_mainWindow_13") + " " + file + " "
+						showConfigurationInfo(existingFile);
+						showInfo(textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
 								+ textbundle.getString("output_mainWindow_18") + ".");
 					} else {
 						try {
-							dataProcessing.setCurrentConfiguration(dataProcessing.configurationLoad(file));
-							showConfigurationInfo(file);
-							showInfo(textbundle.getString("output_mainWindow_13") + " " + file + " "
+							dataProcessing.setCurrentConfiguration(dataProcessing.configurationLoad(existingFile));
+							showConfigurationInfo(existingFile);
+							showInfo(textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
 									+ textbundle.getString("output_mainWindow_18") + ".");
 						} catch (final IOException configurationLoadIO) {
 							errorDialog(textbundle.getString("output_mainWindow_19") + ": " + configurationLoadIO);
@@ -924,189 +925,191 @@ public class MainWindow
 			case 1:
 				switch (buttonNumber) {
 					case 1:
-					menuAlgorithm11.setSelected(true);
-                        guiRadioAlgorithm11.setSelected(true);
-                        menuAlgorithm12.setSelected(false);
-                        guiRadioAlgorithm12.setSelected(false);
-                        menuAlgorithm13.setSelected(false);
-                        guiRadioAlgorithm13.setSelected(false);
-                        menuAlgorithm14.setSelected(false);
-                        guiRadioAlgorithm14.setSelected(false);
-                        menuAlgorithm15.setSelected(false);
-                        guiRadioAlgorithm15.setSelected(false);
-                        menuAlgorithm16.setSelected(false);
-                        guiRadioAlgorithm16.setSelected(false);
-                        menuAlgorithm17.setSelected(false);
-                        guiRadioAlgorithm17.setSelected(false);
-                        break;
-                    case 2:
-					menuAlgorithm11.setSelected(false);
-                        guiRadioAlgorithm11.setSelected(false);
-                        menuAlgorithm12.setSelected(true);
-                        guiRadioAlgorithm12.setSelected(true);
-                        menuAlgorithm13.setSelected(false);
-                        guiRadioAlgorithm13.setSelected(false);
-                        menuAlgorithm14.setSelected(false);
-                        guiRadioAlgorithm14.setSelected(false);
-                        menuAlgorithm15.setSelected(false);
-                        guiRadioAlgorithm15.setSelected(false);
-                        menuAlgorithm16.setSelected(false);
-                        guiRadioAlgorithm16.setSelected(false);
-                        menuAlgorithm17.setSelected(false);
-                        guiRadioAlgorithm17.setSelected(false);
-                        break;
-                    case 3:
-					menuAlgorithm11.setSelected(false);
-                        guiRadioAlgorithm11.setSelected(false);
-                        menuAlgorithm12.setSelected(false);
-                        guiRadioAlgorithm12.setSelected(false);
-                        menuAlgorithm13.setSelected(true);
-                        guiRadioAlgorithm13.setSelected(true);
-                        menuAlgorithm14.setSelected(false);
-                        guiRadioAlgorithm14.setSelected(false);
-                        menuAlgorithm15.setSelected(false);
-                        guiRadioAlgorithm15.setSelected(false);
-                        menuAlgorithm16.setSelected(false);
-                        guiRadioAlgorithm16.setSelected(false);
-                        menuAlgorithm17.setSelected(false);
-                        guiRadioAlgorithm17.setSelected(false);
-                        break;
-                    case 4:
-					menuAlgorithm11.setSelected(false);
-                        guiRadioAlgorithm11.setSelected(false);
-                        menuAlgorithm12.setSelected(false);
-                        guiRadioAlgorithm12.setSelected(false);
-                        menuAlgorithm13.setSelected(false);
-                        guiRadioAlgorithm13.setSelected(false);
-                        menuAlgorithm14.setSelected(true);
-                        guiRadioAlgorithm14.setSelected(true);
-                        menuAlgorithm15.setSelected(false);
-                        guiRadioAlgorithm15.setSelected(false);
-                        menuAlgorithm16.setSelected(false);
-                        guiRadioAlgorithm16.setSelected(false);
-                        menuAlgorithm17.setSelected(false);
-                        guiRadioAlgorithm17.setSelected(false);
-                        break;
-                    case 5:
-					menuAlgorithm11.setSelected(false);
-                        guiRadioAlgorithm11.setSelected(false);
-                        menuAlgorithm12.setSelected(false);
-                        guiRadioAlgorithm12.setSelected(false);
-                        menuAlgorithm13.setSelected(false);
-                        guiRadioAlgorithm13.setSelected(false);
-                        menuAlgorithm14.setSelected(false);
-                        guiRadioAlgorithm14.setSelected(false);
-                        menuAlgorithm15.setSelected(true);
-                        guiRadioAlgorithm15.setSelected(true);
-                        menuAlgorithm16.setSelected(false);
-                        guiRadioAlgorithm16.setSelected(false);
-                        menuAlgorithm17.setSelected(false);
-                        guiRadioAlgorithm17.setSelected(false);
-                        break;
-                    case 6:
-					menuAlgorithm11.setSelected(false);
-                        guiRadioAlgorithm11.setSelected(false);
-                        menuAlgorithm12.setSelected(false);
-                        guiRadioAlgorithm12.setSelected(false);
-                        menuAlgorithm13.setSelected(false);
-                        guiRadioAlgorithm13.setSelected(false);
-                        menuAlgorithm14.setSelected(false);
-                        guiRadioAlgorithm14.setSelected(false);
-                        menuAlgorithm15.setSelected(false);
-                        guiRadioAlgorithm15.setSelected(false);
-                        menuAlgorithm16.setSelected(true);
-                        guiRadioAlgorithm16.setSelected(true);
-                        menuAlgorithm17.setSelected(false);
-                        guiRadioAlgorithm17.setSelected(false);
-                        break;
-                    case 7: menuAlgorithm11.setSelected(false);
-                        guiRadioAlgorithm11.setSelected(false);
-                        menuAlgorithm12.setSelected(false);
-                        guiRadioAlgorithm12.setSelected(false);
-                        menuAlgorithm13.setSelected(false);
-                        guiRadioAlgorithm13.setSelected(false);
-                        menuAlgorithm14.setSelected(false);
-                        guiRadioAlgorithm14.setSelected(false);
-                        menuAlgorithm15.setSelected(false);
-                        guiRadioAlgorithm15.setSelected(false);
-                        menuAlgorithm16.setSelected(false);
-                        guiRadioAlgorithm16.setSelected(false);
-                        menuAlgorithm17.setSelected(true);
-                        guiRadioAlgorithm17.setSelected(true);
-                        break;
-                    default:
-                        break;
+						menuAlgorithm11.setSelected(true);
+						guiRadioAlgorithm11.setSelected(true);
+						menuAlgorithm12.setSelected(false);
+						guiRadioAlgorithm12.setSelected(false);
+						menuAlgorithm13.setSelected(false);
+						guiRadioAlgorithm13.setSelected(false);
+						menuAlgorithm14.setSelected(false);
+						guiRadioAlgorithm14.setSelected(false);
+						menuAlgorithm15.setSelected(false);
+						guiRadioAlgorithm15.setSelected(false);
+						menuAlgorithm16.setSelected(false);
+						guiRadioAlgorithm16.setSelected(false);
+						menuAlgorithm17.setSelected(false);
+						guiRadioAlgorithm17.setSelected(false);
+						break;
+					case 2:
+						menuAlgorithm11.setSelected(false);
+						guiRadioAlgorithm11.setSelected(false);
+						menuAlgorithm12.setSelected(true);
+						guiRadioAlgorithm12.setSelected(true);
+						menuAlgorithm13.setSelected(false);
+						guiRadioAlgorithm13.setSelected(false);
+						menuAlgorithm14.setSelected(false);
+						guiRadioAlgorithm14.setSelected(false);
+						menuAlgorithm15.setSelected(false);
+						guiRadioAlgorithm15.setSelected(false);
+						menuAlgorithm16.setSelected(false);
+						guiRadioAlgorithm16.setSelected(false);
+						menuAlgorithm17.setSelected(false);
+						guiRadioAlgorithm17.setSelected(false);
+						break;
+					case 3:
+						menuAlgorithm11.setSelected(false);
+						guiRadioAlgorithm11.setSelected(false);
+						menuAlgorithm12.setSelected(false);
+						guiRadioAlgorithm12.setSelected(false);
+						menuAlgorithm13.setSelected(true);
+						guiRadioAlgorithm13.setSelected(true);
+						menuAlgorithm14.setSelected(false);
+						guiRadioAlgorithm14.setSelected(false);
+						menuAlgorithm15.setSelected(false);
+						guiRadioAlgorithm15.setSelected(false);
+						menuAlgorithm16.setSelected(false);
+						guiRadioAlgorithm16.setSelected(false);
+						menuAlgorithm17.setSelected(false);
+						guiRadioAlgorithm17.setSelected(false);
+						break;
+					case 4:
+						menuAlgorithm11.setSelected(false);
+						guiRadioAlgorithm11.setSelected(false);
+						menuAlgorithm12.setSelected(false);
+						guiRadioAlgorithm12.setSelected(false);
+						menuAlgorithm13.setSelected(false);
+						guiRadioAlgorithm13.setSelected(false);
+						menuAlgorithm14.setSelected(true);
+						guiRadioAlgorithm14.setSelected(true);
+						menuAlgorithm15.setSelected(false);
+						guiRadioAlgorithm15.setSelected(false);
+						menuAlgorithm16.setSelected(false);
+						guiRadioAlgorithm16.setSelected(false);
+						menuAlgorithm17.setSelected(false);
+						guiRadioAlgorithm17.setSelected(false);
+						break;
+					case 5:
+						menuAlgorithm11.setSelected(false);
+						guiRadioAlgorithm11.setSelected(false);
+						menuAlgorithm12.setSelected(false);
+						guiRadioAlgorithm12.setSelected(false);
+						menuAlgorithm13.setSelected(false);
+						guiRadioAlgorithm13.setSelected(false);
+						menuAlgorithm14.setSelected(false);
+						guiRadioAlgorithm14.setSelected(false);
+						menuAlgorithm15.setSelected(true);
+						guiRadioAlgorithm15.setSelected(true);
+						menuAlgorithm16.setSelected(false);
+						guiRadioAlgorithm16.setSelected(false);
+						menuAlgorithm17.setSelected(false);
+						guiRadioAlgorithm17.setSelected(false);
+						break;
+					case 6:
+						menuAlgorithm11.setSelected(false);
+						guiRadioAlgorithm11.setSelected(false);
+						menuAlgorithm12.setSelected(false);
+						guiRadioAlgorithm12.setSelected(false);
+						menuAlgorithm13.setSelected(false);
+						guiRadioAlgorithm13.setSelected(false);
+						menuAlgorithm14.setSelected(false);
+						guiRadioAlgorithm14.setSelected(false);
+						menuAlgorithm15.setSelected(false);
+						guiRadioAlgorithm15.setSelected(false);
+						menuAlgorithm16.setSelected(true);
+						guiRadioAlgorithm16.setSelected(true);
+						menuAlgorithm17.setSelected(false);
+						guiRadioAlgorithm17.setSelected(false);
+						break;
+					case 7:
+						menuAlgorithm11.setSelected(false);
+						guiRadioAlgorithm11.setSelected(false);
+						menuAlgorithm12.setSelected(false);
+						guiRadioAlgorithm12.setSelected(false);
+						menuAlgorithm13.setSelected(false);
+						guiRadioAlgorithm13.setSelected(false);
+						menuAlgorithm14.setSelected(false);
+						guiRadioAlgorithm14.setSelected(false);
+						menuAlgorithm15.setSelected(false);
+						guiRadioAlgorithm15.setSelected(false);
+						menuAlgorithm16.setSelected(false);
+						guiRadioAlgorithm16.setSelected(false);
+						menuAlgorithm17.setSelected(true);
+						guiRadioAlgorithm17.setSelected(true);
+						break;
+					default:
+						break;
 				}
 				break;
 			case 2:
 				switch (buttonNumber) {
 					case 1:
-					menuAlgorithm21.setSelected(true);
-                        guiRadioAlgorithm21.setSelected(true);
-                        menuAlgorithm22.setSelected(false);
-                        guiRadioAlgorithm22.setSelected(false);
-                        menuAlgorithm23.setSelected(false);
-                        guiRadioAlgorithm23.setSelected(false);
-                        menuAlgorithm24.setSelected(false);
-                        guiRadioAlgorithm24.setSelected(false);
-                        menuAlgorithm25.setSelected(false);
-                        guiRadioAlgorithm25.setSelected(false);
-                        guiStatistic.setEnabled(true);
-                        break;
-                    case 2:
-					menuAlgorithm21.setSelected(false);
-                        guiRadioAlgorithm21.setSelected(false);
-                        menuAlgorithm22.setSelected(true);
-                        guiRadioAlgorithm22.setSelected(true);
-                        menuAlgorithm23.setSelected(false);
-                        guiRadioAlgorithm23.setSelected(false);
-                        menuAlgorithm24.setSelected(false);
-                        guiRadioAlgorithm24.setSelected(false);
-                        menuAlgorithm25.setSelected(false);
-                        guiRadioAlgorithm25.setSelected(false);
-                        guiStatistic.setEnabled(true);
-                        break;
-                    case 3:
-					menuAlgorithm21.setSelected(false);
-                        guiRadioAlgorithm21.setSelected(false);
-                        menuAlgorithm22.setSelected(false);
-                        guiRadioAlgorithm22.setSelected(false);
-                        menuAlgorithm23.setSelected(true);
-                        guiRadioAlgorithm23.setSelected(true);
-                        menuAlgorithm24.setSelected(false);
-                        guiRadioAlgorithm24.setSelected(false);
-                        menuAlgorithm25.setSelected(false);
-                        guiRadioAlgorithm25.setSelected(false);
-                        guiStatistic.setEnabled(true);
-                        break;
-                    case 4:
-					menuAlgorithm21.setSelected(false);
-                        guiRadioAlgorithm21.setSelected(false);
-                        menuAlgorithm22.setSelected(false);
-                        guiRadioAlgorithm22.setSelected(false);
-                        menuAlgorithm23.setSelected(false);
-                        guiRadioAlgorithm23.setSelected(false);
-                        menuAlgorithm24.setSelected(true);
-                        guiRadioAlgorithm24.setSelected(true);
-                        menuAlgorithm25.setSelected(false);
-                        guiRadioAlgorithm25.setSelected(false);
-                        guiStatistic.setEnabled(true);
-                        break;
-                    case 5: menuAlgorithm21.setSelected(false);
-                        guiRadioAlgorithm21.setSelected(false);
-                        menuAlgorithm22.setSelected(false);
-                        guiRadioAlgorithm22.setSelected(false);
-                        menuAlgorithm23.setSelected(false);
-                        guiRadioAlgorithm23.setSelected(false);
-                        menuAlgorithm24.setSelected(false);
-                        guiRadioAlgorithm24.setSelected(false);
-                        menuAlgorithm25.setSelected(true);
-                        guiRadioAlgorithm25.setSelected(true);
-                        guiStatistic.setEnabled(false);
-                        guiStatistic.setSelected(false);
-                        break;
-                    default:
-                        break;
+						menuAlgorithm21.setSelected(true);
+						guiRadioAlgorithm21.setSelected(true);
+						menuAlgorithm22.setSelected(false);
+						guiRadioAlgorithm22.setSelected(false);
+						menuAlgorithm23.setSelected(false);
+						guiRadioAlgorithm23.setSelected(false);
+						menuAlgorithm24.setSelected(false);
+						guiRadioAlgorithm24.setSelected(false);
+						menuAlgorithm25.setSelected(false);
+						guiRadioAlgorithm25.setSelected(false);
+						guiStatistic.setEnabled(true);
+						break;
+					case 2:
+						menuAlgorithm21.setSelected(false);
+						guiRadioAlgorithm21.setSelected(false);
+						menuAlgorithm22.setSelected(true);
+						guiRadioAlgorithm22.setSelected(true);
+						menuAlgorithm23.setSelected(false);
+						guiRadioAlgorithm23.setSelected(false);
+						menuAlgorithm24.setSelected(false);
+						guiRadioAlgorithm24.setSelected(false);
+						menuAlgorithm25.setSelected(false);
+						guiRadioAlgorithm25.setSelected(false);
+						guiStatistic.setEnabled(true);
+						break;
+					case 3:
+						menuAlgorithm21.setSelected(false);
+						guiRadioAlgorithm21.setSelected(false);
+						menuAlgorithm22.setSelected(false);
+						guiRadioAlgorithm22.setSelected(false);
+						menuAlgorithm23.setSelected(true);
+						guiRadioAlgorithm23.setSelected(true);
+						menuAlgorithm24.setSelected(false);
+						guiRadioAlgorithm24.setSelected(false);
+						menuAlgorithm25.setSelected(false);
+						guiRadioAlgorithm25.setSelected(false);
+						guiStatistic.setEnabled(true);
+						break;
+					case 4:
+						menuAlgorithm21.setSelected(false);
+						guiRadioAlgorithm21.setSelected(false);
+						menuAlgorithm22.setSelected(false);
+						guiRadioAlgorithm22.setSelected(false);
+						menuAlgorithm23.setSelected(false);
+						guiRadioAlgorithm23.setSelected(false);
+						menuAlgorithm24.setSelected(true);
+						guiRadioAlgorithm24.setSelected(true);
+						menuAlgorithm25.setSelected(false);
+						guiRadioAlgorithm25.setSelected(false);
+						guiStatistic.setEnabled(true);
+						break;
+					case 5:
+						menuAlgorithm21.setSelected(false);
+						guiRadioAlgorithm21.setSelected(false);
+						menuAlgorithm22.setSelected(false);
+						guiRadioAlgorithm22.setSelected(false);
+						menuAlgorithm23.setSelected(false);
+						guiRadioAlgorithm23.setSelected(false);
+						menuAlgorithm24.setSelected(false);
+						guiRadioAlgorithm24.setSelected(false);
+						menuAlgorithm25.setSelected(true);
+						guiRadioAlgorithm25.setSelected(true);
+						guiStatistic.setEnabled(false);
+						guiStatistic.setSelected(false);
+						break;
+					default:
+						break;
 				}
 				break;
 			default:
@@ -1547,10 +1550,13 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 * @param fileName
 	 */
-	private void showImageInfo(final String fileName) {
+	private void showImageInfo(final String imageFileName) {
+		String fileName = imageFileName;
+
 		if (fileName.length() > 18) {
 			fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
 		}
+
 		guiLabelImage.setText(textbundle.getString("output_mainWindow_20") + ": " + fileName);
 	}
 
@@ -1561,10 +1567,13 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 * @param fileName
 	 */
-	private void showConfigurationInfo(final String fileName) {
+	private void showConfigurationInfo(final String configFilename) {
+		String fileName = configFilename;
+
 		if (fileName.length() > 18) {
 			fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
 		}
+
 		guiLabelConfiguration.setText("CFG: " + fileName);
 	}
 
