@@ -116,17 +116,16 @@ public class Mosaic {
 	public List<List<Vector<String>>> mosaicCopy() {
 		// final List<List<Vector<String>>> copy = new
 		// Vector[mosaicHeight][mosaicWidth];
-		final List<List<Vector<String>>> copy = new ArrayList<>(mosaicHeight);
+		final Mosaic copyMosaic = new Mosaic(mosaicWidth, mosaicHeight, dataManagement);
+		final List<List<Vector<String>>> copy = copyMosaic.getMosaic();
 
 		for (int row = 0; row < mosaicHeight; row++) {
-			copy.add(row, new ArrayList<>());
-
 			for (int column = 0; column < mosaicWidth; column++) {
-				copy.get(row).set(column, new Vector<>());
+				final Vector<String> vector = copy.get(row).get(column);
 
 				for (final Enumeration<String> pixel = mosaicMatrix.get(row).get(column).elements(); pixel
 						.hasMoreElements();) {
-					copy.get(row).get(column).add(pixel.nextElement());
+					vector.add(pixel.nextElement());
 				}
 			}
 		}

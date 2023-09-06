@@ -1,11 +1,15 @@
 package pictobrick.service;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Enumeration;
 import java.util.List;
-import java.awt.*;
-import java.awt.image.*;
+import java.util.ResourceBundle;
+import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
@@ -22,6 +26,11 @@ import pictobrick.ui.MainWindow;
  * @author Adrian Schuetz
  */
 public class DataProcessor {
+	private static final int ELEMENT_SIZE_OPTIMIZATION = 1;
+	private static final int MOLDING_OPTIMIZATION = 2;
+	private static final int COSTS_OPTIMIZATION = 3;
+	private static final int STABILITY_OPTIMIZATION = 4;
+	private static final int BASIC_ELEMENTS_ONLY = 5;
 	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	private final DataManagement dataManagement;
 	private final MainWindow mainWindow;
@@ -274,7 +283,7 @@ public class DataProcessor {
 		final SwingWorker worker = new SwingWorker() {
 			public Object construct() {
 				switch (tilingAlgo) {
-					case 1:
+					case ELEMENT_SIZE_OPTIMIZATION:
 						elementSizeOptimisation = new ElementSizeOptimizer(dataProcessing, calculation);
 						elementSizeOptimisation.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
@@ -294,6 +303,7 @@ public class DataProcessor {
 							} catch (final Exception e) {
 								System.out.println(e.toString());
 							}
+
 							dataProcessing.setInfo(textbundle.getString("output_dataProcessing_1") + ":", 3);
 							dataProcessing.setInfo(textbundle.getString("output_dataProcessing_2"), 3);
 							dataProcessing.setInfo(textbundle.getString("output_dataProcessing_3") + ": "
@@ -310,7 +320,7 @@ public class DataProcessor {
 							}
 						}
 						break;
-					case 2:
+					case MOLDING_OPTIMIZATION:
 						// Copy the mosaic for statistic evaluation
 						if (statisticOutput) {
 							statisticMosaic = new Mosaic(dataManagement.getMosaicWidth(),
@@ -357,8 +367,7 @@ public class DataProcessor {
 						}
 
 						break;
-					case 3:
-						// Copy the mosaic for statistic evaluation
+					case COSTS_OPTIMIZATION:
 						if (statisticOutput) {
 							statisticMosaic = new Mosaic(dataManagement.getMosaicWidth(),
 									dataManagement.getMosaicHeight(), dataManagement);
@@ -372,6 +381,7 @@ public class DataProcessor {
 								dataManagement.getMosaicInstance(),
 								false);
 						costsOptimisation = null;
+
 						// Statistic evaluation with element size optimisation
 						if (statisticOutput) {
 							dataProcessing.setInfo(textbundle.getString("output_dataProcessing_1") + ":", 3);
@@ -384,7 +394,7 @@ public class DataProcessor {
 							elementSizeOptimisation = null;
 						}
 						break;
-					case 4:
+					case STABILITY_OPTIMIZATION:
 						// Only print statistic if improvements are selected
 						if (statisticOutput) {
 							// Copy the mosaic for statistic evaluation
@@ -431,7 +441,7 @@ public class DataProcessor {
 							stabilityOptimisation = null;
 						}
 						break;
-					case 5:
+					case BASIC_ELEMENTS_ONLY:
 						basicElementsOnly = new BasicElementsOnlyTiler(dataProcessing, calculation);
 						basicElementsOnly.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
