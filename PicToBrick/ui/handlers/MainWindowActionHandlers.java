@@ -1,12 +1,19 @@
 package pictobrick.ui.handlers;
 
+import java.awt.Cursor;
+import java.awt.Dimension;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 
 import pictobrick.service.DataProcessor;
+import pictobrick.service.SwingWorker;
 import pictobrick.ui.MainWindow;
+import pictobrick.ui.MosaicSizeDialog;
+import pictobrick.ui.PictureElement;
+import pictobrick.ui.WorkingDirectoryDialog;
 
 /**
  * Handles ActionHandler events for the MainWindow. Code moved from MainWindow
@@ -256,6 +263,144 @@ public class MainWindowActionHandlers {
             mainWindow.guiStatus(21);
             dataProcessing.generateMosaic(mosaicWidth, mosaicHeight, quantisation, tiling,
                     guiThreeDEffect.isSelected(), guiStatistic.isSelected());
+        }
+    }
+
+    /**
+     * Process load image request.
+     */
+    public void loadImage() {
+        mainWindow.adjustDividerLocation();
+        mainWindow.imageLoad();
+        final DataProcessor dataProcessing = mainWindow.getDataProcessing();
+
+        if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
+            mainWindow.guiStatus(11);
+        }
+    }
+
+    /**
+     * Process load configuration request.
+     */
+    public void loadConfiguration() {
+        final DataProcessor dataProcessing = mainWindow.getDataProcessing();
+
+        if (dataProcessing.getWorkingDirectory() == null) {
+            mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_9"));
+        } else {
+            mainWindow.configurationLoad();
+        }
+
+        if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
+            mainWindow.guiStatus(11);
+        }
+    }
+
+    /**
+     * Display the dialog to set the working directory.
+     */
+    public void setWorkingDirectory() {
+        final DataProcessor dataProcessing = mainWindow.getDataProcessing();
+        WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(mainWindow,
+                dataProcessing.getWorkingDirectory());
+
+        if (workingDirectoryDialog.getButton() == 1) {
+            mainWindow.workingDirectory(true);
+        }
+
+        workingDirectoryDialog = null;
+    }
+
+    /**
+     * Display dialog for setting the dimensions of the mosaic to be created.
+     */
+    public void setMosaicDimensions() {
+        final DataProcessor dataProcessing = mainWindow.getDataProcessing();
+        MosaicSizeDialog mosaicDimensionDialog = new MosaicSizeDialog(mainWindow,
+                dataProcessing.getCurrentConfiguration());
+        final PictureElement guiPictureElementTop = mainWindow.getGuiPictureElementTop();
+
+        if (!mosaicDimensionDialog.isCanceled()) {
+            guiPictureElementTop.removeMouseListener(guiPictureElementTop);
+            guiPictureElementTop.removeMouseMotionListener(guiPictureElementTop);
+            guiPictureElementTop.setCutoutRatio(new Dimension(
+                    mosaicDimensionDialog.getArea().width * dataProcessing.getConfigurationDimension().width,
+                    mosaicDimensionDialog.getArea().height * dataProcessing.getConfigurationDimension().height));
+            guiPictureElementTop.addMouseListener(guiPictureElementTop);
+            guiPictureElementTop.addMouseMotionListener(guiPictureElementTop);
+            guiPictureElementTop.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+            final int mosaicWidth = mosaicDimensionDialog.getArea().width;
+            mainWindow.setMosaicWidth(mosaicWidth);
+            final int mosaicHeight = mosaicDimensionDialog.getArea().height;
+            mainWindow.setMosaicHeight(mosaicHeight);
+            mainWindow.showDimensionInfo(mosaicWidth, mosaicHeight, false);
+            mainWindow.guiStatus(12);
+        }
+
+        mosaicDimensionDialog = null;
+    }
+
+    /**
+     * Process generate documents request.
+     */
+    public void generateDocument() {
+        final JCheckBox guiOutputGrafic = mainWindow.getGuiOutputGrafic();
+        final JCheckBox guiOutputConfiguration = mainWindow.getGuiOutputConfiguration();
+        final JCheckBox guiOutputMaterial = mainWindow.getGuiOutputMaterial();
+        final JCheckBox guiOutputBuildingInstruction = mainWindow.getGuiOutputBuildingInstruction();
+        final JCheckBox guiOutputXml = mainWindow.getGuiOutputXml();
+
+        if (guiOutputGrafic.isSelected() ||
+                guiOutputConfiguration.isSelected() ||
+                guiOutputMaterial.isSelected() ||
+                guiOutputBuildingInstruction.isSelected() ||
+                guiOutputXml.isSelected()) {
+            mainWindow.guiStatus(31);
+            mainWindow.refreshProgressBarOutputFiles(0, 1);
+            mainWindow.refreshProgressBarOutputFiles(0, 2);
+            mainWindow.refreshProgressBarOutputFiles(0, 3);
+            mainWindow.refreshProgressBarOutputFiles(0, 4);
+            mainWindow.refreshProgressBarOutputFiles(0, 5);
+            mainWindow.refreshProgressBarOutputFiles(0, 6);
+            mainWindow.setStatusProgressBarOutputFiles(guiOutputGrafic.isSelected(),
+                    guiOutputConfiguration.isSelected(),
+                    guiOutputMaterial.isSelected(),
+                    guiOutputBuildingInstruction.isSelected(),
+                    guiOutputXml.isSelected(),
+                    true);
+            mainWindow.showProgressBarOutputFiles();
+
+            // SwingWorker
+            // "construct": all commands are startet in a new thread
+            // "finished": all commands are queued to the gui thread
+            // after finshing aforesaid (construct-)thread
+            final SwingWorker worker = new SwingWorker() {
+                public Object construct() {
+                    final DataProcessor dataProcessing = mainWindow.getDataProcessing();
+                    final String message = dataProcessing.generateDocuments(
+                            guiOutputGrafic.isSelected(),
+                            guiOutputConfiguration.isSelected(),
+                            guiOutputMaterial.isSelected(),
+                            guiOutputBuildingInstruction.isSelected(),
+                            guiOutputXml.isSelected(),
+                            dataProcessing.getInfo(2));
+
+                    if (!message.equals("")) {
+                        mainWindow.errorDialog(message);
+                    } else {
+                        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_10"));
+                    }
+
+                    return true;
+                }
+
+                public void finished() {
+                    mainWindow.guiStatus(32);
+                    mainWindow.hideProgressBarOutputFiles();
+                }
+            };
+
+            worker.start();
         }
     }
 

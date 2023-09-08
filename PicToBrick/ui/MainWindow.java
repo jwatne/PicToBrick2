@@ -3,7 +3,6 @@ package pictobrick.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -45,7 +44,6 @@ import javax.swing.filechooser.FileFilter;
 import pictobrick.model.ColorObject;
 import pictobrick.model.Configuration;
 import pictobrick.service.DataProcessor;
-import pictobrick.service.SwingWorker;
 import pictobrick.ui.handlers.MainWindowActionHandlers;
 
 /**
@@ -173,6 +171,33 @@ public class MainWindow
 	private int guiZoomSlider1Value;
 	private int guiZoomSlider2Value;
 	private final MainWindowActionHandlers mainWindowActionHandlers;
+
+	/**
+	 * method: MainWindow
+	 * description: constructor
+	 *
+	 * @author Tobias Reichling
+	 */
+	public MainWindow() {
+		super("pictobrick");
+		addWindowListener(new WindowClosingAdapter(true));
+		dataProcessing = new DataProcessor(this);
+		progressBarsAlgorithm = new ProgressBarsAlgorithms(this);
+		progressBarsOutputFiles = new ProgressBarsOutputFiles(this);
+		mainWindowActionHandlers = new MainWindowActionHandlers(this);
+		buildMenu();
+		buildGui();
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		// Check if the minimum of 256MB memory are available
+		if (((Runtime.getRuntime().maxMemory() / 1024) / 1024) < 250) {
+			errorDialog(textbundle.getString("dialog_mainWindow_error_1") + "\r\n" +
+					textbundle.getString("dialog_mainWindow_error_2") + "\r\n" +
+					textbundle.getString("dialog_mainWindow_error_3"));
+		}
+
+		workingDirectory(false);
+	}
 
 	public JCheckBoxMenuItem getMenuGrafic() {
 		return menuGrafic;
@@ -314,31 +339,12 @@ public class MainWindow
 		this.guiStatistic = guiStatistic;
 	}
 
-	/**
-	 * method: MainWindow
-	 * description: constructor
-	 *
-	 * @author Tobias Reichling
-	 */
-	public MainWindow() {
-		super("pictobrick");
-		addWindowListener(new WindowClosingAdapter(true));
-		dataProcessing = new DataProcessor(this);
-		progressBarsAlgorithm = new ProgressBarsAlgorithms(this);
-		progressBarsOutputFiles = new ProgressBarsOutputFiles(this);
-		mainWindowActionHandlers = new MainWindowActionHandlers(this);
-		buildMenu();
-		buildGui();
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
+	public PictureElement getGuiPictureElementTop() {
+		return guiPictureElementTop;
+	}
 
-		// Check if the minimum of 256MB memory are available
-		if (((Runtime.getRuntime().maxMemory() / 1024) / 1024) < 250) {
-			errorDialog(textbundle.getString("dialog_mainWindow_error_1") + "\r\n" +
-					textbundle.getString("dialog_mainWindow_error_2") + "\r\n" +
-					textbundle.getString("dialog_mainWindow_error_3"));
-		}
-
-		workingDirectory(false);
+	public void setGuiPictureElementTop(PictureElement guiPictureElementTop) {
+		this.guiPictureElementTop = guiPictureElementTop;
 	}
 
 	/**
@@ -542,103 +548,19 @@ public class MainWindow
 		} else if (actionCommand.contains("mosaicgenerate")) {
 			mainWindowActionHandlers.generateMosaic();
 		} else if (actionCommand.contains("imageload")) {
-			adjustDividerLocation();
-			imageLoad();
-
-			if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
-				guiStatus(11);
-			}
+			mainWindowActionHandlers.loadImage();
 		} else if (actionCommand.contains("configurationload")) {
-
-			if (dataProcessing.getWorkingDirectory() == null) {
-				errorDialog(textbundle.getString("output_mainWindow_9"));
-			} else {
-				configurationLoad();
-			}
-			if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
-				guiStatus(11);
-			}
+			mainWindowActionHandlers.loadConfiguration();
 		} else if (actionCommand.contains("settings")) {
-			WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(this,
-					dataProcessing.getWorkingDirectory());
-			if (workingDirectoryDialog.getButton() == 1) {
-				workingDirectory(true);
-			}
-			workingDirectoryDialog = null;
+			mainWindowActionHandlers.setWorkingDirectory();
 		} else if (actionCommand.contains("exit")) {
 			this.setVisible(false);
 			this.dispose();
 			System.exit(0);
 		} else if (actionCommand.contains("mosaicdimension")) {
-			MosaicSizeDialog mosaicDimensionDialog = new MosaicSizeDialog(this,
-					dataProcessing.getCurrentConfiguration());
-			if (!mosaicDimensionDialog.isCanceled()) {
-				guiPictureElementTop.removeMouseListener(guiPictureElementTop);
-				guiPictureElementTop.removeMouseMotionListener(guiPictureElementTop);
-				guiPictureElementTop.setCutoutRatio(new Dimension(
-						mosaicDimensionDialog.getArea().width * dataProcessing.getConfigurationDimension().width,
-						mosaicDimensionDialog.getArea().height * dataProcessing.getConfigurationDimension().height));
-				guiPictureElementTop.addMouseListener(guiPictureElementTop);
-				guiPictureElementTop.addMouseMotionListener(guiPictureElementTop);
-				guiPictureElementTop.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-				mosaicWidth = mosaicDimensionDialog.getArea().width;
-				mosaicHeight = mosaicDimensionDialog.getArea().height;
-				showDimensionInfo(mosaicWidth, mosaicHeight, false);
-				guiStatus(12);
-			}
-			mosaicDimensionDialog = null;
+			mainWindowActionHandlers.setMosaicDimensions();
 		} else if (actionCommand.contains("documentgenerate")) {
-			if (guiOutputGrafic.isSelected() ||
-					guiOutputConfiguration.isSelected() ||
-					guiOutputMaterial.isSelected() ||
-					guiOutputBuildingInstruction.isSelected() ||
-					guiOutputXml.isSelected()) {
-				guiStatus(31);
-				refreshProgressBarOutputFiles(0, 1);
-				refreshProgressBarOutputFiles(0, 2);
-				refreshProgressBarOutputFiles(0, 3);
-				refreshProgressBarOutputFiles(0, 4);
-				refreshProgressBarOutputFiles(0, 5);
-				refreshProgressBarOutputFiles(0, 6);
-				setStatusProgressBarOutputFiles(guiOutputGrafic.isSelected(),
-						guiOutputConfiguration.isSelected(),
-						guiOutputMaterial.isSelected(),
-						guiOutputBuildingInstruction.isSelected(),
-						guiOutputXml.isSelected(),
-						true);
-				showProgressBarOutputFiles();
-
-				// SwingWorker
-				// "construct": all commands are startet in a new thread
-				// "finished": all commands are queued to the gui thread
-				// after finshing aforesaid (construct-)thread
-				final SwingWorker worker = new SwingWorker() {
-					public Object construct() {
-						final String message = dataProcessing.generateDocuments(
-								guiOutputGrafic.isSelected(),
-								guiOutputConfiguration.isSelected(),
-								guiOutputMaterial.isSelected(),
-								guiOutputBuildingInstruction.isSelected(),
-								guiOutputXml.isSelected(),
-								dataProcessing.getInfo(2));
-
-						if (!message.equals("")) {
-							errorDialog(message);
-						} else {
-							showInfo(textbundle.getString("output_mainWindow_10"));
-						}
-
-						return true;
-					}
-
-					public void finished() {
-						guiStatus(32);
-						hideProgressBarOutputFiles();
-					}
-				};
-
-				worker.start();
-			}
+			mainWindowActionHandlers.generateDocument();
 		} else if (actionCommand.contains("about")) {
 			final AboutDialog aboutDialog = new AboutDialog(this);
 			aboutDialog.setVisible(true);
@@ -802,7 +724,7 @@ public class MainWindow
 	 *
 	 * @author Tobias Reichling
 	 */
-	private void configurationLoad() {
+	public void configurationLoad() {
 		final Vector<String> configurationVector = dataProcessing.getConfiguration();
 		ConfigurationLoadingDialog configurationLoadingDialog = new ConfigurationLoadingDialog(this,
 				configurationVector);
@@ -945,7 +867,7 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 * @exception IOExcepion
 	 */
-	private void imageLoad() {
+	public void imageLoad() {
 		// system dialog
 		final JFileChooser d = new JFileChooser();
 		d.setFileFilter(new FileFilter() {
@@ -1556,7 +1478,7 @@ public class MainWindow
 	 * @param heightValue
 	 * @param reset       (true/false)
 	 */
-	private void showDimensionInfo(final int widthValue, final int heightValue, final boolean reset) {
+	public void showDimensionInfo(final int widthValue, final int heightValue, final boolean reset) {
 		if (reset) {
 			guiLabelWidth.setText(textbundle.getString("output_mainWindow_29") + ": ");
 			guiLabelHeight.setText(textbundle.getString("output_mainWindow_30") + ": ");
