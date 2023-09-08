@@ -37,9 +37,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -49,6 +46,7 @@ import pictobrick.model.ColorObject;
 import pictobrick.model.Configuration;
 import pictobrick.service.DataProcessor;
 import pictobrick.service.SwingWorker;
+import pictobrick.ui.handlers.MainWindowActionHandlers;
 
 /**
  * class: MainWindow
@@ -61,7 +59,7 @@ public class MainWindow
 		extends JFrame
 		implements ActionListener, ChangeListener {
 	// resource bundle
-	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
+	public static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	// --------------------------------------------------------------------------------------------------------
 	// data processing
 	private final DataProcessor dataProcessing;
@@ -174,6 +172,147 @@ public class MainWindow
 	private JSlider guiZoomSlider2;
 	private int guiZoomSlider1Value;
 	private int guiZoomSlider2Value;
+	private final MainWindowActionHandlers mainWindowActionHandlers;
+
+	public JCheckBoxMenuItem getMenuGrafic() {
+		return menuGrafic;
+	}
+
+	public void setMenuGrafic(final JCheckBoxMenuItem menuGrafic) {
+		this.menuGrafic = menuGrafic;
+	}
+
+	public JCheckBox getGuiOutputGrafic() {
+		return guiOutputGrafic;
+	}
+
+	public void setGuiOutputGrafic(final JCheckBox guiOutputGrafic) {
+		this.guiOutputGrafic = guiOutputGrafic;
+	}
+
+	public JCheckBoxMenuItem getMenuXml() {
+		return menuXml;
+	}
+
+	public void setMenuXml(final JCheckBoxMenuItem menuXml) {
+		this.menuXml = menuXml;
+	}
+
+	public JCheckBox getGuiOutputXml() {
+		return guiOutputXml;
+	}
+
+	public void setGuiOutputXml(final JCheckBox guiOutputXml) {
+		this.guiOutputXml = guiOutputXml;
+	}
+
+	public JCheckBoxMenuItem getMenuConfiguration() {
+		return menuConfiguration;
+	}
+
+	public void setMenuConfiguration(final JCheckBoxMenuItem menuConfiguration) {
+		this.menuConfiguration = menuConfiguration;
+	}
+
+	public JCheckBox getGuiOutputConfiguration() {
+		return guiOutputConfiguration;
+	}
+
+	public void setGuiOutputConfiguration(final JCheckBox guiOutputConfiguration) {
+		this.guiOutputConfiguration = guiOutputConfiguration;
+	}
+
+	public JCheckBoxMenuItem getMenuBuildingInstruction() {
+		return menuBuildingInstruction;
+	}
+
+	public void setMenuBuildingInstruction(final JCheckBoxMenuItem menuBuildingInstruction) {
+		this.menuBuildingInstruction = menuBuildingInstruction;
+	}
+
+	public JCheckBox getGuiOutputBuildingInstruction() {
+		return guiOutputBuildingInstruction;
+	}
+
+	public void setGuiOutputBuildingInstruction(final JCheckBox guiOutputBuildingInstruction) {
+		this.guiOutputBuildingInstruction = guiOutputBuildingInstruction;
+	}
+
+	public JCheckBoxMenuItem getMenuMaterial() {
+		return menuMaterial;
+	}
+
+	public void setMenuMaterial(final JCheckBoxMenuItem menuMaterial) {
+		this.menuMaterial = menuMaterial;
+	}
+
+	public JCheckBox getGuiOutputMaterial() {
+		return guiOutputMaterial;
+	}
+
+	public void setGuiOutputMaterial(final JCheckBox guiOutputMaterial) {
+		this.guiOutputMaterial = guiOutputMaterial;
+	}
+
+	public DataProcessor getDataProcessing() {
+		return dataProcessing;
+	}
+
+	public JComboBox<String> getGuiComboBoxInterpolation() {
+		return guiComboBoxInterpolation;
+	}
+
+	public void setGuiComboBoxInterpolation(final JComboBox<String> guiComboBoxInterpolation) {
+		this.guiComboBoxInterpolation = guiComboBoxInterpolation;
+	}
+
+	public ButtonGroup getGuiGroupQuantisation() {
+		return guiGroupQuantisation;
+	}
+
+	public void setGuiGroupQuantisation(final ButtonGroup guiGroupQuantisation) {
+		this.guiGroupQuantisation = guiGroupQuantisation;
+	}
+
+	public ButtonGroup getGuiGroupTiling() {
+		return guiGroupTiling;
+	}
+
+	public void setGuiGroupTiling(final ButtonGroup guiGroupTiling) {
+		this.guiGroupTiling = guiGroupTiling;
+	}
+
+	public int getMosaicWidth() {
+		return mosaicWidth;
+	}
+
+	public void setMosaicWidth(final int mosaicWidth) {
+		this.mosaicWidth = mosaicWidth;
+	}
+
+	public int getMosaicHeight() {
+		return mosaicHeight;
+	}
+
+	public void setMosaicHeight(final int mosaicHeight) {
+		this.mosaicHeight = mosaicHeight;
+	}
+
+	public JCheckBox getGuiThreeDEffect() {
+		return guiThreeDEffect;
+	}
+
+	public void setGuiThreeDEffect(final JCheckBox guiThreeDEffect) {
+		this.guiThreeDEffect = guiThreeDEffect;
+	}
+
+	public JCheckBox getGuiStatistic() {
+		return guiStatistic;
+	}
+
+	public void setGuiStatistic(final JCheckBox guiStatistic) {
+		this.guiStatistic = guiStatistic;
+	}
 
 	/**
 	 * method: MainWindow
@@ -184,10 +323,10 @@ public class MainWindow
 	public MainWindow() {
 		super("pictobrick");
 		addWindowListener(new WindowClosingAdapter(true));
-		osStyle();
 		dataProcessing = new DataProcessor(this);
 		progressBarsAlgorithm = new ProgressBarsAlgorithms(this);
 		progressBarsOutputFiles = new ProgressBarsOutputFiles(this);
+		mainWindowActionHandlers = new MainWindowActionHandlers(this);
 		buildMenu();
 		buildGui();
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -374,105 +513,42 @@ public class MainWindow
 	}
 
 	/**
-	 * method: actionPerformed
+	 * Method: actionPerformed.
+	 * <p>
 	 * description: ActionListener
 	 *
 	 * @author Tobias Reichling
-	 * @param event
+	 * @param event the ActionEvent to process.
 	 */
 	public void actionPerformed(final ActionEvent event) {
-		// synchronisize check boxes (gui) and menu items (menu)
-		if (event.getActionCommand().contains("menu")) {
-			if (event.getActionCommand().contains("grafic")) {
-				checkBoxStatus(11, false);
-			} else if (event.getActionCommand().contains("xml")) {
-				checkBoxStatus(13, false);
-			} else if (event.getActionCommand().contains("buildinginstruction")) {
-				checkBoxStatus(14, false);
-			} else if (event.getActionCommand().contains("material")) {
-				checkBoxStatus(15, false);
-			} else if (event.getActionCommand().contains("configuration")) {
-				checkBoxStatus(16, false);
-			}
-			// synchronisize check boxes (gui) and menu items (menu)
-		} else if (event.getActionCommand().contains("gui")) {
-			if (event.getActionCommand().contains("grafic")) {
-				checkBoxStatus(21, false);
-			} else if (event.getActionCommand().contains("xml")) {
-				checkBoxStatus(23, false);
-			} else if (event.getActionCommand().contains("buildinginstruction")) {
-				checkBoxStatus(24, false);
-			} else if (event.getActionCommand().contains("material")) {
-				checkBoxStatus(25, false);
-			} else if (event.getActionCommand().contains("configuration")) {
-				checkBoxStatus(26, false);
-			}
-			// synchronisize radio buttons (gui) and menu items (menu)
-		} else if (event.getActionCommand().contains("algorithm")) {
-			if (event.getActionCommand().contains("11")) {
-				radioButtonStatus(1, 1);
-			} else if (event.getActionCommand().contains("12")) {
-				radioButtonStatus(1, 2);
-			} else if (event.getActionCommand().contains("13")) {
-				radioButtonStatus(1, 3);
-			} else if (event.getActionCommand().contains("14")) {
-				radioButtonStatus(1, 4);
-			} else if (event.getActionCommand().contains("15")) {
-				radioButtonStatus(1, 5);
-			} else if (event.getActionCommand().contains("16")) {
-				radioButtonStatus(1, 6);
-			} else if (event.getActionCommand().contains("17")) {
-				radioButtonStatus(1, 7);
-			} else if (event.getActionCommand().contains("21")) {
-				radioButtonStatus(2, 1);
-			} else if (event.getActionCommand().contains("22")) {
-				radioButtonStatus(2, 2);
-			} else if (event.getActionCommand().contains("23")) {
-				radioButtonStatus(2, 3);
-			} else if (event.getActionCommand().contains("24")) {
-				radioButtonStatus(2, 4);
-			} else if (event.getActionCommand().contains("25")) {
-				radioButtonStatus(2, 5);
-			}
-			// buttons
-		} else if (event.getActionCommand().contains("cutout")) {
-			cutout();
-		} else if (event.getActionCommand().contains("output")) {
-			guiStatus(30);
-			adjustDividerLocation();
-		} else if (event.getActionCommand().contains("mosaicnew")) {
-			guiStatus(10);
-			adjustDividerLocation();
-			showInfo(textbundle.getString("output_mainWindow_4") + "!");
-		} else if (event.getActionCommand().contains("mosaicgenerate")) {
-			dataProcessing.initInfo();
-			dataProcessing.setInterpolation(guiComboBoxInterpolation.getSelectedIndex() + 1);
-			final int quantisation = Integer.parseInt(
-					guiGroupQuantisation.getSelection().getActionCommand().substring(9, 11)) - 10;
-			final int tiling = Integer.parseInt(guiGroupTiling.getSelection().getActionCommand().substring(9, 11))
-					- 20;
+		final String actionCommand = event.getActionCommand();
 
-			if (tiling == 2 && !(dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
-				errorDialog(textbundle.getString("output_mainWindow_6"));
-			} else if (tiling == 4 && ((dataProcessing.getCurrentConfiguration().getMaterial() == 3)
-					|| (dataProcessing.getCurrentConfiguration().getMaterial() == 1))) {
-				errorDialog(textbundle.getString("output_mainWindow_7"));
-			} else if (tiling == 3 && (dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
-				errorDialog(textbundle.getString("output_mainWindow_8"));
-			} else {
-				adjustDividerLocation();
-				guiStatus(21);
-				dataProcessing.generateMosaic(mosaicWidth, mosaicHeight, quantisation, tiling,
-						guiThreeDEffect.isSelected(), guiStatistic.isSelected());
-			}
-		} else if (event.getActionCommand().contains("imageload")) {
+		if (actionCommand.contains("menu")) {
+			// Synchronize check boxes (gui) and menu items (menu)
+			mainWindowActionHandlers.setCheckboxGuiToMenuValue(actionCommand);
+			// Synchronize check boxes (gui) and menu items (menu)
+		} else if (actionCommand.contains("gui")) {
+			mainWindowActionHandlers.setCheckboxMenuToGuiValue(actionCommand);
+			// Synchronize radio buttons (gui) and menu items (menu)
+		} else if (actionCommand.contains("algorithm")) {
+			mainWindowActionHandlers.synchronizeRadioButtonsAndMenuItems(actionCommand);
+			// buttons
+		} else if (actionCommand.contains("cutout")) {
+			cutout();
+		} else if (actionCommand.contains("output")) {
+			mainWindowActionHandlers.outputAction();
+		} else if (actionCommand.contains("mosaicnew")) {
+			mainWindowActionHandlers.startNewMosaic();
+		} else if (actionCommand.contains("mosaicgenerate")) {
+			mainWindowActionHandlers.generateMosaic();
+		} else if (actionCommand.contains("imageload")) {
 			adjustDividerLocation();
 			imageLoad();
 
 			if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
 				guiStatus(11);
 			}
-		} else if (event.getActionCommand().contains("configurationload")) {
+		} else if (actionCommand.contains("configurationload")) {
 
 			if (dataProcessing.getWorkingDirectory() == null) {
 				errorDialog(textbundle.getString("output_mainWindow_9"));
@@ -482,18 +558,18 @@ public class MainWindow
 			if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
 				guiStatus(11);
 			}
-		} else if (event.getActionCommand().contains("settings")) {
+		} else if (actionCommand.contains("settings")) {
 			WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(this,
 					dataProcessing.getWorkingDirectory());
 			if (workingDirectoryDialog.getButton() == 1) {
 				workingDirectory(true);
 			}
 			workingDirectoryDialog = null;
-		} else if (event.getActionCommand().contains("exit")) {
+		} else if (actionCommand.contains("exit")) {
 			this.setVisible(false);
 			this.dispose();
 			System.exit(0);
-		} else if (event.getActionCommand().contains("mosaicdimension")) {
+		} else if (actionCommand.contains("mosaicdimension")) {
 			MosaicSizeDialog mosaicDimensionDialog = new MosaicSizeDialog(this,
 					dataProcessing.getCurrentConfiguration());
 			if (!mosaicDimensionDialog.isCanceled()) {
@@ -511,7 +587,7 @@ public class MainWindow
 				guiStatus(12);
 			}
 			mosaicDimensionDialog = null;
-		} else if (event.getActionCommand().contains("documentgenerate")) {
+		} else if (actionCommand.contains("documentgenerate")) {
 			if (guiOutputGrafic.isSelected() ||
 					guiOutputConfiguration.isSelected() ||
 					guiOutputMaterial.isSelected() ||
@@ -563,8 +639,8 @@ public class MainWindow
 
 				worker.start();
 			}
-		} else if (event.getActionCommand().contains("about")) {
-			AboutDialog aboutDialog = new AboutDialog(this);
+		} else if (actionCommand.contains("about")) {
+			final AboutDialog aboutDialog = new AboutDialog(this);
 			aboutDialog.setVisible(true);
 		}
 	}
@@ -914,13 +990,13 @@ public class MainWindow
 
 	/**
 	 * method: radioButtonStatus
-	 * description: synchronisize radio buttons gui and menu
+	 * description: Synchronize radio buttons gui and menu
 	 *
 	 * @author Tobias Reichling
 	 * @param groupNumber
 	 * @param buttonNumber
 	 */
-	private void radioButtonStatus(final int groupNumber, final int buttonNumber) {
+	public void radioButtonStatus(final int groupNumber, final int buttonNumber) {
 		switch (groupNumber) {
 			case 1:
 				switch (buttonNumber) {
@@ -1118,112 +1194,6 @@ public class MainWindow
 	}
 
 	/**
-	 * method: checkBoxStatus
-	 * description: synchronisize check boxes gui and menu
-	 *
-	 * @author Tobias Reichling
-	 * @param checkBoxNumber
-	 * @param reset          (true/false)
-	 */
-	private void checkBoxStatus(final int checkBoxNumber, final boolean reset) {
-		if (reset) {
-			menuGrafic.setSelected(false);
-			guiOutputGrafic.setSelected(false);
-			menuXml.setSelected(false);
-			guiOutputXml.setSelected(false);
-			menuConfiguration.setSelected(false);
-			guiOutputConfiguration.setSelected(false);
-			menuBuildingInstruction.setSelected(false);
-			guiOutputBuildingInstruction.setSelected(false);
-			menuMaterial.setSelected(false);
-			guiOutputMaterial.setSelected(false);
-		} else {
-			// 1x = menu
-			// 2x = gui
-			// ------------------
-			// x1 = grafic
-			// x3 = xml
-			// x4 = buildingInstruction
-			// x5 = material
-			// x6 = configuration
-			switch (checkBoxNumber) {
-				case 11:
-					if (menuGrafic.isSelected()) {
-						guiOutputGrafic.setSelected(true);
-					} else {
-						guiOutputGrafic.setSelected(false);
-					}
-					break;
-				case 13:
-					if (menuXml.isSelected()) {
-						guiOutputXml.setSelected(true);
-					} else {
-						guiOutputXml.setSelected(false);
-					}
-					break;
-				case 14:
-					if (menuBuildingInstruction.isSelected()) {
-						guiOutputBuildingInstruction.setSelected(true);
-					} else {
-						guiOutputBuildingInstruction.setSelected(false);
-					}
-					break;
-				case 15:
-					if (menuMaterial.isSelected()) {
-						guiOutputMaterial.setSelected(true);
-					} else {
-						guiOutputMaterial.setSelected(false);
-					}
-					break;
-				case 16:
-					if (menuConfiguration.isSelected()) {
-						guiOutputConfiguration.setSelected(true);
-					} else {
-						guiOutputConfiguration.setSelected(false);
-					}
-					break;
-				case 21:
-					if (guiOutputGrafic.isSelected()) {
-						menuGrafic.setSelected(true);
-					} else {
-						menuGrafic.setSelected(false);
-					}
-					break;
-				case 23:
-					if (guiOutputXml.isSelected()) {
-						menuXml.setSelected(true);
-					} else {
-						menuXml.setSelected(false);
-					}
-					break;
-				case 24:
-					if (guiOutputBuildingInstruction.isSelected()) {
-						menuBuildingInstruction.setSelected(true);
-					} else {
-						menuBuildingInstruction.setSelected(false);
-					}
-					break;
-				case 25:
-					if (guiOutputMaterial.isSelected()) {
-						menuMaterial.setSelected(true);
-					} else {
-						menuMaterial.setSelected(false);
-					}
-					break;
-				case 26:
-					if (guiOutputConfiguration.isSelected()) {
-						menuConfiguration.setSelected(true);
-					} else {
-						menuConfiguration.setSelected(false);
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	/**
 	 * method: guiStatus
 	 * description: changes gui status
 	 *
@@ -1240,7 +1210,7 @@ public class MainWindow
 				guiPanelRightArea.add(guiPanelOptions1, BorderLayout.CENTER);
 				guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
 				// init check boxes
-				checkBoxStatus(0, true);
+				mainWindowActionHandlers.checkBoxStatus(0, true);
 				// init zoom sliders
 				guiZoomSlider1.setEnabled(false);
 				guiZoomSlider2.setEnabled(false);
@@ -1539,7 +1509,7 @@ public class MainWindow
 	 *
 	 * @author Tobias Reichling
 	 */
-	private void adjustDividerLocation() {
+	public void adjustDividerLocation() {
 		guiSplitPane.setDividerLocation(guiSplitPane.getHeight() / 2);
 	}
 
@@ -1886,30 +1856,6 @@ public class MainWindow
 		guiPanelInformation.add(guiTextFieldInformation);
 		guiStatus(10);
 		pack();
-	}
-
-	/**
-	 * method: osStyle
-	 * description: look and feel
-	 *
-	 * @author Tobias Reichling
-	 */
-	private void osStyle() {
-		final String osName = System.getProperty("os.name");
-		if (osName.contains("Windows")) {
-			try {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-				SwingUtilities.updateComponentTreeUI(this);
-			} catch (final UnsupportedLookAndFeelException e) {
-				System.err.println(e.toString());
-			} catch (final ClassNotFoundException e) {
-				System.err.println(e.toString());
-			} catch (final InstantiationException e) {
-				System.err.println(e.toString());
-			} catch (final IllegalAccessException e) {
-				System.err.println(e.toString());
-			}
-		}
 	}
 
 	/**
