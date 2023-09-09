@@ -44,6 +44,7 @@ import javax.swing.filechooser.FileFilter;
 import pictobrick.model.ColorObject;
 import pictobrick.model.Configuration;
 import pictobrick.service.DataProcessor;
+import pictobrick.ui.handlers.GuiStatusHandler;
 import pictobrick.ui.handlers.MainWindowActionHandlers;
 
 /**
@@ -77,13 +78,48 @@ public class MainWindow
 	private JMenu menuHelp;
 	private JMenuItem menuNewMosaik;
 	private JMenuItem menuImageLoad;
+
+	public JMenuItem getMenuImageLoad() {
+		return menuImageLoad;
+	}
+
 	private JMenuItem menuConfigurationLoad;
+
+	public JMenuItem getMenuConfigurationLoad() {
+		return menuConfigurationLoad;
+	}
+
 	private JMenuItem menuSettings;
 	private JMenuItem menuEnd;
 	private JMenuItem menuMosaicDimension;
 	private JMenuItem menuMosaicGenerate;
 	private JMenuItem menuDocumentGenerate;
 	private JMenuItem menuAbout;
+
+	public JMenuItem getMenuSettings() {
+		return menuSettings;
+	}
+
+	public JMenuItem getMenuEnd() {
+		return menuEnd;
+	}
+
+	public JMenuItem getMenuMosaicDimension() {
+		return menuMosaicDimension;
+	}
+
+	public JMenuItem getMenuMosaicGenerate() {
+		return menuMosaicGenerate;
+	}
+
+	public JMenuItem getMenuDocumentGenerate() {
+		return menuDocumentGenerate;
+	}
+
+	public JMenuItem getMenuAbout() {
+		return menuAbout;
+	}
+
 	private ButtonGroup menuGroupQuantisation;
 	private ButtonGroup menuGroupTiling;
 	private JRadioButtonMenuItem menuAlgorithm11;
@@ -98,6 +134,55 @@ public class MainWindow
 	private JRadioButtonMenuItem menuAlgorithm22;
 	private JRadioButtonMenuItem menuAlgorithm23;
 	private JRadioButtonMenuItem menuAlgorithm24;
+
+	public JRadioButtonMenuItem getMenuAlgorithm11() {
+		return menuAlgorithm11;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm12() {
+		return menuAlgorithm12;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm13() {
+		return menuAlgorithm13;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm14() {
+		return menuAlgorithm14;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm15() {
+		return menuAlgorithm15;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm16() {
+		return menuAlgorithm16;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm17() {
+		return menuAlgorithm17;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm25() {
+		return menuAlgorithm25;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm21() {
+		return menuAlgorithm21;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm22() {
+		return menuAlgorithm22;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm23() {
+		return menuAlgorithm23;
+	}
+
+	public JRadioButtonMenuItem getMenuAlgorithm24() {
+		return menuAlgorithm24;
+	}
+
 	private JCheckBoxMenuItem menuGrafic;
 	private JCheckBoxMenuItem menuXml;
 	private JCheckBoxMenuItem menuBuildingInstruction;
@@ -106,11 +191,34 @@ public class MainWindow
 	private JPanel guiPanelTopArea;
 	private JPanel guiPanelBottomArea;
 	private JPanel guiPanelRightArea;
+
+	public JPanel getGuiPanelRightArea() {
+		return guiPanelRightArea;
+	}
+
 	private JPanel guiPanelInformation;
 	private JPanel guiPanelZoom;
+
+	public JPanel getGuiPanelZoom() {
+		return guiPanelZoom;
+	}
+
 	private JPanel guiPanelOptions1;
 	private JPanel guiPanelOptions2;
 	private JPanel guiPanelOptions3;
+
+	public JPanel getGuiPanelOptions1() {
+		return guiPanelOptions1;
+	}
+
+	public JPanel getGuiPanelOptions2() {
+		return guiPanelOptions2;
+	}
+
+	public JPanel getGuiPanelOptions3() {
+		return guiPanelOptions3;
+	}
+
 	private JPanel guiPanelOptions2Bottom;
 	private JPanel guiPanelOptions1Top;
 	private JPanel guiPanelOptions2Top;
@@ -120,6 +228,15 @@ public class MainWindow
 	private JPanel guiPanelOptions3Empty;
 	private JPanel guiPanelTopArea2;
 	private JPanel guiPanelBottomArea2;
+
+	public JPanel getGuiPanelTopArea2() {
+		return guiPanelTopArea2;
+	}
+
+	public JPanel getGuiPanelBottomArea2() {
+		return guiPanelBottomArea2;
+	}
+
 	private JButton buttonImageLoad;
 	private JButton buttonConfigurationLoad;
 	private JButton buttonMosaicDimension;
@@ -128,6 +245,39 @@ public class MainWindow
 	private JButton buttonMosaicNew;
 	private JButton buttonMosaicGenerate;
 	private JButton buttonDocumentsGenerate;
+
+	public JButton getButtonImageLoad() {
+		return buttonImageLoad;
+	}
+
+	public JButton getButtonConfigurationLoad() {
+		return buttonConfigurationLoad;
+	}
+
+	public JButton getButtonMosaicDimension() {
+		return buttonMosaicDimension;
+	}
+
+	public JButton getButtonCutout() {
+		return buttonCutout;
+	}
+
+	public JButton getButtonOutput() {
+		return buttonOutput;
+	}
+
+	public JButton getButtonMosaicNew() {
+		return buttonMosaicNew;
+	}
+
+	public JButton getButtonMosaicGenerate() {
+		return buttonMosaicGenerate;
+	}
+
+	public JButton getButtonDocumentsGenerate() {
+		return buttonDocumentsGenerate;
+	}
+
 	private ButtonGroup guiGroupQuantisation;
 	private ButtonGroup guiGroupTiling;
 	private JRadioButton guiRadioAlgorithm11;
@@ -142,6 +292,55 @@ public class MainWindow
 	private JRadioButton guiRadioAlgorithm23;
 	private JRadioButton guiRadioAlgorithm24;
 	private JRadioButton guiRadioAlgorithm25;
+
+	public JRadioButton getGuiRadioAlgorithm11() {
+		return guiRadioAlgorithm11;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm12() {
+		return guiRadioAlgorithm12;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm13() {
+		return guiRadioAlgorithm13;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm14() {
+		return guiRadioAlgorithm14;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm15() {
+		return guiRadioAlgorithm15;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm16() {
+		return guiRadioAlgorithm16;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm17() {
+		return guiRadioAlgorithm17;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm21() {
+		return guiRadioAlgorithm21;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm22() {
+		return guiRadioAlgorithm22;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm23() {
+		return guiRadioAlgorithm23;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm24() {
+		return guiRadioAlgorithm24;
+	}
+
+	public JRadioButton getGuiRadioAlgorithm25() {
+		return guiRadioAlgorithm25;
+	}
+
 	private JCheckBox guiOutputGrafic;
 	private JCheckBox guiOutputXml;
 	private JCheckBox guiThreeDEffect;
@@ -151,6 +350,11 @@ public class MainWindow
 	private JCheckBox guiOutputBuildingInstruction;
 	private PictureElement guiPictureElementTop;
 	private PictureElement guiPictureElementBottom;
+
+	public PictureElement getGuiPictureElementBottom() {
+		return guiPictureElementBottom;
+	}
+
 	private JLabel guiLabelImage;
 	private JLabel guiLabelConfiguration;
 	private JLabel guiLabelWidth;
@@ -165,12 +369,56 @@ public class MainWindow
 	private JSplitPane guiSplitPane;
 	private JScrollPane guiScrollPaneTop;
 	private JScrollPane guiScrollPaneBottom;
+
+	public JScrollPane getGuiScrollPaneTop() {
+		return guiScrollPaneTop;
+	}
+
+	public JScrollPane getGuiScrollPaneBottom() {
+		return guiScrollPaneBottom;
+	}
+
 	private JTextField guiTextFieldInformation;
 	private JSlider guiZoomSlider1;
 	private JSlider guiZoomSlider2;
 	private int guiZoomSlider1Value;
 	private int guiZoomSlider2Value;
+
+	public void setGuiZoomSlider1Value(final int guiZoomSlider1Value) {
+		this.guiZoomSlider1Value = guiZoomSlider1Value;
+	}
+
+	public void setGuiZoomSlider2Value(final int guiZoomSlider2Value) {
+		this.guiZoomSlider2Value = guiZoomSlider2Value;
+	}
+
+	public JSlider getGuiZoomSlider1() {
+		return guiZoomSlider1;
+	}
+
+	public JSlider getGuiZoomSlider2() {
+		return guiZoomSlider2;
+	}
+
+	public int getGuiZoomSlider1Value() {
+		return guiZoomSlider1Value;
+	}
+
+	public int getGuiZoomSlider2Value() {
+		return guiZoomSlider2Value;
+	}
+
 	private final MainWindowActionHandlers mainWindowActionHandlers;
+
+	public MainWindowActionHandlers getMainWindowActionHandlers() {
+		return mainWindowActionHandlers;
+	}
+
+	GuiStatusHandler guiStatusHandler;
+
+	public GuiStatusHandler getGuiStatusHandler() {
+		return guiStatusHandler;
+	}
 
 	/**
 	 * method: MainWindow
@@ -185,6 +433,7 @@ public class MainWindow
 		progressBarsAlgorithm = new ProgressBarsAlgorithms(this);
 		progressBarsOutputFiles = new ProgressBarsOutputFiles(this);
 		mainWindowActionHandlers = new MainWindowActionHandlers(this);
+		guiStatusHandler = new GuiStatusHandler(this);
 		buildMenu();
 		buildGui();
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -343,7 +592,7 @@ public class MainWindow
 		return guiPictureElementTop;
 	}
 
-	public void setGuiPictureElementTop(PictureElement guiPictureElementTop) {
+	public void setGuiPictureElementTop(final PictureElement guiPictureElementTop) {
 		this.guiPictureElementTop = guiPictureElementTop;
 	}
 
@@ -578,7 +827,7 @@ public class MainWindow
 		if (guiPictureElementTop.isCutout()) {
 			guiPictureElementTop.removeMouseListener(guiPictureElementTop);
 			guiPictureElementTop.removeMouseMotionListener(guiPictureElementTop);
-			guiStatus(20);
+			guiStatusHandler.guiStatus(GuiStatusHandler.GENERATE_MOSAIC);
 			dataProcessing.replaceImageByCutout(guiPictureElementTop.getCutoutRectangle());
 			dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
 					(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
@@ -604,7 +853,7 @@ public class MainWindow
 		dataProcessing.computeScaleFactor(true, (double) (guiScrollPaneBottom.getWidth() - 40),
 				(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
 		guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true, guiZoomSlider2.getValue()));
-		guiStatus(22);
+		guiStatusHandler.guiStatus(GuiStatusHandler.ENABLE_GUI_AFTER_GENERATE_MOSAIC);
 		guiPictureElementBottom.updateUI();
 
 		if (guiStatistic.isSelected()) {
@@ -1116,316 +1365,6 @@ public class MainWindow
 	}
 
 	/**
-	 * method: guiStatus
-	 * description: changes gui status
-	 *
-	 * @author Tobias Reichling
-	 * @param status
-	 */
-	public void guiStatus(final int status) {
-		switch (status) {
-			// gui start
-			case 10:
-				dataProcessing.setCurrentConfiguration(null);
-				// sets option panel 1
-				guiPanelRightArea.removeAll();
-				guiPanelRightArea.add(guiPanelOptions1, BorderLayout.CENTER);
-				guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
-				// init check boxes
-				mainWindowActionHandlers.checkBoxStatus(0, true);
-				// init zoom sliders
-				guiZoomSlider1.setEnabled(false);
-				guiZoomSlider2.setEnabled(false);
-				guiZoomSlider1.setValue(3);
-				guiZoomSlider2.setValue(3);
-				guiZoomSlider1Value = 3;
-				guiZoomSlider2Value = 3;
-				// init information labels
-				showImageInfo("");
-				showConfigurationInfo("");
-				showDimensionInfo(0, 0, true);
-				// reset images
-				dataProcessing.imageReset();
-				guiPanelTopArea2.removeAll();
-				guiPictureElementTop = new PictureElement(this);
-				guiPanelTopArea2.add(guiPictureElementTop);
-				guiPictureElementTop.setImage(null);
-				guiScrollPaneTop.updateUI();
-				guiPictureElementBottom.setImage(null);
-				guiScrollPaneBottom.updateUI();
-				// enable/disable buttons, menu items, etc.
-				guiPanelOptions1.updateUI();
-				menuImageLoad.setEnabled(true);
-				menuConfigurationLoad.setEnabled(true);
-				menuMosaicDimension.setEnabled(false);
-				buttonMosaicDimension.setEnabled(false);
-				menuSettings.setEnabled(true);
-				menuAlgorithm11.setEnabled(false);
-				menuAlgorithm12.setEnabled(false);
-				menuAlgorithm13.setEnabled(false);
-				menuAlgorithm14.setEnabled(false);
-				menuAlgorithm15.setEnabled(false);
-				menuAlgorithm16.setEnabled(false);
-				menuAlgorithm17.setEnabled(false);
-				menuAlgorithm21.setEnabled(false);
-				menuAlgorithm22.setEnabled(false);
-				menuAlgorithm23.setEnabled(false);
-				menuAlgorithm24.setEnabled(false);
-				menuAlgorithm25.setEnabled(false);
-				guiComboBoxInterpolation.setEnabled(false);
-				guiComboBoxInterpolation.setSelectedIndex(0);
-				menuMosaicGenerate.setEnabled(false);
-				menuGrafic.setEnabled(false);
-				menuXml.setEnabled(false);
-				menuBuildingInstruction.setEnabled(false);
-				menuMaterial.setEnabled(false);
-				menuConfiguration.setEnabled(false);
-				menuDocumentGenerate.setEnabled(false);
-				buttonCutout.setEnabled(false);
-				buttonImageLoad.setEnabled(true);
-				buttonConfigurationLoad.setEnabled(true);
-				menuConfigurationLoad.setEnabled(true);
-				menuImageLoad.setEnabled(true);
-				radioButtonStatus(1, 1);
-				radioButtonStatus(2, 5);
-				break;
-			// image and configuration are loaded
-			case 11:
-				// enable/disable buttons, menu items, etc.
-				menuMosaicDimension.setEnabled(true);
-				buttonMosaicDimension.setEnabled(true);
-				// set information text
-				showInfo(textbundle.getString("output_mainWindow_22"));
-				break;
-			// cutout situation
-			case 12:
-				// set information text
-				showInfo(textbundle.getString("output_mainWindow_23") + ": " + mosaicWidth + " x " + mosaicHeight + ". "
-						+ textbundle.getString("output_mainWindow_24") + ".");
-				// enable/disable buttons, menu items, etc.
-				buttonCutout.setEnabled(false);
-				buttonImageLoad.setEnabled(false);
-				buttonConfigurationLoad.setEnabled(false);
-				menuConfigurationLoad.setEnabled(false);
-				menuImageLoad.setEnabled(false);
-				menuSettings.setEnabled(false);
-				guiStatus(13);
-				break;
-			// cutout situation - no rectangle available
-			case 13:
-				// enable/disable buttons, menu items, etc.
-				guiZoomSlider1.setEnabled(true);
-				buttonCutout.setEnabled(false);
-				break;
-			// cutout situation - rectangle available
-			case 14:
-				// enable/disable buttons, menu items, etc.
-				guiZoomSlider1.setEnabled(false);
-				buttonCutout.setEnabled(true);
-				// sets information text
-				showInfo(textbundle.getString("output_mainWindow_25"));
-				break;
-			// generate mosaic
-			case 20:
-				// sets information text
-				showInfo(textbundle.getString("output_mainWindow_26"));
-				// sets option panel 2
-				guiPanelRightArea.remove(guiPanelOptions1);
-				guiPanelRightArea.add(guiPanelOptions2, BorderLayout.CENTER);
-				guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
-				guiPanelOptions2.updateUI();
-				// enable/disable buttons, menu items, etc.
-				guiZoomSlider1.setEnabled(true);
-				menuImageLoad.setEnabled(false);
-				menuConfigurationLoad.setEnabled(false);
-				menuMosaicDimension.setEnabled(false);
-				menuAlgorithm11.setEnabled(true);
-				menuAlgorithm12.setEnabled(true);
-				menuAlgorithm13.setEnabled(true);
-				menuAlgorithm14.setEnabled(true);
-				menuAlgorithm15.setEnabled(true);
-				menuAlgorithm16.setEnabled(true);
-				menuAlgorithm17.setEnabled(true);
-				menuAlgorithm21.setEnabled(true);
-				menuAlgorithm22.setEnabled(true);
-				menuAlgorithm23.setEnabled(true);
-				menuAlgorithm24.setEnabled(true);
-				menuAlgorithm25.setEnabled(true);
-				guiComboBoxInterpolation.setEnabled(true);
-				menuMosaicGenerate.setEnabled(true);
-				menuGrafic.setEnabled(false);
-				menuXml.setEnabled(false);
-				menuBuildingInstruction.setEnabled(false);
-				menuMaterial.setEnabled(false);
-				menuConfiguration.setEnabled(false);
-				menuDocumentGenerate.setEnabled(false);
-				buttonOutput.setEnabled(false);
-				guiThreeDEffect.setEnabled(true);
-				guiThreeDEffect.setSelected(true);
-				guiStatistic.setSelected(false);
-				guiStatistic.setEnabled(false);
-				break;
-			// disable gui while generating mosaic
-			case 21:
-				// enable/disable buttons, menu items, etc.
-				menuAlgorithm11.setEnabled(false);
-				menuAlgorithm12.setEnabled(false);
-				menuAlgorithm13.setEnabled(false);
-				menuAlgorithm14.setEnabled(false);
-				menuAlgorithm15.setEnabled(false);
-				menuAlgorithm16.setEnabled(false);
-				menuAlgorithm17.setEnabled(false);
-				menuAlgorithm21.setEnabled(false);
-				menuAlgorithm22.setEnabled(false);
-				menuAlgorithm23.setEnabled(false);
-				menuAlgorithm24.setEnabled(false);
-				menuAlgorithm25.setEnabled(false);
-				guiRadioAlgorithm11.setEnabled(false);
-				guiRadioAlgorithm12.setEnabled(false);
-				guiRadioAlgorithm13.setEnabled(false);
-				guiRadioAlgorithm14.setEnabled(false);
-				guiRadioAlgorithm15.setEnabled(false);
-				guiRadioAlgorithm16.setEnabled(false);
-				guiRadioAlgorithm17.setEnabled(false);
-				guiRadioAlgorithm21.setEnabled(false);
-				guiRadioAlgorithm22.setEnabled(false);
-				guiRadioAlgorithm23.setEnabled(false);
-				guiRadioAlgorithm24.setEnabled(false);
-				guiRadioAlgorithm25.setEnabled(false);
-				guiComboBoxInterpolation.setEnabled(false);
-				buttonOutput.setEnabled(false);
-				guiZoomSlider1.setEnabled(false);
-				guiZoomSlider2.setEnabled(false);
-				menuMosaicGenerate.setEnabled(false);
-				buttonMosaicGenerate.setEnabled(false);
-				guiThreeDEffect.setEnabled(false);
-				guiStatistic.setEnabled(false);
-				break;
-			// enable gui after generating mosaic
-			case 22:
-				// sets information text
-				showInfo(textbundle.getString("output_mainWindow_27"));
-				// enable/disable buttons, menu items, etc.
-				buttonOutput.setEnabled(true);
-				guiZoomSlider1.setValue(3);
-				guiZoomSlider1Value = 3;
-				guiZoomSlider2.setValue(3);
-				guiZoomSlider2Value = 3;
-				guiZoomSlider1.setEnabled(true);
-				guiZoomSlider2.setEnabled(true);
-				menuAlgorithm11.setEnabled(true);
-				menuAlgorithm12.setEnabled(true);
-				menuAlgorithm13.setEnabled(true);
-				menuAlgorithm14.setEnabled(true);
-				menuAlgorithm15.setEnabled(true);
-				menuAlgorithm16.setEnabled(true);
-				menuAlgorithm17.setEnabled(true);
-				menuAlgorithm21.setEnabled(true);
-				menuAlgorithm22.setEnabled(true);
-				menuAlgorithm23.setEnabled(true);
-				menuAlgorithm24.setEnabled(true);
-				menuAlgorithm25.setEnabled(true);
-				guiRadioAlgorithm11.setEnabled(true);
-				guiRadioAlgorithm12.setEnabled(true);
-				guiRadioAlgorithm13.setEnabled(true);
-				guiRadioAlgorithm14.setEnabled(true);
-				guiRadioAlgorithm15.setEnabled(true);
-				guiRadioAlgorithm16.setEnabled(true);
-				guiRadioAlgorithm17.setEnabled(true);
-				guiRadioAlgorithm21.setEnabled(true);
-				guiRadioAlgorithm22.setEnabled(true);
-				guiRadioAlgorithm23.setEnabled(true);
-				guiRadioAlgorithm24.setEnabled(true);
-				guiRadioAlgorithm25.setEnabled(true);
-				guiComboBoxInterpolation.setEnabled(true);
-				menuMosaicGenerate.setEnabled(true);
-				buttonMosaicGenerate.setEnabled(true);
-				guiThreeDEffect.setEnabled(true);
-				if (!guiRadioAlgorithm25.isSelected()) {
-					guiStatistic.setEnabled(true);
-				}
-				break;
-			// output
-			case 30:
-				// sets information text
-				showInfo(textbundle.getString("output_mainWindow_28"));
-				// sets option panel 3
-				guiPanelRightArea.remove(guiPanelOptions2);
-				guiPanelRightArea.add(guiPanelOptions3, BorderLayout.CENTER);
-				guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
-				// enable/disable buttons, menu items, etc.
-				guiZoomSlider1.setEnabled(true);
-				guiZoomSlider2.setEnabled(true);
-				radioButtonStatus(1, 1);
-				radioButtonStatus(2, 5);
-				guiPanelOptions3.updateUI();
-				menuImageLoad.setEnabled(false);
-				menuConfigurationLoad.setEnabled(false);
-				menuMosaicDimension.setEnabled(false);
-				menuAlgorithm11.setEnabled(false);
-				menuAlgorithm12.setEnabled(false);
-				menuAlgorithm13.setEnabled(false);
-				menuAlgorithm14.setEnabled(false);
-				menuAlgorithm15.setEnabled(false);
-				menuAlgorithm16.setEnabled(false);
-				menuAlgorithm17.setEnabled(false);
-				menuAlgorithm21.setEnabled(false);
-				menuAlgorithm22.setEnabled(false);
-				menuAlgorithm23.setEnabled(false);
-				menuAlgorithm24.setEnabled(false);
-				menuAlgorithm25.setEnabled(false);
-				guiComboBoxInterpolation.setEnabled(false);
-				menuMosaicGenerate.setEnabled(false);
-				menuGrafic.setEnabled(true);
-				menuXml.setEnabled(true);
-				menuBuildingInstruction.setEnabled(true);
-				menuMaterial.setEnabled(true);
-				menuConfiguration.setEnabled(true);
-				menuDocumentGenerate.setEnabled(true);
-				guiThreeDEffect.setEnabled(false);
-				guiStatistic.setEnabled(false);
-				break;
-			// disable gui while generating output documents
-			case 31:
-				// enable/disable buttons, menu items, etc.
-				guiZoomSlider1.setEnabled(false);
-				guiZoomSlider2.setEnabled(false);
-				menuGrafic.setEnabled(false);
-				menuXml.setEnabled(false);
-				menuBuildingInstruction.setEnabled(false);
-				menuMaterial.setEnabled(false);
-				menuConfiguration.setEnabled(false);
-				guiOutputGrafic.setEnabled(false);
-				guiOutputXml.setEnabled(false);
-				guiOutputBuildingInstruction.setEnabled(false);
-				guiOutputMaterial.setEnabled(false);
-				guiOutputConfiguration.setEnabled(false);
-				menuDocumentGenerate.setEnabled(false);
-				buttonDocumentsGenerate.setEnabled(false);
-				break;
-			// enable gui after generating output documents
-			case 32: // enable/disable buttons, menu items, etc.
-				guiZoomSlider1.setEnabled(true);
-				guiZoomSlider2.setEnabled(true);
-				menuGrafic.setEnabled(true);
-				menuXml.setEnabled(true);
-				menuBuildingInstruction.setEnabled(true);
-				menuMaterial.setEnabled(true);
-				menuConfiguration.setEnabled(true);
-				guiOutputGrafic.setEnabled(true);
-				guiOutputXml.setEnabled(true);
-				guiOutputBuildingInstruction.setEnabled(true);
-				guiOutputMaterial.setEnabled(true);
-				guiOutputConfiguration.setEnabled(true);
-				menuDocumentGenerate.setEnabled(true);
-				buttonDocumentsGenerate.setEnabled(true);
-				break;
-			default:
-				break;
-		}
-	}
-
-	/**
 	 * method: adjustDividerLocation
 	 * description: adjust divider location (split pane)
 	 *
@@ -1442,7 +1381,7 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 * @param fileName
 	 */
-	private void showImageInfo(final String imageFileName) {
+	public void showImageInfo(final String imageFileName) {
 		String fileName = imageFileName;
 
 		if (fileName.length() > 18) {
@@ -1459,7 +1398,7 @@ public class MainWindow
 	 * @author Tobias Reichling
 	 * @param fileName
 	 */
-	private void showConfigurationInfo(final String configFilename) {
+	public void showConfigurationInfo(final String configFilename) {
 		String fileName = configFilename;
 
 		if (fileName.length() > 18) {
@@ -1776,7 +1715,7 @@ public class MainWindow
 		informationAreaBorder.setTitleColor(new Color(100, 100, 100));
 		guiPanelInformation.setBorder(informationAreaBorder);
 		guiPanelInformation.add(guiTextFieldInformation);
-		guiStatus(10);
+		guiStatusHandler.guiStatus(GuiStatusHandler.GUI_START);
 		pack();
 	}
 

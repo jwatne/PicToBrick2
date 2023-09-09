@@ -21,9 +21,19 @@ import pictobrick.ui.WorkingDirectoryDialog;
  */
 public class MainWindowActionHandlers {
     private final MainWindow mainWindow;
+    private GuiStatusHandler guiStatusHandler;
 
     public MainWindowActionHandlers(final MainWindow mainWindow) {
         this.mainWindow = mainWindow;
+        this.guiStatusHandler = mainWindow.getGuiStatusHandler();
+    }
+
+    public GuiStatusHandler getGuiStatusHandler() {
+        if (guiStatusHandler == null) {
+            guiStatusHandler = mainWindow.getGuiStatusHandler();
+        }
+
+        return guiStatusHandler;
     }
 
     /**
@@ -219,7 +229,7 @@ public class MainWindowActionHandlers {
      * Handle &quot;output&quot; ActionEvent.
      */
     public void outputAction() {
-        mainWindow.guiStatus(30);
+        getGuiStatusHandler().guiStatus(GuiStatusHandler.OUTPUT);
         mainWindow.adjustDividerLocation();
     }
 
@@ -227,7 +237,7 @@ public class MainWindowActionHandlers {
      * Starts a new mosaic.
      */
     public void startNewMosaic() {
-        mainWindow.guiStatus(10);
+        getGuiStatusHandler().guiStatus(GuiStatusHandler.GUI_START);
         mainWindow.adjustDividerLocation();
         mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_4") + "!");
     }
@@ -260,7 +270,7 @@ public class MainWindowActionHandlers {
             final JCheckBox guiThreeDEffect = mainWindow.getGuiThreeDEffect();
             final JCheckBox guiStatistic = mainWindow.getGuiStatistic();
             mainWindow.adjustDividerLocation();
-            mainWindow.guiStatus(21);
+            getGuiStatusHandler().guiStatus(GuiStatusHandler.DISABLE_GUI_WHILE_GENERATE_MOSAIC);
             dataProcessing.generateMosaic(mosaicWidth, mosaicHeight, quantisation, tiling,
                     guiThreeDEffect.isSelected(), guiStatistic.isSelected());
         }
@@ -272,11 +282,7 @@ public class MainWindowActionHandlers {
     public void loadImage() {
         mainWindow.adjustDividerLocation();
         mainWindow.imageLoad();
-        final DataProcessor dataProcessing = mainWindow.getDataProcessing();
-
-        if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
-            mainWindow.guiStatus(11);
-        }
+        checkIfImageAndConfigLoaded();
     }
 
     /**
@@ -291,9 +297,7 @@ public class MainWindowActionHandlers {
             mainWindow.configurationLoad();
         }
 
-        if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
-            mainWindow.guiStatus(11);
-        }
+        checkIfImageAndConfigLoaded();
     }
 
     /**
@@ -334,7 +338,7 @@ public class MainWindowActionHandlers {
             final int mosaicHeight = mosaicDimensionDialog.getArea().height;
             mainWindow.setMosaicHeight(mosaicHeight);
             mainWindow.showDimensionInfo(mosaicWidth, mosaicHeight, false);
-            mainWindow.guiStatus(12);
+            getGuiStatusHandler().guiStatus(GuiStatusHandler.CUTOUT);
         }
 
         mosaicDimensionDialog = null;
@@ -355,7 +359,7 @@ public class MainWindowActionHandlers {
                 guiOutputMaterial.isSelected() ||
                 guiOutputBuildingInstruction.isSelected() ||
                 guiOutputXml.isSelected()) {
-            mainWindow.guiStatus(31);
+            getGuiStatusHandler().guiStatus(GuiStatusHandler.DISABLE_GUI_WHILE_GENERATING_OUTPUT);
             mainWindow.refreshProgressBarOutputFiles(0, 1);
             mainWindow.refreshProgressBarOutputFiles(0, 2);
             mainWindow.refreshProgressBarOutputFiles(0, 3);
@@ -395,7 +399,7 @@ public class MainWindowActionHandlers {
                 }
 
                 public void finished() {
-                    mainWindow.guiStatus(32);
+                    getGuiStatusHandler().guiStatus(GuiStatusHandler.ENABLE_GUI_AFTER_GENERATING_OUTPUT);
                     mainWindow.hideProgressBarOutputFiles();
                 }
             };
@@ -404,4 +408,15 @@ public class MainWindowActionHandlers {
         }
     }
 
+    /**
+     * Check if both image and configuration are loaded and, if so, set the GUI
+     * state accordingly.
+     */
+    private void checkIfImageAndConfigLoaded() {
+        final DataProcessor dataProcessing = mainWindow.getDataProcessing();
+
+        if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
+            getGuiStatusHandler().guiStatus(GuiStatusHandler.IMAGE_AND_CONFIG_LOADED);
+        }
+    }
 }
