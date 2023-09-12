@@ -180,7 +180,7 @@ public class GuiStatusHandler {
         mainWindow.radioButtonStatus(2, 5);
         guiPanelOptions3.updateUI();
         mainWindow.getMenuFile().processOutput();
-        mainWindow.getMenuMosaicDimension().setEnabled(false);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuAlgorithm11().setEnabled(false);
         mainWindow.getMenuAlgorithm12().setEnabled(false);
         mainWindow.getMenuAlgorithm13().setEnabled(false);
@@ -315,7 +315,7 @@ public class GuiStatusHandler {
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiZoomSlider1().setEnabled(true);
         mainWindow.getMenuFile().processGenerateMosaic();
-        mainWindow.getMenuMosaicDimension().setEnabled(false);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuAlgorithm11().setEnabled(true);
         mainWindow.getMenuAlgorithm12().setEnabled(true);
         mainWindow.getMenuAlgorithm13().setEnabled(true);
@@ -388,7 +388,7 @@ public class GuiStatusHandler {
      */
     private void processImageAndConfigurationLoaded() {
         // enable/disable buttons, menu items, etc.
-        mainWindow.getMenuMosaicDimension().setEnabled(true);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(true);
         mainWindow.getButtonMosaicDimension().setEnabled(true);
         // set information text
         mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_22"));
@@ -438,7 +438,7 @@ public class GuiStatusHandler {
         // enable/disable buttons, menu items, etc.
         guiPanelOptions1.updateUI();
         mainWindow.getMenuFile().processGuiStart();
-        mainWindow.getMenuMosaicDimension().setEnabled(false);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getButtonMosaicDimension().setEnabled(false);
         mainWindow.getMenuAlgorithm11().setEnabled(false);
         mainWindow.getMenuAlgorithm12().setEnabled(false);

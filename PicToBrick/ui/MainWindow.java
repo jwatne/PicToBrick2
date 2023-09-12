@@ -47,6 +47,7 @@ import pictobrick.service.DataProcessor;
 import pictobrick.ui.handlers.GuiStatusHandler;
 import pictobrick.ui.handlers.MainWindowActionHandlers;
 import pictobrick.ui.menus.FileMenu;
+import pictobrick.ui.menus.PreprocessingMenu;
 
 /**
  * class: MainWindow
@@ -78,19 +79,19 @@ public class MainWindow
 		return menuFile;
 	}
 
-	private JMenu menuPreprocessing;
+	private PreprocessingMenu menuPreprocessing;
+
+	public PreprocessingMenu getMenuPreprocessing() {
+		return menuPreprocessing;
+	}
+
 	private JMenu menuMosaic;
 	private JMenu menuOutput;
 	private JMenu menuHelp;
 
-	private JMenuItem menuMosaicDimension;
 	private JMenuItem menuMosaicGenerate;
 	private JMenuItem menuDocumentGenerate;
 	private JMenuItem menuAbout;
-
-	public JMenuItem getMenuMosaicDimension() {
-		return menuMosaicDimension;
-	}
 
 	public JMenuItem getMenuMosaicGenerate() {
 		return menuMosaicGenerate;
@@ -1713,16 +1714,11 @@ public class MainWindow
 		menuBar = new JMenuBar();
 		// menuFile
 		menuFile = new FileMenu(textbundle.getString("dialog_mainWindow_menu_10"), this);
-
 		menuBar.add(menuFile);
 		// menuPreprocessing
-		menuPreprocessing = new JMenu(textbundle.getString("dialog_mainWindow_menu_20"));
-		menuMosaicDimension = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_21"));
-		menuMosaicDimension.addActionListener(this);
-		menuMosaicDimension.setActionCommand("mosaicdimension");
-		menuPreprocessing.add(menuMosaicDimension);
+		menuPreprocessing = new PreprocessingMenu(textbundle.getString("dialog_mainWindow_menu_20"), this);
 		menuBar.add(menuPreprocessing);
-		// menuMosaik
+		// menuMosaic
 		menuMosaic = new JMenu(textbundle.getString("dialog_mainWindow_menu_30"));
 		menuGroupQuantisation = new ButtonGroup();
 		menuAlgorithm11 = new JRadioButtonMenuItem(textbundle.getString("algorithm_naiveQuantisationRgb"), true);
