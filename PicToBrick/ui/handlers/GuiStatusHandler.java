@@ -179,8 +179,7 @@ public class GuiStatusHandler {
         mainWindow.radioButtonStatus(1, 1);
         mainWindow.radioButtonStatus(2, 5);
         guiPanelOptions3.updateUI();
-        mainWindow.getMenuImageLoad().setEnabled(false);
-        mainWindow.getMenuConfigurationLoad().setEnabled(false);
+        mainWindow.getMenuFile().processOutput();
         mainWindow.getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuAlgorithm11().setEnabled(false);
         mainWindow.getMenuAlgorithm12().setEnabled(false);
@@ -315,8 +314,7 @@ public class GuiStatusHandler {
         guiPanelOptions2.updateUI();
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiZoomSlider1().setEnabled(true);
-        mainWindow.getMenuImageLoad().setEnabled(false);
-        mainWindow.getMenuConfigurationLoad().setEnabled(false);
+        mainWindow.getMenuFile().processGenerateMosaic();
         mainWindow.getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuAlgorithm11().setEnabled(true);
         mainWindow.getMenuAlgorithm12().setEnabled(true);
@@ -381,9 +379,7 @@ public class GuiStatusHandler {
         mainWindow.getButtonCutout().setEnabled(false);
         mainWindow.getButtonImageLoad().setEnabled(false);
         mainWindow.getButtonConfigurationLoad().setEnabled(false);
-        mainWindow.getMenuConfigurationLoad().setEnabled(false);
-        mainWindow.getMenuImageLoad().setEnabled(false);
-        mainWindow.getMenuSettings().setEnabled(false);
+        mainWindow.getMenuFile().processCutoutState();
         processCutoutNoRectangleAvailable();
     }
 
@@ -441,11 +437,9 @@ public class GuiStatusHandler {
         mainWindow.getGuiScrollPaneBottom().updateUI();
         // enable/disable buttons, menu items, etc.
         guiPanelOptions1.updateUI();
-        mainWindow.getMenuImageLoad().setEnabled(true);
-        mainWindow.getMenuConfigurationLoad().setEnabled(true);
+        mainWindow.getMenuFile().processGuiStart();
         mainWindow.getMenuMosaicDimension().setEnabled(false);
         mainWindow.getButtonMosaicDimension().setEnabled(false);
-        mainWindow.getMenuSettings().setEnabled(true);
         mainWindow.getMenuAlgorithm11().setEnabled(false);
         mainWindow.getMenuAlgorithm12().setEnabled(false);
         mainWindow.getMenuAlgorithm13().setEnabled(false);

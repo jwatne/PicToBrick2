@@ -46,6 +46,7 @@ import pictobrick.model.Configuration;
 import pictobrick.service.DataProcessor;
 import pictobrick.ui.handlers.GuiStatusHandler;
 import pictobrick.ui.handlers.MainWindowActionHandlers;
+import pictobrick.ui.menus.FileMenu;
 
 /**
  * class: MainWindow
@@ -71,38 +72,21 @@ public class MainWindow
 	// --------------------------------------------------------------------------------------------------------
 	// menu
 	private JMenuBar menuBar;
-	private JMenu menuFile;
+	private FileMenu menuFile;
+
+	public FileMenu getMenuFile() {
+		return menuFile;
+	}
+
 	private JMenu menuPreprocessing;
 	private JMenu menuMosaic;
 	private JMenu menuOutput;
 	private JMenu menuHelp;
-	private JMenuItem menuNewMosaik;
-	private JMenuItem menuImageLoad;
 
-	public JMenuItem getMenuImageLoad() {
-		return menuImageLoad;
-	}
-
-	private JMenuItem menuConfigurationLoad;
-
-	public JMenuItem getMenuConfigurationLoad() {
-		return menuConfigurationLoad;
-	}
-
-	private JMenuItem menuSettings;
-	private JMenuItem menuEnd;
 	private JMenuItem menuMosaicDimension;
 	private JMenuItem menuMosaicGenerate;
 	private JMenuItem menuDocumentGenerate;
 	private JMenuItem menuAbout;
-
-	public JMenuItem getMenuSettings() {
-		return menuSettings;
-	}
-
-	public JMenuItem getMenuEnd() {
-		return menuEnd;
-	}
 
 	public JMenuItem getMenuMosaicDimension() {
 		return menuMosaicDimension;
@@ -1728,27 +1712,8 @@ public class MainWindow
 	private void buildMenu() {
 		menuBar = new JMenuBar();
 		// menuFile
-		menuFile = new JMenu(textbundle.getString("dialog_mainWindow_menu_10"));
-		menuNewMosaik = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_11"));
-		menuNewMosaik.addActionListener(this);
-		menuNewMosaik.setActionCommand("mosaicnew");
-		menuFile.add(menuNewMosaik);
-		menuImageLoad = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_12"));
-		menuImageLoad.addActionListener(this);
-		menuImageLoad.setActionCommand("imageload");
-		menuFile.add(menuImageLoad);
-		menuConfigurationLoad = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_13"));
-		menuConfigurationLoad.addActionListener(this);
-		menuConfigurationLoad.setActionCommand("configurationload");
-		menuFile.add(menuConfigurationLoad);
-		menuSettings = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_14"));
-		menuSettings.addActionListener(this);
-		menuSettings.setActionCommand("settings");
-		menuFile.add(menuSettings);
-		menuEnd = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_15"));
-		menuEnd.addActionListener(this);
-		menuEnd.setActionCommand("exit");
-		menuFile.add(menuEnd);
+		menuFile = new FileMenu(textbundle.getString("dialog_mainWindow_menu_10"), this);
+
 		menuBar.add(menuFile);
 		// menuPreprocessing
 		menuPreprocessing = new JMenu(textbundle.getString("dialog_mainWindow_menu_20"));
