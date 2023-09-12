@@ -120,7 +120,7 @@ public class GuiStatusHandler {
             case ENABLE_GUI_AFTER_GENERATING_OUTPUT: // enable/disable buttons, menu items, etc.
                 mainWindow.getGuiZoomSlider1().setEnabled(true);
                 mainWindow.getGuiZoomSlider2().setEnabled(true);
-                mainWindow.getMenuGrafic().setEnabled(true);
+                mainWindow.getMenuGraphic().setEnabled(true);
                 mainWindow.getMenuXml().setEnabled(true);
                 mainWindow.getMenuBuildingInstruction().setEnabled(true);
                 mainWindow.getMenuMaterial().setEnabled(true);
@@ -145,7 +145,7 @@ public class GuiStatusHandler {
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiZoomSlider2().setEnabled(false);
-        mainWindow.getMenuGrafic().setEnabled(false);
+        mainWindow.getMenuGraphic().setEnabled(false);
         mainWindow.getMenuXml().setEnabled(false);
         mainWindow.getMenuBuildingInstruction().setEnabled(false);
         mainWindow.getMenuMaterial().setEnabled(false);
@@ -181,21 +181,9 @@ public class GuiStatusHandler {
         guiPanelOptions3.updateUI();
         mainWindow.getMenuFile().processOutput();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
-        mainWindow.getMenuAlgorithm11().setEnabled(false);
-        mainWindow.getMenuAlgorithm12().setEnabled(false);
-        mainWindow.getMenuAlgorithm13().setEnabled(false);
-        mainWindow.getMenuAlgorithm14().setEnabled(false);
-        mainWindow.getMenuAlgorithm15().setEnabled(false);
-        mainWindow.getMenuAlgorithm16().setEnabled(false);
-        mainWindow.getMenuAlgorithm17().setEnabled(false);
-        mainWindow.getMenuAlgorithm21().setEnabled(false);
-        mainWindow.getMenuAlgorithm22().setEnabled(false);
-        mainWindow.getMenuAlgorithm23().setEnabled(false);
-        mainWindow.getMenuAlgorithm24().setEnabled(false);
-        mainWindow.getMenuAlgorithm25().setEnabled(false);
+        mainWindow.getMenuMosaic().processOutput();
         mainWindow.getGuiComboBoxInterpolation().setEnabled(false);
-        mainWindow.getMenuMosaicGenerate().setEnabled(false);
-        mainWindow.getMenuGrafic().setEnabled(true);
+        mainWindow.getMenuGraphic().setEnabled(true);
         mainWindow.getMenuXml().setEnabled(true);
         mainWindow.getMenuBuildingInstruction().setEnabled(true);
         mainWindow.getMenuMaterial().setEnabled(true);
@@ -223,18 +211,7 @@ public class GuiStatusHandler {
         guiZoomSlider2.setValue(guiZoomSlider2Value);
         mainWindow.setGuiZoomSlider2Value(guiZoomSlider2Value);
         guiZoomSlider2.setEnabled(true);
-        mainWindow.getMenuAlgorithm11().setEnabled(true);
-        mainWindow.getMenuAlgorithm12().setEnabled(true);
-        mainWindow.getMenuAlgorithm13().setEnabled(true);
-        mainWindow.getMenuAlgorithm14().setEnabled(true);
-        mainWindow.getMenuAlgorithm15().setEnabled(true);
-        mainWindow.getMenuAlgorithm16().setEnabled(true);
-        mainWindow.getMenuAlgorithm17().setEnabled(true);
-        mainWindow.getMenuAlgorithm21().setEnabled(true);
-        mainWindow.getMenuAlgorithm22().setEnabled(true);
-        mainWindow.getMenuAlgorithm23().setEnabled(true);
-        mainWindow.getMenuAlgorithm24().setEnabled(true);
-        mainWindow.getMenuAlgorithm25().setEnabled(true);
+        mainWindow.getMenuMosaic().processEnableGuiAfterGeneratingMosaic();
         mainWindow.getGuiRadioAlgorithm11().setEnabled(true);
         mainWindow.getGuiRadioAlgorithm12().setEnabled(true);
         mainWindow.getGuiRadioAlgorithm13().setEnabled(true);
@@ -248,7 +225,6 @@ public class GuiStatusHandler {
         mainWindow.getGuiRadioAlgorithm24().setEnabled(true);
         mainWindow.getGuiRadioAlgorithm25().setEnabled(true);
         mainWindow.getGuiComboBoxInterpolation().setEnabled(true);
-        mainWindow.getMenuMosaicGenerate().setEnabled(true);
         mainWindow.getButtonMosaicGenerate().setEnabled(true);
         mainWindow.getGuiThreeDEffect().setEnabled(true);
         final JRadioButton guiRadioAlgorithm25 = mainWindow.getGuiRadioAlgorithm25();
@@ -263,18 +239,7 @@ public class GuiStatusHandler {
      */
     private void processDisableGuiWhileGeneratingMosaic() {
         // enable/disable buttons, menu items, etc.
-        mainWindow.getMenuAlgorithm11().setEnabled(false);
-        mainWindow.getMenuAlgorithm12().setEnabled(false);
-        mainWindow.getMenuAlgorithm13().setEnabled(false);
-        mainWindow.getMenuAlgorithm14().setEnabled(false);
-        mainWindow.getMenuAlgorithm15().setEnabled(false);
-        mainWindow.getMenuAlgorithm16().setEnabled(false);
-        mainWindow.getMenuAlgorithm17().setEnabled(false);
-        mainWindow.getMenuAlgorithm21().setEnabled(false);
-        mainWindow.getMenuAlgorithm22().setEnabled(false);
-        mainWindow.getMenuAlgorithm23().setEnabled(false);
-        mainWindow.getMenuAlgorithm24().setEnabled(false);
-        mainWindow.getMenuAlgorithm25().setEnabled(false);
+        mainWindow.getMenuMosaic().processDisableGuiWhileGeneratingMosaic();
         mainWindow.getGuiRadioAlgorithm11().setEnabled(false);
         mainWindow.getGuiRadioAlgorithm12().setEnabled(false);
         mainWindow.getGuiRadioAlgorithm13().setEnabled(false);
@@ -291,7 +256,6 @@ public class GuiStatusHandler {
         mainWindow.getButtonOutput().setEnabled(false);
         mainWindow.getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiZoomSlider2().setEnabled(false);
-        mainWindow.getMenuMosaicGenerate().setEnabled(false);
         mainWindow.getButtonMosaicGenerate().setEnabled(false);
         mainWindow.getGuiThreeDEffect().setEnabled(false);
         mainWindow.getGuiStatistic().setEnabled(false);
@@ -316,21 +280,9 @@ public class GuiStatusHandler {
         mainWindow.getGuiZoomSlider1().setEnabled(true);
         mainWindow.getMenuFile().processGenerateMosaic();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
-        mainWindow.getMenuAlgorithm11().setEnabled(true);
-        mainWindow.getMenuAlgorithm12().setEnabled(true);
-        mainWindow.getMenuAlgorithm13().setEnabled(true);
-        mainWindow.getMenuAlgorithm14().setEnabled(true);
-        mainWindow.getMenuAlgorithm15().setEnabled(true);
-        mainWindow.getMenuAlgorithm16().setEnabled(true);
-        mainWindow.getMenuAlgorithm17().setEnabled(true);
-        mainWindow.getMenuAlgorithm21().setEnabled(true);
-        mainWindow.getMenuAlgorithm22().setEnabled(true);
-        mainWindow.getMenuAlgorithm23().setEnabled(true);
-        mainWindow.getMenuAlgorithm24().setEnabled(true);
-        mainWindow.getMenuAlgorithm25().setEnabled(true);
+        mainWindow.getMenuMosaic().processGenerateMosaic();
         mainWindow.getGuiComboBoxInterpolation().setEnabled(true);
-        mainWindow.getMenuMosaicGenerate().setEnabled(true);
-        mainWindow.getMenuGrafic().setEnabled(false);
+        mainWindow.getMenuGraphic().setEnabled(false);
         mainWindow.getMenuXml().setEnabled(false);
         mainWindow.getMenuBuildingInstruction().setEnabled(false);
         mainWindow.getMenuMaterial().setEnabled(false);
@@ -440,23 +392,11 @@ public class GuiStatusHandler {
         mainWindow.getMenuFile().processGuiStart();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getButtonMosaicDimension().setEnabled(false);
-        mainWindow.getMenuAlgorithm11().setEnabled(false);
-        mainWindow.getMenuAlgorithm12().setEnabled(false);
-        mainWindow.getMenuAlgorithm13().setEnabled(false);
-        mainWindow.getMenuAlgorithm14().setEnabled(false);
-        mainWindow.getMenuAlgorithm15().setEnabled(false);
-        mainWindow.getMenuAlgorithm16().setEnabled(false);
-        mainWindow.getMenuAlgorithm17().setEnabled(false);
-        mainWindow.getMenuAlgorithm21().setEnabled(false);
-        mainWindow.getMenuAlgorithm22().setEnabled(false);
-        mainWindow.getMenuAlgorithm23().setEnabled(false);
-        mainWindow.getMenuAlgorithm24().setEnabled(false);
-        mainWindow.getMenuAlgorithm25().setEnabled(false);
+        mainWindow.getMenuMosaic().processGuiStart();
         final JComboBox<String> guiComboBoxInterpolation = mainWindow.getGuiComboBoxInterpolation();
         guiComboBoxInterpolation.setEnabled(false);
         guiComboBoxInterpolation.setSelectedIndex(0);
-        mainWindow.getMenuMosaicGenerate().setEnabled(false);
-        mainWindow.getMenuGrafic().setEnabled(false);
+        mainWindow.getMenuGraphic().setEnabled(false);
         mainWindow.getMenuXml().setEnabled(false);
         mainWindow.getMenuBuildingInstruction().setEnabled(false);
         mainWindow.getMenuMaterial().setEnabled(false);
@@ -468,5 +408,4 @@ public class GuiStatusHandler {
         mainWindow.radioButtonStatus(1, 1);
         mainWindow.radioButtonStatus(2, 5);
     }
-
 }
