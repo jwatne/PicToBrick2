@@ -283,7 +283,7 @@ public class GuiStatusHandler {
     private void processCutoutWithRectangleAvailable() {
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiZoomSlider1().setEnabled(false);
-        mainWindow.getButtonCutout().setEnabled(true);
+        mainWindow.getGuiPanelOptions1().getButtonCutout().setEnabled(true);
         // sets information text
         mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_25"));
     }
@@ -294,7 +294,7 @@ public class GuiStatusHandler {
     private void processCutoutNoRectangleAvailable() {
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiZoomSlider1().setEnabled(true);
-        mainWindow.getButtonCutout().setEnabled(false);
+        mainWindow.getGuiPanelOptions1().getButtonCutout().setEnabled(false);
     }
 
     /**
@@ -308,9 +308,7 @@ public class GuiStatusHandler {
                 + mosaicHeight + ". "
                 + MainWindow.textbundle.getString("output_mainWindow_24") + ".");
         // enable/disable buttons, menu items, etc.
-        mainWindow.getButtonCutout().setEnabled(false);
-        mainWindow.getButtonImageLoad().setEnabled(false);
-        mainWindow.getButtonConfigurationLoad().setEnabled(false);
+        mainWindow.getGuiPanelOptions1().processCutoutState();
         mainWindow.getMenuFile().processCutoutState();
         processCutoutNoRectangleAvailable();
     }
@@ -321,7 +319,7 @@ public class GuiStatusHandler {
     private void processImageAndConfigurationLoaded() {
         // enable/disable buttons, menu items, etc.
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(true);
-        mainWindow.getButtonMosaicDimension().setEnabled(true);
+        mainWindow.getGuiPanelOptions1().getButtonMosaicDimension().setEnabled(true);
         // set information text
         mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_22"));
     }
@@ -352,10 +350,7 @@ public class GuiStatusHandler {
         final int guiZoomSlider2Value = 3;
         guiZoomSlider2.setValue(guiZoomSlider2Value);
         mainWindow.setGuiZoomSlider2Value(guiZoomSlider2Value);
-        // init information labels
-        mainWindow.showImageInfo("");
-        mainWindow.showConfigurationInfo("");
-        mainWindow.showDimensionInfo(0, 0, true);
+        mainWindow.getGuiPanelOptions1().processGuiStart();
         // reset images
         dataProcessing.imageReset();
         final JPanel guiPanelTopArea2 = mainWindow.getGuiPanelTopArea2();
@@ -371,15 +366,11 @@ public class GuiStatusHandler {
         guiPanelOptions1.updateUI();
         mainWindow.getMenuFile().processGuiStart();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
-        mainWindow.getButtonMosaicDimension().setEnabled(false);
         mainWindow.getMenuMosaic().processGuiStart();
         final JComboBox<String> guiComboBoxInterpolation = mainWindow.getGuiComboBoxInterpolation();
         guiComboBoxInterpolation.setEnabled(false);
         guiComboBoxInterpolation.setSelectedIndex(0);
         mainWindow.getMenuOutput().processGuiStart();
-        mainWindow.getButtonCutout().setEnabled(false);
-        mainWindow.getButtonImageLoad().setEnabled(true);
-        mainWindow.getButtonConfigurationLoad().setEnabled(true);
         mainWindow.radioButtonStatus(1, 1);
         mainWindow.radioButtonStatus(2, 5);
     }

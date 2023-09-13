@@ -48,6 +48,7 @@ import pictobrick.ui.menus.FileMenu;
 import pictobrick.ui.menus.MosaicMenu;
 import pictobrick.ui.menus.OutputMenu;
 import pictobrick.ui.menus.PreprocessingMenu;
+import pictobrick.ui.panels.Options1Panel;
 
 /**
  * class: MainWindow
@@ -120,11 +121,11 @@ public class MainWindow
 		return guiPanelZoom;
 	}
 
-	private JPanel guiPanelOptions1;
+	private Options1Panel guiPanelOptions1;
 	private JPanel guiPanelOptions2;
 	private JPanel guiPanelOptions3;
 
-	public JPanel getGuiPanelOptions1() {
+	public Options1Panel getGuiPanelOptions1() {
 		return guiPanelOptions1;
 	}
 
@@ -137,10 +138,8 @@ public class MainWindow
 	}
 
 	private JPanel guiPanelOptions2Bottom;
-	private JPanel guiPanelOptions1Top;
 	private JPanel guiPanelOptions2Top;
 	private JPanel guiPanelOptions3Top;
-	private JPanel guiPanelOptions1Empty;
 	private JPanel guiPanelThreeDEffectStatistic;
 	private JPanel guiPanelOptions3Empty;
 	private JPanel guiPanelTopArea2;
@@ -154,30 +153,10 @@ public class MainWindow
 		return guiPanelBottomArea2;
 	}
 
-	private JButton buttonImageLoad;
-	private JButton buttonConfigurationLoad;
-	private JButton buttonMosaicDimension;
-	private JButton buttonCutout;
 	private JButton buttonOutput;
 	private JButton buttonMosaicNew;
 	private JButton buttonMosaicGenerate;
 	private JButton buttonDocumentsGenerate;
-
-	public JButton getButtonImageLoad() {
-		return buttonImageLoad;
-	}
-
-	public JButton getButtonConfigurationLoad() {
-		return buttonConfigurationLoad;
-	}
-
-	public JButton getButtonMosaicDimension() {
-		return buttonMosaicDimension;
-	}
-
-	public JButton getButtonCutout() {
-		return buttonCutout;
-	}
 
 	public JButton getButtonOutput() {
 		return buttonOutput;
@@ -272,10 +251,6 @@ public class MainWindow
 		return guiPictureElementBottom;
 	}
 
-	private JLabel guiLabelImage;
-	private JLabel guiLabelConfiguration;
-	private JLabel guiLabelWidth;
-	private JLabel guiLabelHeight;
 	private JLabel guiLabelZoom1;
 	private JLabel guiLabelZoom2;
 	private JLabel guiLabelQuantisation;
@@ -882,7 +857,7 @@ public class MainWindow
 									dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
 									dataProcessing
 											.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
-									showConfigurationInfo(
+									getGuiPanelOptions1().showConfigurationInfo(
 											configurationDerivationDialog.getConfiguration().getName() + ".cfg");
 									showInfo(textbundle.getString("output_mainWindow_13") + " "
 											+ configurationDerivationDialog.getConfiguration().getName() + ".cfg "
@@ -941,7 +916,7 @@ public class MainWindow
 									dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
 									dataProcessing
 											.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
-									showConfigurationInfo(
+									getGuiPanelOptions1().showConfigurationInfo(
 											configurationDerivationDialog.getConfiguration().getName() + ".cfg");
 									showInfo(textbundle.getString("output_mainWindow_13") + " "
 											+ configurationDerivationDialog.getConfiguration().getName() + ".cfg  "
@@ -958,31 +933,35 @@ public class MainWindow
 							configurationDerivationDialog = null;
 						}
 					}
+
 					break;
 				// load existing configuration
 				case 3:
 					final String existingFile = (String) configurationVector
 							.elementAt(configurationLoadingDialog.getFile());
+
 					if (configurationLoadingDialog.getFile() < 3) {
 						dataProcessing.setCurrentConfiguration(
 								dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile()));
-						showConfigurationInfo(existingFile);
+						getGuiPanelOptions1().showConfigurationInfo(existingFile);
 						showInfo(textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
 								+ textbundle.getString("output_mainWindow_18") + ".");
 					} else {
 						try {
 							dataProcessing.setCurrentConfiguration(dataProcessing.configurationLoad(existingFile));
-							showConfigurationInfo(existingFile);
+							getGuiPanelOptions1().showConfigurationInfo(existingFile);
 							showInfo(textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
 									+ textbundle.getString("output_mainWindow_18") + ".");
 						} catch (final IOException configurationLoadIO) {
 							errorDialog(textbundle.getString("output_mainWindow_19") + ": " + configurationLoadIO);
 						}
 					}
+
 				default:
 					break;
 			}
 		}
+
 		configurationLoadingDialog = null;
 	}
 
@@ -1007,8 +986,10 @@ public class MainWindow
 				return "*.jpg;*.gif;*.png";
 			}
 		});
+
 		d.showOpenDialog(this);
 		final File menuFile = d.getSelectedFile();
+
 		if (dataProcessing.imageLoad(menuFile)) {
 			guiZoomSlider1.setEnabled(true);
 			dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
@@ -1016,7 +997,7 @@ public class MainWindow
 			guiZoomSlider1.setValue(3);
 			guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
 			guiPictureElementTop.updateUI();
-			showImageInfo(menuFile.getName());
+			getGuiPanelOptions1().showImageInfo(menuFile.getName());
 			showInfo(textbundle.getString("output_mainWindow_20") + " " + menuFile.getName() + " "
 					+ textbundle.getString("output_mainWindow_18") + ".");
 		} else {
@@ -1181,61 +1162,6 @@ public class MainWindow
 	}
 
 	/**
-	 * method: showImageInfo
-	 * description: shows the name of the current image
-	 *
-	 * @author Tobias Reichling
-	 * @param fileName
-	 */
-	public void showImageInfo(final String imageFileName) {
-		String fileName = imageFileName;
-
-		if (fileName.length() > 18) {
-			fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
-		}
-
-		guiLabelImage.setText(textbundle.getString("output_mainWindow_20") + ": " + fileName);
-	}
-
-	/**
-	 * method: showConfigurationInfo
-	 * description: shows the name of the current configuration
-	 *
-	 * @author Tobias Reichling
-	 * @param fileName
-	 */
-	public void showConfigurationInfo(final String configFilename) {
-		String fileName = configFilename;
-
-		if (fileName.length() > 18) {
-			fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
-		}
-
-		guiLabelConfiguration.setText("CFG: " + fileName);
-	}
-
-	/**
-	 * method: showDimensionInfo
-	 * description: shows the current dimensions
-	 *
-	 * @author Tobias Reichling
-	 * @param widthValue
-	 * @param heightValue
-	 * @param reset       (true/false)
-	 */
-	public void showDimensionInfo(final int widthValue, final int heightValue, final boolean reset) {
-		if (reset) {
-			guiLabelWidth.setText(textbundle.getString("output_mainWindow_29") + ": ");
-			guiLabelHeight.setText(textbundle.getString("output_mainWindow_30") + ": ");
-		} else {
-			guiLabelWidth.setText(textbundle.getString("output_mainWindow_29") + ": " + widthValue + " "
-					+ textbundle.getString("output_mainWindow_31"));
-			guiLabelHeight.setText(textbundle.getString("output_mainWindow_30") + ": " + heightValue + " "
-					+ textbundle.getString("output_mainWindow_31"));
-		}
-	}
-
-	/**
 	 * method: showInfo
 	 * description: shows an information text
 	 *
@@ -1302,36 +1228,7 @@ public class MainWindow
 		optionAreaBorder.setTitleColor(new Color(100, 100, 100));
 		buttonMosaicNew = new JButton(textbundle.getString("dialog_mainWindow_button_1"));
 		// option panel 1
-		guiPanelOptions1 = new JPanel(new BorderLayout());
-		guiPanelOptions1.setBorder(optionAreaBorder);
-		guiPanelOptions1Empty = new JPanel();
-		guiPanelOptions1Top = new JPanel(new GridLayout(8, 1));
-		buttonImageLoad = new JButton(textbundle.getString("dialog_mainWindow_button_2"));
-		buttonImageLoad.addActionListener(this);
-		buttonImageLoad.setActionCommand("imageload");
-		buttonConfigurationLoad = new JButton(textbundle.getString("dialog_mainWindow_button_3"));
-		buttonConfigurationLoad.addActionListener(this);
-		buttonConfigurationLoad.setActionCommand("configurationload");
-		buttonMosaicDimension = new JButton(textbundle.getString("dialog_mainWindow_button_4"));
-		buttonMosaicDimension.addActionListener(this);
-		buttonMosaicDimension.setActionCommand("mosaicdimension");
-		buttonCutout = new JButton(textbundle.getString("dialog_mainWindow_button_5"));
-		buttonCutout.addActionListener(this);
-		buttonCutout.setActionCommand("cutout");
-		guiLabelImage = new JLabel(textbundle.getString("dialog_mainWindow_label_1") + ": ");
-		guiLabelConfiguration = new JLabel(textbundle.getString("dialog_mainWindow_label_9") + ": ");
-		guiLabelWidth = new JLabel(textbundle.getString("dialog_mainWindow_label_2") + ": ");
-		guiLabelHeight = new JLabel(textbundle.getString("dialog_mainWindow_label_3") + ": ");
-		guiPanelOptions1.add(guiPanelOptions1Top, BorderLayout.NORTH);
-		guiPanelOptions1.add(guiPanelOptions1Empty, BorderLayout.CENTER);
-		guiPanelOptions1.add(buttonCutout, BorderLayout.SOUTH);
-		guiPanelOptions1Top.add(buttonImageLoad);
-		guiPanelOptions1Top.add(guiLabelImage);
-		guiPanelOptions1Top.add(buttonConfigurationLoad);
-		guiPanelOptions1Top.add(guiLabelConfiguration);
-		guiPanelOptions1Top.add(buttonMosaicDimension);
-		guiPanelOptions1Top.add(guiLabelWidth);
-		guiPanelOptions1Top.add(guiLabelHeight);
+		guiPanelOptions1 = new Options1Panel(new BorderLayout(), this, optionAreaBorder);
 		// option panel 2
 		guiPanelOptions2 = new JPanel(new BorderLayout());
 		guiPanelOptions2.setBorder(optionAreaBorder);

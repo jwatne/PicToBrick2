@@ -337,7 +337,7 @@ public class MainWindowActionHandlers {
             mainWindow.setMosaicWidth(mosaicWidth);
             final int mosaicHeight = mosaicDimensionDialog.getArea().height;
             mainWindow.setMosaicHeight(mosaicHeight);
-            mainWindow.showDimensionInfo(mosaicWidth, mosaicHeight, false);
+            mainWindow.getGuiPanelOptions1().showDimensionInfo(mosaicWidth, mosaicHeight, false);
             getGuiStatusHandler().guiStatus(GuiStatusHandler.CUTOUT);
         }
 
