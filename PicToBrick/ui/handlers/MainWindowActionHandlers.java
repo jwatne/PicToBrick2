@@ -83,15 +83,15 @@ public class MainWindowActionHandlers {
      * @param reset          (true/false)
      */
     public void checkBoxStatus(final int checkBoxNumber, final boolean reset) {
-        final JCheckBoxMenuItem menuGrafic = mainWindow.getMenuGraphic();
+        final JCheckBoxMenuItem menuGrafic = mainWindow.getMenuOutput().getMenuGraphic();
         final JCheckBox guiOutputGrafic = mainWindow.getGuiOutputGrafic();
-        final JCheckBoxMenuItem menuXml = mainWindow.getMenuXml();
+        final JCheckBoxMenuItem menuXml = mainWindow.getMenuOutput().getMenuXml();
         final JCheckBox guiOutputXml = mainWindow.getGuiOutputXml();
-        final JCheckBoxMenuItem menuConfiguration = mainWindow.getMenuConfiguration();
+        final JCheckBoxMenuItem menuConfiguration = mainWindow.getMenuOutput().getMenuConfiguration();
         final JCheckBox guiOutputConfiguration = mainWindow.getGuiOutputConfiguration();
-        final JCheckBoxMenuItem menuBuildingInstruction = mainWindow.getMenuBuildingInstruction();
+        final JCheckBoxMenuItem menuBuildingInstruction = mainWindow.getMenuOutput().getMenuBuildingInstruction();
         final JCheckBox guiOutputBuildingInstruction = mainWindow.getGuiOutputBuildingInstruction();
-        final JCheckBoxMenuItem menuMaterial = mainWindow.getMenuMaterial();
+        final JCheckBoxMenuItem menuMaterial = mainWindow.getMenuOutput().getMenuMaterial();
         final JCheckBox guiOutputMaterial = mainWindow.getGuiOutputMaterial();
 
         if (reset) {

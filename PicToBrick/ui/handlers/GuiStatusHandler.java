@@ -120,17 +120,12 @@ public class GuiStatusHandler {
             case ENABLE_GUI_AFTER_GENERATING_OUTPUT: // enable/disable buttons, menu items, etc.
                 mainWindow.getGuiZoomSlider1().setEnabled(true);
                 mainWindow.getGuiZoomSlider2().setEnabled(true);
-                mainWindow.getMenuGraphic().setEnabled(true);
-                mainWindow.getMenuXml().setEnabled(true);
-                mainWindow.getMenuBuildingInstruction().setEnabled(true);
-                mainWindow.getMenuMaterial().setEnabled(true);
-                mainWindow.getMenuConfiguration().setEnabled(true);
+                mainWindow.getMenuOutput().enableGuiAfterGeneratingOutput();
                 mainWindow.getGuiOutputGrafic().setEnabled(true);
                 mainWindow.getGuiOutputXml().setEnabled(true);
                 mainWindow.getGuiOutputBuildingInstruction().setEnabled(true);
                 mainWindow.getGuiOutputMaterial().setEnabled(true);
                 mainWindow.getGuiOutputConfiguration().setEnabled(true);
-                mainWindow.getMenuDocumentGenerate().setEnabled(true);
                 mainWindow.getButtonDocumentsGenerate().setEnabled(true);
                 break;
             default:
@@ -145,17 +140,12 @@ public class GuiStatusHandler {
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiZoomSlider2().setEnabled(false);
-        mainWindow.getMenuGraphic().setEnabled(false);
-        mainWindow.getMenuXml().setEnabled(false);
-        mainWindow.getMenuBuildingInstruction().setEnabled(false);
-        mainWindow.getMenuMaterial().setEnabled(false);
-        mainWindow.getMenuConfiguration().setEnabled(false);
+        mainWindow.getMenuOutput().processDisableGuiWhileGeneratingOutput();
         mainWindow.getGuiOutputGrafic().setEnabled(false);
         mainWindow.getGuiOutputXml().setEnabled(false);
         mainWindow.getGuiOutputBuildingInstruction().setEnabled(false);
         mainWindow.getGuiOutputMaterial().setEnabled(false);
         mainWindow.getGuiOutputConfiguration().setEnabled(false);
-        mainWindow.getMenuDocumentGenerate().setEnabled(false);
         mainWindow.getButtonDocumentsGenerate().setEnabled(false);
     }
 
@@ -183,12 +173,7 @@ public class GuiStatusHandler {
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuMosaic().processOutput();
         mainWindow.getGuiComboBoxInterpolation().setEnabled(false);
-        mainWindow.getMenuGraphic().setEnabled(true);
-        mainWindow.getMenuXml().setEnabled(true);
-        mainWindow.getMenuBuildingInstruction().setEnabled(true);
-        mainWindow.getMenuMaterial().setEnabled(true);
-        mainWindow.getMenuConfiguration().setEnabled(true);
-        mainWindow.getMenuDocumentGenerate().setEnabled(true);
+        mainWindow.getMenuOutput().processOutput();
         mainWindow.getGuiThreeDEffect().setEnabled(false);
         mainWindow.getGuiStatistic().setEnabled(false);
     }
@@ -282,12 +267,7 @@ public class GuiStatusHandler {
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuMosaic().processGenerateMosaic();
         mainWindow.getGuiComboBoxInterpolation().setEnabled(true);
-        mainWindow.getMenuGraphic().setEnabled(false);
-        mainWindow.getMenuXml().setEnabled(false);
-        mainWindow.getMenuBuildingInstruction().setEnabled(false);
-        mainWindow.getMenuMaterial().setEnabled(false);
-        mainWindow.getMenuConfiguration().setEnabled(false);
-        mainWindow.getMenuDocumentGenerate().setEnabled(false);
+        mainWindow.getMenuOutput().processGenerateMosaic();
         mainWindow.getButtonOutput().setEnabled(false);
         final JCheckBox guiThreeDEffect = mainWindow.getGuiThreeDEffect();
         guiThreeDEffect.setEnabled(true);
@@ -396,12 +376,7 @@ public class GuiStatusHandler {
         final JComboBox<String> guiComboBoxInterpolation = mainWindow.getGuiComboBoxInterpolation();
         guiComboBoxInterpolation.setEnabled(false);
         guiComboBoxInterpolation.setSelectedIndex(0);
-        mainWindow.getMenuGraphic().setEnabled(false);
-        mainWindow.getMenuXml().setEnabled(false);
-        mainWindow.getMenuBuildingInstruction().setEnabled(false);
-        mainWindow.getMenuMaterial().setEnabled(false);
-        mainWindow.getMenuConfiguration().setEnabled(false);
-        mainWindow.getMenuDocumentGenerate().setEnabled(false);
+        mainWindow.getMenuOutput().processGuiStart();
         mainWindow.getButtonCutout().setEnabled(false);
         mainWindow.getButtonImageLoad().setEnabled(true);
         mainWindow.getButtonConfigurationLoad().setEnabled(true);

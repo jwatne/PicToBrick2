@@ -20,7 +20,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -47,6 +46,7 @@ import pictobrick.ui.handlers.GuiStatusHandler;
 import pictobrick.ui.handlers.MainWindowActionHandlers;
 import pictobrick.ui.menus.FileMenu;
 import pictobrick.ui.menus.MosaicMenu;
+import pictobrick.ui.menus.OutputMenu;
 import pictobrick.ui.menus.PreprocessingMenu;
 
 /**
@@ -91,25 +91,20 @@ public class MainWindow
 		return menuMosaic;
 	}
 
-	private JMenu menuOutput;
+	private OutputMenu menuOutput;
+
+	public OutputMenu getMenuOutput() {
+		return menuOutput;
+	}
+
 	private JMenu menuHelp;
 
-	private JMenuItem menuDocumentGenerate;
 	private JMenuItem menuAbout;
-
-	public JMenuItem getMenuDocumentGenerate() {
-		return menuDocumentGenerate;
-	}
 
 	public JMenuItem getMenuAbout() {
 		return menuAbout;
 	}
 
-	private JCheckBoxMenuItem menuGraphic;
-	private JCheckBoxMenuItem menuXml;
-	private JCheckBoxMenuItem menuBuildingInstruction;
-	private JCheckBoxMenuItem menuMaterial;
-	private JCheckBoxMenuItem menuConfiguration;
 	private JPanel guiPanelTopArea;
 	private JPanel guiPanelBottomArea;
 	private JPanel guiPanelRightArea;
@@ -370,28 +365,12 @@ public class MainWindow
 		workingDirectory(false);
 	}
 
-	public JCheckBoxMenuItem getMenuGraphic() {
-		return menuGraphic;
-	}
-
-	public void setMenuGraphic(final JCheckBoxMenuItem menuGrafic) {
-		this.menuGraphic = menuGrafic;
-	}
-
 	public JCheckBox getGuiOutputGrafic() {
 		return guiOutputGrafic;
 	}
 
 	public void setGuiOutputGrafic(final JCheckBox guiOutputGrafic) {
 		this.guiOutputGrafic = guiOutputGrafic;
-	}
-
-	public JCheckBoxMenuItem getMenuXml() {
-		return menuXml;
-	}
-
-	public void setMenuXml(final JCheckBoxMenuItem menuXml) {
-		this.menuXml = menuXml;
 	}
 
 	public JCheckBox getGuiOutputXml() {
@@ -402,14 +381,6 @@ public class MainWindow
 		this.guiOutputXml = guiOutputXml;
 	}
 
-	public JCheckBoxMenuItem getMenuConfiguration() {
-		return menuConfiguration;
-	}
-
-	public void setMenuConfiguration(final JCheckBoxMenuItem menuConfiguration) {
-		this.menuConfiguration = menuConfiguration;
-	}
-
 	public JCheckBox getGuiOutputConfiguration() {
 		return guiOutputConfiguration;
 	}
@@ -418,28 +389,12 @@ public class MainWindow
 		this.guiOutputConfiguration = guiOutputConfiguration;
 	}
 
-	public JCheckBoxMenuItem getMenuBuildingInstruction() {
-		return menuBuildingInstruction;
-	}
-
-	public void setMenuBuildingInstruction(final JCheckBoxMenuItem menuBuildingInstruction) {
-		this.menuBuildingInstruction = menuBuildingInstruction;
-	}
-
 	public JCheckBox getGuiOutputBuildingInstruction() {
 		return guiOutputBuildingInstruction;
 	}
 
 	public void setGuiOutputBuildingInstruction(final JCheckBox guiOutputBuildingInstruction) {
 		this.guiOutputBuildingInstruction = guiOutputBuildingInstruction;
-	}
-
-	public JCheckBoxMenuItem getMenuMaterial() {
-		return menuMaterial;
-	}
-
-	public void setMenuMaterial(final JCheckBoxMenuItem menuMaterial) {
-		this.menuMaterial = menuMaterial;
 	}
 
 	public JCheckBox getGuiOutputMaterial() {
@@ -1588,32 +1543,7 @@ public class MainWindow
 		menuMosaic = new MosaicMenu(textbundle.getString("dialog_mainWindow_menu_30"), this);
 		menuBar.add(menuMosaic);
 		// menuOutput
-		menuOutput = new JMenu(textbundle.getString("dialog_mainWindow_menu_40"));
-		menuGraphic = new JCheckBoxMenuItem(textbundle.getString("dialog_mainWindow_menu_41"));
-		menuGraphic.addActionListener(this);
-		menuGraphic.setActionCommand("menugrafic");
-		menuXml = new JCheckBoxMenuItem(textbundle.getString("dialog_mainWindow_menu_42"));
-		menuXml.addActionListener(this);
-		menuXml.setActionCommand("menuxml");
-		menuBuildingInstruction = new JCheckBoxMenuItem(textbundle.getString("dialog_mainWindow_menu_43"));
-		menuBuildingInstruction.addActionListener(this);
-		menuBuildingInstruction.setActionCommand("menubuildinginstruction");
-		menuMaterial = new JCheckBoxMenuItem(textbundle.getString("dialog_mainWindow_menu_44"));
-		menuMaterial.addActionListener(this);
-		menuMaterial.setActionCommand("menumaterial");
-		menuConfiguration = new JCheckBoxMenuItem(textbundle.getString("dialog_mainWindow_menu_45"));
-		menuConfiguration.addActionListener(this);
-		menuConfiguration.setActionCommand("menuconfiguration");
-		menuOutput.add(menuGraphic);
-		menuOutput.add(menuConfiguration);
-		menuOutput.add(menuMaterial);
-		menuOutput.add(menuBuildingInstruction);
-		menuOutput.add(menuXml);
-		menuOutput.addSeparator();
-		menuDocumentGenerate = new JMenuItem(textbundle.getString("dialog_mainWindow_menu_46"));
-		menuDocumentGenerate.addActionListener(this);
-		menuDocumentGenerate.setActionCommand("documentgenerate");
-		menuOutput.add(menuDocumentGenerate);
+		menuOutput = new OutputMenu(textbundle.getString("dialog_mainWindow_menu_40"), this);
 		menuBar.add(menuOutput);
 		// menuHelp
 		menuHelp = new JMenu(textbundle.getString("dialog_mainWindow_menu_50"));
