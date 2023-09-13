@@ -7,7 +7,6 @@ import java.awt.LayoutManager;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 import pictobrick.ui.MainWindow;
 
@@ -15,29 +14,28 @@ import pictobrick.ui.MainWindow;
  * Panel for the first set of options for the application. Code moved from
  * {@link pictobrick.ui.MainWindow} by John Watne 09/2023.
  */
-public class Options1Panel extends JPanel {
-    private JPanel guiPanelOptions1Empty;
-    private JPanel guiPanelOptions1Top;
-    private JButton buttonImageLoad;
-    private JButton buttonConfigurationLoad;
-    private JButton buttonMosaicDimension;
-    private JButton buttonCutout;
-    private JLabel guiLabelImage;
-    private JLabel guiLabelConfiguration;
-    private JLabel guiLabelWidth;
-    private JLabel guiLabelHeight;
+public class OptionsPanel1 extends JPanel implements OptionsPanel {
+    private final JPanel guiPanelOptions1Empty;
+    private final JPanel guiPanelOptions1Top;
+    private final JButton buttonImageLoad;
+    private final JButton buttonConfigurationLoad;
+    private final JButton buttonMosaicDimension;
+    private final JButton buttonCutout;
+    private final JLabel guiLabelImage;
+    private final JLabel guiLabelConfiguration;
+    private final JLabel guiLabelWidth;
+    private final JLabel guiLabelHeight;
 
     /**
      * Constructs the panel for the main window with the given layout manager.
      *
-     * @param layout           the LayoutManager to use.
-     * @param mainWindow       the main window of the application that is the action
-     *                         listener for items on this panel.
-     * @param optionAreaBorder titled border to use for the panel.
+     * @param layout     the LayoutManager to use.
+     * @param mainWindow the main window of the application that is the action
+     *                   listener for items on this panel.
      */
-    public Options1Panel(LayoutManager layout, MainWindow mainWindow, TitledBorder optionAreaBorder) {
+    public OptionsPanel1(final LayoutManager layout, final MainWindow mainWindow) {
         super(layout);
-        setBorder(optionAreaBorder);
+        setBorder(getOptionAreaBorder());
         guiPanelOptions1Empty = new JPanel();
         guiPanelOptions1Top = new JPanel(new GridLayout(8, 1));
         buttonImageLoad = new JButton(MainWindow.textbundle.getString("dialog_mainWindow_button_2"));

@@ -247,9 +247,10 @@ public class MainWindowActionHandlers {
      */
     public void generateMosaic() {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
-        final JComboBox<String> guiComboBoxInterpolation = mainWindow.getGuiComboBoxInterpolation();
-        final ButtonGroup guiGroupQuantisation = mainWindow.getGuiGroupQuantisation();
-        final ButtonGroup guiGroupTiling = mainWindow.getGuiGroupTiling();
+        final JComboBox<String> guiComboBoxInterpolation = mainWindow.getGuiPanelOptions2()
+                .getGuiComboBoxInterpolation();
+        final ButtonGroup guiGroupQuantisation = mainWindow.getGuiPanelOptions2().getGuiGroupQuantisation();
+        final ButtonGroup guiGroupTiling = mainWindow.getGuiPanelOptions2().getGuiGroupTiling();
         dataProcessing.initInfo();
         dataProcessing.setInterpolation(guiComboBoxInterpolation.getSelectedIndex() + 1);
         final int quantisation = Integer.parseInt(
@@ -267,8 +268,8 @@ public class MainWindowActionHandlers {
         } else {
             final int mosaicWidth = mainWindow.getMosaicWidth();
             final int mosaicHeight = mainWindow.getMosaicHeight();
-            final JCheckBox guiThreeDEffect = mainWindow.getGuiThreeDEffect();
-            final JCheckBox guiStatistic = mainWindow.getGuiStatistic();
+            final JCheckBox guiThreeDEffect = mainWindow.getGuiPanelOptions2().getGuiThreeDEffect();
+            final JCheckBox guiStatistic = mainWindow.getGuiPanelOptions2().getGuiStatistic();
             mainWindow.adjustDividerLocation();
             getGuiStatusHandler().guiStatus(GuiStatusHandler.DISABLE_GUI_WHILE_GENERATE_MOSAIC);
             dataProcessing.generateMosaic(mosaicWidth, mosaicHeight, quantisation, tiling,

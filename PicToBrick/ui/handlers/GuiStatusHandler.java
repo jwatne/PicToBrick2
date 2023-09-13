@@ -2,10 +2,7 @@ package pictobrick.ui.handlers;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 
 import pictobrick.service.DataProcessor;
@@ -172,10 +169,8 @@ public class GuiStatusHandler {
         mainWindow.getMenuFile().processOutput();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuMosaic().processOutput();
-        mainWindow.getGuiComboBoxInterpolation().setEnabled(false);
+        mainWindow.getGuiPanelOptions2().processOutput();
         mainWindow.getMenuOutput().processOutput();
-        mainWindow.getGuiThreeDEffect().setEnabled(false);
-        mainWindow.getGuiStatistic().setEnabled(false);
     }
 
     /**
@@ -185,7 +180,7 @@ public class GuiStatusHandler {
         // sets information text
         mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_27"));
         // enable/disable buttons, menu items, etc.
-        mainWindow.getButtonOutput().setEnabled(true);
+        mainWindow.getGuiPanelOptions2().processEnableGuiAfterGeneratingMosaic();
         final JSlider guiZoomSlider1 = mainWindow.getGuiZoomSlider1();
         final int guiZoomSlider1Value = 3;
         guiZoomSlider1.setValue(guiZoomSlider1Value);
@@ -197,26 +192,6 @@ public class GuiStatusHandler {
         mainWindow.setGuiZoomSlider2Value(guiZoomSlider2Value);
         guiZoomSlider2.setEnabled(true);
         mainWindow.getMenuMosaic().processEnableGuiAfterGeneratingMosaic();
-        mainWindow.getGuiRadioAlgorithm11().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm12().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm13().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm14().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm15().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm16().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm17().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm21().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm22().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm23().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm24().setEnabled(true);
-        mainWindow.getGuiRadioAlgorithm25().setEnabled(true);
-        mainWindow.getGuiComboBoxInterpolation().setEnabled(true);
-        mainWindow.getButtonMosaicGenerate().setEnabled(true);
-        mainWindow.getGuiThreeDEffect().setEnabled(true);
-        final JRadioButton guiRadioAlgorithm25 = mainWindow.getGuiRadioAlgorithm25();
-
-        if (!guiRadioAlgorithm25.isSelected()) {
-            mainWindow.getGuiStatistic().setEnabled(true);
-        }
     }
 
     /**
@@ -225,25 +200,9 @@ public class GuiStatusHandler {
     private void processDisableGuiWhileGeneratingMosaic() {
         // enable/disable buttons, menu items, etc.
         mainWindow.getMenuMosaic().processDisableGuiWhileGeneratingMosaic();
-        mainWindow.getGuiRadioAlgorithm11().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm12().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm13().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm14().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm15().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm16().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm17().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm21().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm22().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm23().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm24().setEnabled(false);
-        mainWindow.getGuiRadioAlgorithm25().setEnabled(false);
-        mainWindow.getGuiComboBoxInterpolation().setEnabled(false);
-        mainWindow.getButtonOutput().setEnabled(false);
+        mainWindow.getGuiPanelOptions2().processDisableGuiWhileGeneratingMosaic();
         mainWindow.getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiZoomSlider2().setEnabled(false);
-        mainWindow.getButtonMosaicGenerate().setEnabled(false);
-        mainWindow.getGuiThreeDEffect().setEnabled(false);
-        mainWindow.getGuiStatistic().setEnabled(false);
     }
 
     /**
@@ -266,15 +225,8 @@ public class GuiStatusHandler {
         mainWindow.getMenuFile().processGenerateMosaic();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuMosaic().processGenerateMosaic();
-        mainWindow.getGuiComboBoxInterpolation().setEnabled(true);
+        mainWindow.getGuiPanelOptions2().processGenerateMosaic();
         mainWindow.getMenuOutput().processGenerateMosaic();
-        mainWindow.getButtonOutput().setEnabled(false);
-        final JCheckBox guiThreeDEffect = mainWindow.getGuiThreeDEffect();
-        guiThreeDEffect.setEnabled(true);
-        guiThreeDEffect.setSelected(true);
-        final JCheckBox guiStatistic = mainWindow.getGuiStatistic();
-        guiStatistic.setSelected(false);
-        guiStatistic.setEnabled(false);
     }
 
     /**
@@ -367,9 +319,7 @@ public class GuiStatusHandler {
         mainWindow.getMenuFile().processGuiStart();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuMosaic().processGuiStart();
-        final JComboBox<String> guiComboBoxInterpolation = mainWindow.getGuiComboBoxInterpolation();
-        guiComboBoxInterpolation.setEnabled(false);
-        guiComboBoxInterpolation.setSelectedIndex(0);
+        mainWindow.getGuiPanelOptions2().processGuiStart();
         mainWindow.getMenuOutput().processGuiStart();
         mainWindow.radioButtonStatus(1, 1);
         mainWindow.radioButtonStatus(2, 5);

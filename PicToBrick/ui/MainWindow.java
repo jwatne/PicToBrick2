@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -17,10 +16,8 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,7 +26,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
@@ -48,7 +44,8 @@ import pictobrick.ui.menus.FileMenu;
 import pictobrick.ui.menus.MosaicMenu;
 import pictobrick.ui.menus.OutputMenu;
 import pictobrick.ui.menus.PreprocessingMenu;
-import pictobrick.ui.panels.Options1Panel;
+import pictobrick.ui.panels.OptionsPanel1;
+import pictobrick.ui.panels.OptionsPanel2;
 
 /**
  * class: MainWindow
@@ -121,15 +118,15 @@ public class MainWindow
 		return guiPanelZoom;
 	}
 
-	private Options1Panel guiPanelOptions1;
-	private JPanel guiPanelOptions2;
+	private OptionsPanel1 guiPanelOptions1;
+	private OptionsPanel2 guiPanelOptions2;
 	private JPanel guiPanelOptions3;
 
-	public Options1Panel getGuiPanelOptions1() {
+	public OptionsPanel1 getGuiPanelOptions1() {
 		return guiPanelOptions1;
 	}
 
-	public JPanel getGuiPanelOptions2() {
+	public OptionsPanel2 getGuiPanelOptions2() {
 		return guiPanelOptions2;
 	}
 
@@ -137,10 +134,7 @@ public class MainWindow
 		return guiPanelOptions3;
 	}
 
-	private JPanel guiPanelOptions2Bottom;
-	private JPanel guiPanelOptions2Top;
 	private JPanel guiPanelOptions3Top;
-	private JPanel guiPanelThreeDEffectStatistic;
 	private JPanel guiPanelOptions3Empty;
 	private JPanel guiPanelTopArea2;
 	private JPanel guiPanelBottomArea2;
@@ -153,94 +147,19 @@ public class MainWindow
 		return guiPanelBottomArea2;
 	}
 
-	private JButton buttonOutput;
 	private JButton buttonMosaicNew;
-	private JButton buttonMosaicGenerate;
 	private JButton buttonDocumentsGenerate;
-
-	public JButton getButtonOutput() {
-		return buttonOutput;
-	}
 
 	public JButton getButtonMosaicNew() {
 		return buttonMosaicNew;
-	}
-
-	public JButton getButtonMosaicGenerate() {
-		return buttonMosaicGenerate;
 	}
 
 	public JButton getButtonDocumentsGenerate() {
 		return buttonDocumentsGenerate;
 	}
 
-	private ButtonGroup guiGroupQuantisation;
-	private ButtonGroup guiGroupTiling;
-	private JRadioButton guiRadioAlgorithm11;
-	private JRadioButton guiRadioAlgorithm12;
-	private JRadioButton guiRadioAlgorithm13;
-	private JRadioButton guiRadioAlgorithm14;
-	private JRadioButton guiRadioAlgorithm15;
-	private JRadioButton guiRadioAlgorithm16;
-	private JRadioButton guiRadioAlgorithm17;
-	private JRadioButton guiRadioAlgorithm21;
-	private JRadioButton guiRadioAlgorithm22;
-	private JRadioButton guiRadioAlgorithm23;
-	private JRadioButton guiRadioAlgorithm24;
-	private JRadioButton guiRadioAlgorithm25;
-
-	public JRadioButton getGuiRadioAlgorithm11() {
-		return guiRadioAlgorithm11;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm12() {
-		return guiRadioAlgorithm12;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm13() {
-		return guiRadioAlgorithm13;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm14() {
-		return guiRadioAlgorithm14;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm15() {
-		return guiRadioAlgorithm15;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm16() {
-		return guiRadioAlgorithm16;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm17() {
-		return guiRadioAlgorithm17;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm21() {
-		return guiRadioAlgorithm21;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm22() {
-		return guiRadioAlgorithm22;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm23() {
-		return guiRadioAlgorithm23;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm24() {
-		return guiRadioAlgorithm24;
-	}
-
-	public JRadioButton getGuiRadioAlgorithm25() {
-		return guiRadioAlgorithm25;
-	}
-
 	private JCheckBox guiOutputGrafic;
 	private JCheckBox guiOutputXml;
-	private JCheckBox guiThreeDEffect;
-	private JCheckBox guiStatistic;
 	private JCheckBox guiOutputConfiguration;
 	private JCheckBox guiOutputMaterial;
 	private JCheckBox guiOutputBuildingInstruction;
@@ -253,11 +172,7 @@ public class MainWindow
 
 	private JLabel guiLabelZoom1;
 	private JLabel guiLabelZoom2;
-	private JLabel guiLabelQuantisation;
-	private JLabel guiLabelTiling;
 	private JLabel guiLabelOutput;
-	private JLabel guiLabelSeparator;
-	private JComboBox<String> guiComboBoxInterpolation;
 	private JSplitPane guiSplitPane;
 	private JScrollPane guiScrollPaneTop;
 	private JScrollPane guiScrollPaneBottom;
@@ -384,30 +299,6 @@ public class MainWindow
 		return dataProcessing;
 	}
 
-	public JComboBox<String> getGuiComboBoxInterpolation() {
-		return guiComboBoxInterpolation;
-	}
-
-	public void setGuiComboBoxInterpolation(final JComboBox<String> guiComboBoxInterpolation) {
-		this.guiComboBoxInterpolation = guiComboBoxInterpolation;
-	}
-
-	public ButtonGroup getGuiGroupQuantisation() {
-		return guiGroupQuantisation;
-	}
-
-	public void setGuiGroupQuantisation(final ButtonGroup guiGroupQuantisation) {
-		this.guiGroupQuantisation = guiGroupQuantisation;
-	}
-
-	public ButtonGroup getGuiGroupTiling() {
-		return guiGroupTiling;
-	}
-
-	public void setGuiGroupTiling(final ButtonGroup guiGroupTiling) {
-		this.guiGroupTiling = guiGroupTiling;
-	}
-
 	public int getMosaicWidth() {
 		return mosaicWidth;
 	}
@@ -422,22 +313,6 @@ public class MainWindow
 
 	public void setMosaicHeight(final int mosaicHeight) {
 		this.mosaicHeight = mosaicHeight;
-	}
-
-	public JCheckBox getGuiThreeDEffect() {
-		return guiThreeDEffect;
-	}
-
-	public void setGuiThreeDEffect(final JCheckBox guiThreeDEffect) {
-		this.guiThreeDEffect = guiThreeDEffect;
-	}
-
-	public JCheckBox getGuiStatistic() {
-		return guiStatistic;
-	}
-
-	public void setGuiStatistic(final JCheckBox guiStatistic) {
-		this.guiStatistic = guiStatistic;
 	}
 
 	public PictureElement getGuiPictureElementTop() {
@@ -708,7 +583,7 @@ public class MainWindow
 		guiStatusHandler.guiStatus(GuiStatusHandler.ENABLE_GUI_AFTER_GENERATE_MOSAIC);
 		guiPictureElementBottom.updateUI();
 
-		if (guiStatistic.isSelected()) {
+		if (guiPanelOptions2.getGuiStatistic().isSelected()) {
 			final Enumeration<String> statisticInformation = dataProcessing.getInfo(1);
 			String statisticInformationString = "";
 
@@ -720,16 +595,6 @@ public class MainWindow
 			JOptionPane.showMessageDialog(this, statisticInformationString,
 					textbundle.getString("output_mainWindow_12"), JOptionPane.INFORMATION_MESSAGE);
 		}
-	}
-
-	/**
-	 * method: disableStatisticButton
-	 * description: disables statistic if not possible
-	 *
-	 * @author Tobias Reichling
-	 */
-	public void disableStatisticButton() {
-		guiStatistic.setSelected(false);
 	}
 
 	/**
@@ -1027,128 +892,8 @@ public class MainWindow
 	 */
 	public void radioButtonStatus(final int groupNumber, final int buttonNumber) {
 		menuMosaic.radioButtonStatus(groupNumber, buttonNumber);
+		guiPanelOptions2.radioButtonStatus(groupNumber, buttonNumber);
 
-		switch (groupNumber) {
-			case 1:
-				switch (buttonNumber) {
-					case 1:
-						guiRadioAlgorithm11.setSelected(true);
-						guiRadioAlgorithm12.setSelected(false);
-						guiRadioAlgorithm13.setSelected(false);
-						guiRadioAlgorithm14.setSelected(false);
-						guiRadioAlgorithm15.setSelected(false);
-						guiRadioAlgorithm16.setSelected(false);
-						guiRadioAlgorithm17.setSelected(false);
-						break;
-					case 2:
-						guiRadioAlgorithm11.setSelected(false);
-						guiRadioAlgorithm12.setSelected(true);
-						guiRadioAlgorithm13.setSelected(false);
-						guiRadioAlgorithm14.setSelected(false);
-						guiRadioAlgorithm15.setSelected(false);
-						guiRadioAlgorithm16.setSelected(false);
-						guiRadioAlgorithm17.setSelected(false);
-						break;
-					case 3:
-						guiRadioAlgorithm11.setSelected(false);
-						guiRadioAlgorithm12.setSelected(false);
-						guiRadioAlgorithm13.setSelected(true);
-						guiRadioAlgorithm14.setSelected(false);
-						guiRadioAlgorithm15.setSelected(false);
-						guiRadioAlgorithm16.setSelected(false);
-						guiRadioAlgorithm17.setSelected(false);
-						break;
-					case 4:
-						guiRadioAlgorithm11.setSelected(false);
-						guiRadioAlgorithm12.setSelected(false);
-						guiRadioAlgorithm13.setSelected(false);
-						guiRadioAlgorithm14.setSelected(true);
-						guiRadioAlgorithm15.setSelected(false);
-						guiRadioAlgorithm16.setSelected(false);
-						guiRadioAlgorithm17.setSelected(false);
-						break;
-					case 5:
-						guiRadioAlgorithm11.setSelected(false);
-						guiRadioAlgorithm12.setSelected(false);
-						guiRadioAlgorithm13.setSelected(false);
-						guiRadioAlgorithm14.setSelected(false);
-						guiRadioAlgorithm15.setSelected(true);
-						guiRadioAlgorithm16.setSelected(false);
-						guiRadioAlgorithm17.setSelected(false);
-						break;
-					case 6:
-						guiRadioAlgorithm11.setSelected(false);
-						guiRadioAlgorithm12.setSelected(false);
-						guiRadioAlgorithm13.setSelected(false);
-						guiRadioAlgorithm14.setSelected(false);
-						guiRadioAlgorithm15.setSelected(false);
-						guiRadioAlgorithm16.setSelected(true);
-						guiRadioAlgorithm17.setSelected(false);
-						break;
-					case 7:
-						guiRadioAlgorithm11.setSelected(false);
-						guiRadioAlgorithm12.setSelected(false);
-						guiRadioAlgorithm13.setSelected(false);
-						guiRadioAlgorithm14.setSelected(false);
-						guiRadioAlgorithm15.setSelected(false);
-						guiRadioAlgorithm16.setSelected(false);
-						guiRadioAlgorithm17.setSelected(true);
-						break;
-					default:
-						break;
-				}
-
-				break;
-			case 2:
-				switch (buttonNumber) {
-					case 1:
-						guiRadioAlgorithm21.setSelected(true);
-						guiRadioAlgorithm22.setSelected(false);
-						guiRadioAlgorithm23.setSelected(false);
-						guiRadioAlgorithm24.setSelected(false);
-						guiRadioAlgorithm25.setSelected(false);
-						guiStatistic.setEnabled(true);
-						break;
-					case 2:
-						guiRadioAlgorithm21.setSelected(false);
-						guiRadioAlgorithm22.setSelected(true);
-						guiRadioAlgorithm23.setSelected(false);
-						guiRadioAlgorithm24.setSelected(false);
-						guiRadioAlgorithm25.setSelected(false);
-						guiStatistic.setEnabled(true);
-						break;
-					case 3:
-						guiRadioAlgorithm21.setSelected(false);
-						guiRadioAlgorithm22.setSelected(false);
-						guiRadioAlgorithm23.setSelected(true);
-						guiRadioAlgorithm24.setSelected(false);
-						guiRadioAlgorithm25.setSelected(false);
-						guiStatistic.setEnabled(true);
-						break;
-					case 4:
-						guiRadioAlgorithm21.setSelected(false);
-						guiRadioAlgorithm22.setSelected(false);
-						guiRadioAlgorithm23.setSelected(false);
-						guiRadioAlgorithm24.setSelected(true);
-						guiRadioAlgorithm25.setSelected(false);
-						guiStatistic.setEnabled(true);
-						break;
-					case 5:
-						guiRadioAlgorithm21.setSelected(false);
-						guiRadioAlgorithm22.setSelected(false);
-						guiRadioAlgorithm23.setSelected(false);
-						guiRadioAlgorithm24.setSelected(false);
-						guiRadioAlgorithm25.setSelected(true);
-						guiStatistic.setEnabled(false);
-						guiStatistic.setSelected(false);
-						break;
-					default:
-						break;
-				}
-				break;
-			default:
-				break;
-		}
 	}
 
 	/**
@@ -1228,118 +973,10 @@ public class MainWindow
 		optionAreaBorder.setTitleColor(new Color(100, 100, 100));
 		buttonMosaicNew = new JButton(textbundle.getString("dialog_mainWindow_button_1"));
 		// option panel 1
-		guiPanelOptions1 = new Options1Panel(new BorderLayout(), this, optionAreaBorder);
+		guiPanelOptions1 = new OptionsPanel1(new BorderLayout(), this);
 		// option panel 2
-		guiPanelOptions2 = new JPanel(new BorderLayout());
-		guiPanelOptions2.setBorder(optionAreaBorder);
-		if ((System.getProperty("os.name").startsWith("Mac"))) {
-			guiPanelOptions2Top = new JPanel(new GridLayout(14, 1, 0, 4));
-		} else {
-			guiPanelOptions2Top = new JPanel(new GridLayout(14, 1, 0, 0));
-		}
-		guiPanelOptions2Bottom = new JPanel(new GridLayout(5, 1, 0, 0));
-		buttonMosaicGenerate = new JButton(textbundle.getString("dialog_mainWindow_button_6"));
-		buttonMosaicGenerate.setActionCommand("mosaicgenerate");
-		buttonMosaicGenerate.addActionListener(this);
-		guiLabelQuantisation = new JLabel(textbundle.getString("dialog_mainWindow_label_4") + ":");
-		guiLabelQuantisation.setFont(new Font(guiLabelQuantisation.getFont().getFontName(), Font.BOLD,
-				guiLabelQuantisation.getFont().getSize()));
-		guiLabelTiling = new JLabel(textbundle.getString("dialog_mainWindow_label_5") + ":");
-		guiLabelTiling.setFont(
-				new Font(guiLabelTiling.getFont().getFontName(), Font.BOLD, guiLabelTiling.getFont().getSize()));
-		guiLabelSeparator = new JLabel("");
-		guiGroupQuantisation = new ButtonGroup();
-		guiGroupTiling = new ButtonGroup();
-		buttonOutput = new JButton(textbundle.getString("dialog_mainWindow_button_7"));
-		buttonOutput.setActionCommand("output");
-		buttonOutput.addActionListener(this);
-		guiRadioAlgorithm11 = new JRadioButton(textbundle.getString("algorithm_naiveQuantisationRgb"));
-		guiRadioAlgorithm12 = new JRadioButton(textbundle.getString("algorithm_errorDiffusion"));
-		guiRadioAlgorithm13 = new JRadioButton(textbundle.getString("algorithm_vectorErrorDiffusion"));
-		guiRadioAlgorithm14 = new JRadioButton(textbundle.getString("algorithm_patternDithering"));
-		guiRadioAlgorithm15 = new JRadioButton(textbundle.getString("algorithm_solidRegions"));
-		guiRadioAlgorithm16 = new JRadioButton(textbundle.getString("algorithm_slicing"));
-		guiRadioAlgorithm17 = new JRadioButton(textbundle.getString("algorithm_naiveQuantisationLab"));
-		guiRadioAlgorithm21 = new JRadioButton(textbundle.getString("algorithm_elementSizeOptimisation"));
-		guiRadioAlgorithm22 = new JRadioButton(textbundle.getString("algorithm_moldingOptimisation"));
-		guiRadioAlgorithm23 = new JRadioButton(textbundle.getString("algorithm_costsOptimisation"));
-		guiRadioAlgorithm24 = new JRadioButton(textbundle.getString("algorithm_stabilityOptimisation"));
-		guiRadioAlgorithm25 = new JRadioButton(textbundle.getString("algorithm_basicElementsOnly"));
-		guiRadioAlgorithm11.addActionListener(this);
-		guiRadioAlgorithm12.addActionListener(this);
-		guiRadioAlgorithm13.addActionListener(this);
-		guiRadioAlgorithm14.addActionListener(this);
-		guiRadioAlgorithm15.addActionListener(this);
-		guiRadioAlgorithm16.addActionListener(this);
-		guiRadioAlgorithm17.addActionListener(this);
-		guiRadioAlgorithm21.addActionListener(this);
-		guiRadioAlgorithm22.addActionListener(this);
-		guiRadioAlgorithm23.addActionListener(this);
-		guiRadioAlgorithm24.addActionListener(this);
-		guiRadioAlgorithm25.addActionListener(this);
-		guiRadioAlgorithm11.setActionCommand("algorithm11");
-		guiRadioAlgorithm11.setSelected(true);
-		guiRadioAlgorithm12.setActionCommand("algorithm12");
-		guiRadioAlgorithm13.setActionCommand("algorithm13");
-		guiRadioAlgorithm14.setActionCommand("algorithm14");
-		guiRadioAlgorithm15.setActionCommand("algorithm15");
-		guiRadioAlgorithm16.setActionCommand("algorithm16");
-		guiRadioAlgorithm17.setActionCommand("algorithm17");
-		guiRadioAlgorithm21.setActionCommand("algorithm21");
-		guiRadioAlgorithm22.setActionCommand("algorithm22");
-		guiRadioAlgorithm23.setActionCommand("algorithm23");
-		guiRadioAlgorithm24.setActionCommand("algorithm24");
-		guiRadioAlgorithm25.setActionCommand("algorithm25");
-		guiRadioAlgorithm25.setSelected(true);
-		final Vector<String> guiComboBoxInterpolationsVerfahren = new Vector<>();
-		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_1"));
-		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_2"));
-		guiComboBoxInterpolationsVerfahren.add(textbundle.getString("dialog_mainWindow_combo_3"));
-		guiComboBoxInterpolation = new JComboBox<>(guiComboBoxInterpolationsVerfahren);
-		guiComboBoxInterpolation.setEditable(false);
-		guiComboBoxInterpolation.setEnabled(true);
-		guiThreeDEffect = new JCheckBox(textbundle.getString("dialog_mainWindow_check_1"));
-		guiThreeDEffect.setEnabled(true);
-		guiThreeDEffect.setSelected(true);
-		guiStatistic = new JCheckBox(textbundle.getString("dialog_mainWindow_check_2"));
-		guiStatistic.setEnabled(true);
-		guiStatistic.setSelected(false);
-		guiPanelThreeDEffectStatistic = new JPanel(new BorderLayout());
-		guiPanelThreeDEffectStatistic.add(guiThreeDEffect, BorderLayout.WEST);
-		guiPanelThreeDEffectStatistic.add(guiStatistic, BorderLayout.CENTER);
-		guiGroupQuantisation.add(guiRadioAlgorithm11);
-		guiGroupQuantisation.add(guiRadioAlgorithm17);
-		guiGroupQuantisation.add(guiRadioAlgorithm12);
-		guiGroupQuantisation.add(guiRadioAlgorithm13);
-		guiGroupQuantisation.add(guiRadioAlgorithm14);
-		guiGroupQuantisation.add(guiRadioAlgorithm15);
-		guiGroupQuantisation.add(guiRadioAlgorithm16);
-		guiGroupTiling.add(guiRadioAlgorithm21);
-		guiGroupTiling.add(guiRadioAlgorithm22);
-		guiGroupTiling.add(guiRadioAlgorithm23);
-		guiGroupTiling.add(guiRadioAlgorithm24);
-		guiGroupTiling.add(guiRadioAlgorithm25);
-		guiPanelOptions2Top.add(guiLabelQuantisation);
-		guiPanelOptions2Top.add(guiRadioAlgorithm11);
-		guiPanelOptions2Top.add(guiRadioAlgorithm17);
-		guiPanelOptions2Top.add(guiRadioAlgorithm12);
-		guiPanelOptions2Top.add(guiRadioAlgorithm13);
-		guiPanelOptions2Top.add(guiRadioAlgorithm14);
-		guiPanelOptions2Top.add(guiRadioAlgorithm15);
-		guiPanelOptions2Top.add(guiRadioAlgorithm16);
-		guiPanelOptions2Top.add(guiLabelTiling);
-		guiPanelOptions2Top.add(guiRadioAlgorithm25);
-		guiPanelOptions2Top.add(guiRadioAlgorithm21);
-		guiPanelOptions2Top.add(guiRadioAlgorithm22);
-		guiPanelOptions2Top.add(guiRadioAlgorithm23);
-		guiPanelOptions2Top.add(guiRadioAlgorithm24);
-		guiPanelOptions2Bottom.add(guiPanelThreeDEffectStatistic);
-		guiPanelOptions2Bottom.add(guiComboBoxInterpolation);
-		guiPanelOptions2Bottom.add(buttonMosaicGenerate);
-		guiPanelOptions2Bottom.add(guiLabelSeparator);
-		guiPanelOptions2Bottom.add(buttonOutput);
-		guiPanelOptions2.add(guiPanelOptions2Top, BorderLayout.NORTH);
-		guiPanelOptions2.add(guiPanelOptions2Bottom, BorderLayout.SOUTH);
+		guiPanelOptions2 = new OptionsPanel2(new BorderLayout(), this);
+
 		// option panel 3
 		guiPanelOptions3 = new JPanel(new BorderLayout());
 		guiPanelOptions3.setBorder(optionAreaBorder);

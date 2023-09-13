@@ -410,7 +410,7 @@ public class DataProcessor {
 											// selected
 											mainWindow.errorDialog(textbundle.getString("output_dataProcessing_5")
 													+ "\n\r" + textbundle.getString("output_dataProcessing_6") + ".");
-											mainWindow.disableStatisticButton();
+											mainWindow.getGuiPanelOptions2().disableStatisticButton();
 										}
 									});
 								} catch (final Exception e) {
@@ -418,6 +418,7 @@ public class DataProcessor {
 								}
 							}
 						}
+
 						stabilityOptimisation = new StabilityOptimizer(dataProcessing, calculation, tilingInfo);
 						stabilityOptimisation.tiling(dataManagement.getMosaicWidth(),
 								dataManagement.getMosaicHeight(),
@@ -425,6 +426,7 @@ public class DataProcessor {
 								dataManagement.getMosaicInstance(),
 								false);
 						stabilityOptimisation = null;
+
 						// statistic only for whole image improvements
 						if (statisticOutput && !((Boolean) tilingInfo.elementAt(2))) {
 							final Vector<Object> noOptimisation = new Vector<>();
@@ -440,6 +442,7 @@ public class DataProcessor {
 									true);
 							stabilityOptimisation = null;
 						}
+
 						break;
 					case BASIC_ELEMENTS_ONLY:
 						basicElementsOnly = new BasicElementsOnlyTiler(dataProcessing, calculation);
