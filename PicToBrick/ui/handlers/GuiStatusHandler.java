@@ -8,6 +8,7 @@ import javax.swing.JSlider;
 import pictobrick.service.DataProcessor;
 import pictobrick.ui.MainWindow;
 import pictobrick.ui.PictureElement;
+import pictobrick.ui.panels.OptionsPanel3;
 
 /**
  * Handler for updating the GUI status for the MainWindow. Code moved from
@@ -118,12 +119,13 @@ public class GuiStatusHandler {
                 mainWindow.getGuiZoomSlider1().setEnabled(true);
                 mainWindow.getGuiZoomSlider2().setEnabled(true);
                 mainWindow.getMenuOutput().enableGuiAfterGeneratingOutput();
-                mainWindow.getGuiOutputGrafic().setEnabled(true);
-                mainWindow.getGuiOutputXml().setEnabled(true);
-                mainWindow.getGuiOutputBuildingInstruction().setEnabled(true);
-                mainWindow.getGuiOutputMaterial().setEnabled(true);
-                mainWindow.getGuiOutputConfiguration().setEnabled(true);
-                mainWindow.getButtonDocumentsGenerate().setEnabled(true);
+                final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
+                guiPanelOptions3.getGuiOutputGraphic().setEnabled(true);
+                guiPanelOptions3.getGuiOutputXml().setEnabled(true);
+                guiPanelOptions3.getGuiOutputBuildingInstruction().setEnabled(true);
+                guiPanelOptions3.getGuiOutputMaterial().setEnabled(true);
+                guiPanelOptions3.getGuiOutputConfiguration().setEnabled(true);
+                guiPanelOptions3.getButtonDocumentsGenerate().setEnabled(true);
                 break;
             default:
                 break;
@@ -138,12 +140,13 @@ public class GuiStatusHandler {
         mainWindow.getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiZoomSlider2().setEnabled(false);
         mainWindow.getMenuOutput().processDisableGuiWhileGeneratingOutput();
-        mainWindow.getGuiOutputGrafic().setEnabled(false);
-        mainWindow.getGuiOutputXml().setEnabled(false);
-        mainWindow.getGuiOutputBuildingInstruction().setEnabled(false);
-        mainWindow.getGuiOutputMaterial().setEnabled(false);
-        mainWindow.getGuiOutputConfiguration().setEnabled(false);
-        mainWindow.getButtonDocumentsGenerate().setEnabled(false);
+        final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
+        guiPanelOptions3.getGuiOutputGraphic().setEnabled(false);
+        guiPanelOptions3.getGuiOutputXml().setEnabled(false);
+        guiPanelOptions3.getGuiOutputBuildingInstruction().setEnabled(false);
+        guiPanelOptions3.getGuiOutputMaterial().setEnabled(false);
+        guiPanelOptions3.getGuiOutputConfiguration().setEnabled(false);
+        guiPanelOptions3.getButtonDocumentsGenerate().setEnabled(false);
     }
 
     /**

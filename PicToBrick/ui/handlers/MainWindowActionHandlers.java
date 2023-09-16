@@ -14,6 +14,8 @@ import pictobrick.ui.MainWindow;
 import pictobrick.ui.MosaicSizeDialog;
 import pictobrick.ui.PictureElement;
 import pictobrick.ui.WorkingDirectoryDialog;
+import pictobrick.ui.menus.OutputMenu;
+import pictobrick.ui.panels.OptionsPanel3;
 
 /**
  * Handles ActionHandler events for the MainWindow. Code moved from MainWindow
@@ -83,20 +85,23 @@ public class MainWindowActionHandlers {
      * @param reset          (true/false)
      */
     public void checkBoxStatus(final int checkBoxNumber, final boolean reset) {
-        final JCheckBoxMenuItem menuGrafic = mainWindow.getMenuOutput().getMenuGraphic();
-        final JCheckBox guiOutputGrafic = mainWindow.getGuiOutputGrafic();
-        final JCheckBoxMenuItem menuXml = mainWindow.getMenuOutput().getMenuXml();
-        final JCheckBox guiOutputXml = mainWindow.getGuiOutputXml();
-        final JCheckBoxMenuItem menuConfiguration = mainWindow.getMenuOutput().getMenuConfiguration();
-        final JCheckBox guiOutputConfiguration = mainWindow.getGuiOutputConfiguration();
-        final JCheckBoxMenuItem menuBuildingInstruction = mainWindow.getMenuOutput().getMenuBuildingInstruction();
-        final JCheckBox guiOutputBuildingInstruction = mainWindow.getGuiOutputBuildingInstruction();
-        final JCheckBoxMenuItem menuMaterial = mainWindow.getMenuOutput().getMenuMaterial();
-        final JCheckBox guiOutputMaterial = mainWindow.getGuiOutputMaterial();
+        final OutputMenu menuOutput = mainWindow.getMenuOutput();
+        final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
+        final JCheckBoxMenuItem menuGraphic = menuOutput.getMenuGraphic();
+        final JCheckBox guiOutputGraphic = guiPanelOptions3.getGuiOutputGraphic();
+        final JCheckBoxMenuItem menuXml = menuOutput.getMenuXml();
+        final JCheckBox guiOutputXml = guiPanelOptions3.getGuiOutputXml();
+        final JCheckBoxMenuItem menuConfiguration = menuOutput.getMenuConfiguration();
+        final JCheckBox guiOutputConfiguration = guiPanelOptions3.getGuiOutputConfiguration();
+        final JCheckBoxMenuItem menuBuildingInstruction = menuOutput.getMenuBuildingInstruction();
+        final JCheckBox guiOutputBuildingInstruction = guiPanelOptions3
+                .getGuiOutputBuildingInstruction();
+        final JCheckBoxMenuItem menuMaterial = menuOutput.getMenuMaterial();
+        final JCheckBox guiOutputMaterial = guiPanelOptions3.getGuiOutputMaterial();
 
         if (reset) {
-            menuGrafic.setSelected(false);
-            guiOutputGrafic.setSelected(false);
+            menuGraphic.setSelected(false);
+            guiOutputGraphic.setSelected(false);
             menuXml.setSelected(false);
             guiOutputXml.setSelected(false);
             menuConfiguration.setSelected(false);
@@ -116,10 +121,10 @@ public class MainWindowActionHandlers {
             // x6 = configuration
             switch (checkBoxNumber) {
                 case 11:
-                    if (menuGrafic.isSelected()) {
-                        guiOutputGrafic.setSelected(true);
+                    if (menuGraphic.isSelected()) {
+                        guiOutputGraphic.setSelected(true);
                     } else {
-                        guiOutputGrafic.setSelected(false);
+                        guiOutputGraphic.setSelected(false);
                     }
                     break;
                 case 13:
@@ -151,10 +156,10 @@ public class MainWindowActionHandlers {
                     }
                     break;
                 case 21:
-                    if (guiOutputGrafic.isSelected()) {
-                        menuGrafic.setSelected(true);
+                    if (guiOutputGraphic.isSelected()) {
+                        menuGraphic.setSelected(true);
                     } else {
-                        menuGrafic.setSelected(false);
+                        menuGraphic.setSelected(false);
                     }
                     break;
                 case 23:
@@ -349,11 +354,13 @@ public class MainWindowActionHandlers {
      * Process generate documents request.
      */
     public void generateDocument() {
-        final JCheckBox guiOutputGrafic = mainWindow.getGuiOutputGrafic();
-        final JCheckBox guiOutputConfiguration = mainWindow.getGuiOutputConfiguration();
-        final JCheckBox guiOutputMaterial = mainWindow.getGuiOutputMaterial();
-        final JCheckBox guiOutputBuildingInstruction = mainWindow.getGuiOutputBuildingInstruction();
-        final JCheckBox guiOutputXml = mainWindow.getGuiOutputXml();
+        final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
+        final JCheckBox guiOutputGrafic = guiPanelOptions3.getGuiOutputGraphic();
+        final JCheckBox guiOutputConfiguration = guiPanelOptions3.getGuiOutputConfiguration();
+        final JCheckBox guiOutputMaterial = guiPanelOptions3.getGuiOutputMaterial();
+        final JCheckBox guiOutputBuildingInstruction = guiPanelOptions3
+                .getGuiOutputBuildingInstruction();
+        final JCheckBox guiOutputXml = guiPanelOptions3.getGuiOutputXml();
 
         if (guiOutputGrafic.isSelected() ||
                 guiOutputConfiguration.isSelected() ||

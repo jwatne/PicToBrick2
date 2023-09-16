@@ -16,8 +16,6 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -46,6 +44,7 @@ import pictobrick.ui.menus.OutputMenu;
 import pictobrick.ui.menus.PreprocessingMenu;
 import pictobrick.ui.panels.OptionsPanel1;
 import pictobrick.ui.panels.OptionsPanel2;
+import pictobrick.ui.panels.OptionsPanel3;
 
 /**
  * class: MainWindow
@@ -120,7 +119,7 @@ public class MainWindow
 
 	private OptionsPanel1 guiPanelOptions1;
 	private OptionsPanel2 guiPanelOptions2;
-	private JPanel guiPanelOptions3;
+	private OptionsPanel3 guiPanelOptions3;
 
 	public OptionsPanel1 getGuiPanelOptions1() {
 		return guiPanelOptions1;
@@ -130,12 +129,10 @@ public class MainWindow
 		return guiPanelOptions2;
 	}
 
-	public JPanel getGuiPanelOptions3() {
+	public OptionsPanel3 getGuiPanelOptions3() {
 		return guiPanelOptions3;
 	}
 
-	private JPanel guiPanelOptions3Top;
-	private JPanel guiPanelOptions3Empty;
 	private JPanel guiPanelTopArea2;
 	private JPanel guiPanelBottomArea2;
 
@@ -147,22 +144,6 @@ public class MainWindow
 		return guiPanelBottomArea2;
 	}
 
-	private JButton buttonMosaicNew;
-	private JButton buttonDocumentsGenerate;
-
-	public JButton getButtonMosaicNew() {
-		return buttonMosaicNew;
-	}
-
-	public JButton getButtonDocumentsGenerate() {
-		return buttonDocumentsGenerate;
-	}
-
-	private JCheckBox guiOutputGrafic;
-	private JCheckBox guiOutputXml;
-	private JCheckBox guiOutputConfiguration;
-	private JCheckBox guiOutputMaterial;
-	private JCheckBox guiOutputBuildingInstruction;
 	private PictureElement guiPictureElementTop;
 	private PictureElement guiPictureElementBottom;
 
@@ -172,7 +153,6 @@ public class MainWindow
 
 	private JLabel guiLabelZoom1;
 	private JLabel guiLabelZoom2;
-	private JLabel guiLabelOutput;
 	private JSplitPane guiSplitPane;
 	private JScrollPane guiScrollPaneTop;
 	private JScrollPane guiScrollPaneBottom;
@@ -253,46 +233,6 @@ public class MainWindow
 		}
 
 		workingDirectory(false);
-	}
-
-	public JCheckBox getGuiOutputGrafic() {
-		return guiOutputGrafic;
-	}
-
-	public void setGuiOutputGrafic(final JCheckBox guiOutputGrafic) {
-		this.guiOutputGrafic = guiOutputGrafic;
-	}
-
-	public JCheckBox getGuiOutputXml() {
-		return guiOutputXml;
-	}
-
-	public void setGuiOutputXml(final JCheckBox guiOutputXml) {
-		this.guiOutputXml = guiOutputXml;
-	}
-
-	public JCheckBox getGuiOutputConfiguration() {
-		return guiOutputConfiguration;
-	}
-
-	public void setGuiOutputConfiguration(final JCheckBox guiOutputConfiguration) {
-		this.guiOutputConfiguration = guiOutputConfiguration;
-	}
-
-	public JCheckBox getGuiOutputBuildingInstruction() {
-		return guiOutputBuildingInstruction;
-	}
-
-	public void setGuiOutputBuildingInstruction(final JCheckBox guiOutputBuildingInstruction) {
-		this.guiOutputBuildingInstruction = guiOutputBuildingInstruction;
-	}
-
-	public JCheckBox getGuiOutputMaterial() {
-		return guiOutputMaterial;
-	}
-
-	public void setGuiOutputMaterial(final JCheckBox guiOutputMaterial) {
-		this.guiOutputMaterial = guiOutputMaterial;
 	}
 
 	public DataProcessor getDataProcessing() {
@@ -971,48 +911,13 @@ public class MainWindow
 		final TitledBorder optionAreaBorder = BorderFactory
 				.createTitledBorder(textbundle.getString("dialog_mainWindow_border_2"));
 		optionAreaBorder.setTitleColor(new Color(100, 100, 100));
-		buttonMosaicNew = new JButton(textbundle.getString("dialog_mainWindow_button_1"));
 		// option panel 1
 		guiPanelOptions1 = new OptionsPanel1(new BorderLayout(), this);
 		// option panel 2
 		guiPanelOptions2 = new OptionsPanel2(new BorderLayout(), this);
-
 		// option panel 3
-		guiPanelOptions3 = new JPanel(new BorderLayout());
-		guiPanelOptions3.setBorder(optionAreaBorder);
-		guiPanelOptions3Empty = new JPanel();
-		guiPanelOptions3Top = new JPanel(new GridLayout(8, 1));
-		buttonDocumentsGenerate = new JButton(textbundle.getString("dialog_mainWindow_button_8"));
-		buttonDocumentsGenerate.addActionListener(this);
-		buttonDocumentsGenerate.setActionCommand("documentgenerate");
-		guiLabelOutput = new JLabel(textbundle.getString("dialog_mainWindow_label_6") + ":");
-		guiOutputGrafic = new JCheckBox(textbundle.getString("dialog_mainWindow_check_3"));
-		guiOutputXml = new JCheckBox(textbundle.getString("dialog_mainWindow_check_4"));
-		guiOutputConfiguration = new JCheckBox(textbundle.getString("dialog_mainWindow_check_5"));
-		guiOutputMaterial = new JCheckBox(textbundle.getString("dialog_mainWindow_check_6"));
-		guiOutputBuildingInstruction = new JCheckBox(textbundle.getString("dialog_mainWindow_check_7"));
-		guiOutputGrafic.addActionListener(this);
-		guiOutputGrafic.setActionCommand("guigrafic");
-		guiOutputXml.addActionListener(this);
-		guiOutputXml.setActionCommand("guixml");
-		guiOutputConfiguration.addActionListener(this);
-		guiOutputConfiguration.setActionCommand("guiconfiguration");
-		guiOutputMaterial.addActionListener(this);
-		guiOutputMaterial.setActionCommand("guimaterialliste");
-		guiOutputBuildingInstruction.addActionListener(this);
-		guiOutputBuildingInstruction.setActionCommand("guibuildinginstruction");
-		buttonMosaicNew.addActionListener(this);
-		buttonMosaicNew.setActionCommand("mosaicnew");
-		guiPanelOptions3.add(guiPanelOptions3Top, BorderLayout.NORTH);
-		guiPanelOptions3.add(guiPanelOptions3Empty, BorderLayout.CENTER);
-		guiPanelOptions3.add(buttonMosaicNew, BorderLayout.SOUTH);
-		guiPanelOptions3Top.add(guiLabelOutput);
-		guiPanelOptions3Top.add(guiOutputGrafic);
-		guiPanelOptions3Top.add(guiOutputConfiguration);
-		guiPanelOptions3Top.add(guiOutputMaterial);
-		guiPanelOptions3Top.add(guiOutputBuildingInstruction);
-		guiPanelOptions3Top.add(guiOutputXml);
-		guiPanelOptions3Top.add(buttonDocumentsGenerate);
+		guiPanelOptions3 = new OptionsPanel3(new BorderLayout(), this);
+
 		// zoom area
 		guiPanelZoom = new JPanel(new GridLayout(4, 1));
 		final TitledBorder zoomAreaBorder = BorderFactory
