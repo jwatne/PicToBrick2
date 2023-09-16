@@ -9,6 +9,7 @@ import pictobrick.service.DataProcessor;
 import pictobrick.ui.MainWindow;
 import pictobrick.ui.PictureElement;
 import pictobrick.ui.panels.OptionsPanel3;
+import pictobrick.ui.panels.ZoomPanel;
 
 /**
  * Handler for updating the GUI status for the MainWindow. Code moved from
@@ -116,8 +117,8 @@ public class GuiStatusHandler {
                 break;
             // enable gui after generating output documents
             case ENABLE_GUI_AFTER_GENERATING_OUTPUT: // enable/disable buttons, menu items, etc.
-                mainWindow.getGuiZoomSlider1().setEnabled(true);
-                mainWindow.getGuiZoomSlider2().setEnabled(true);
+                mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
+                mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(true);
                 mainWindow.getMenuOutput().enableGuiAfterGeneratingOutput();
                 final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
                 guiPanelOptions3.getGuiOutputGraphic().setEnabled(true);
@@ -137,8 +138,8 @@ public class GuiStatusHandler {
      */
     private void processDisableGuiWhileGeneratingOutput() {
         // enable/disable buttons, menu items, etc.
-        mainWindow.getGuiZoomSlider1().setEnabled(false);
-        mainWindow.getGuiZoomSlider2().setEnabled(false);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(false);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(false);
         mainWindow.getMenuOutput().processDisableGuiWhileGeneratingOutput();
         final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
         guiPanelOptions3.getGuiOutputGraphic().setEnabled(false);
@@ -164,8 +165,8 @@ public class GuiStatusHandler {
         final JPanel guiPanelZoom = mainWindow.getGuiPanelZoom();
         guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
         // enable/disable buttons, menu items, etc.
-        mainWindow.getGuiZoomSlider1().setEnabled(true);
-        mainWindow.getGuiZoomSlider2().setEnabled(true);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(true);
         mainWindow.radioButtonStatus(1, 1);
         mainWindow.radioButtonStatus(2, 5);
         guiPanelOptions3.updateUI();
@@ -184,15 +185,16 @@ public class GuiStatusHandler {
         mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_27"));
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiPanelOptions2().processEnableGuiAfterGeneratingMosaic();
-        final JSlider guiZoomSlider1 = mainWindow.getGuiZoomSlider1();
+        final ZoomPanel guiPanelZoom = mainWindow.getGuiPanelZoom();
+        final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
         final int guiZoomSlider1Value = 3;
         guiZoomSlider1.setValue(guiZoomSlider1Value);
         guiZoomSlider1.setEnabled(true);
-        mainWindow.setGuiZoomSlider1Value(guiZoomSlider1Value);
+        guiPanelZoom.setGuiZoomSlider1Value(guiZoomSlider1Value);
         final int guiZoomSlider2Value = 3;
-        final JSlider guiZoomSlider2 = mainWindow.getGuiZoomSlider2();
+        final JSlider guiZoomSlider2 = guiPanelZoom.getGuiZoomSlider2();
         guiZoomSlider2.setValue(guiZoomSlider2Value);
-        mainWindow.setGuiZoomSlider2Value(guiZoomSlider2Value);
+        guiPanelZoom.setGuiZoomSlider2Value(guiZoomSlider2Value);
         guiZoomSlider2.setEnabled(true);
         mainWindow.getMenuMosaic().processEnableGuiAfterGeneratingMosaic();
     }
@@ -204,8 +206,8 @@ public class GuiStatusHandler {
         // enable/disable buttons, menu items, etc.
         mainWindow.getMenuMosaic().processDisableGuiWhileGeneratingMosaic();
         mainWindow.getGuiPanelOptions2().processDisableGuiWhileGeneratingMosaic();
-        mainWindow.getGuiZoomSlider1().setEnabled(false);
-        mainWindow.getGuiZoomSlider2().setEnabled(false);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(false);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(false);
     }
 
     /**
@@ -224,7 +226,7 @@ public class GuiStatusHandler {
         guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
         guiPanelOptions2.updateUI();
         // enable/disable buttons, menu items, etc.
-        mainWindow.getGuiZoomSlider1().setEnabled(true);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
         mainWindow.getMenuFile().processGenerateMosaic();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
         mainWindow.getMenuMosaic().processGenerateMosaic();
@@ -237,7 +239,7 @@ public class GuiStatusHandler {
      */
     private void processCutoutWithRectangleAvailable() {
         // enable/disable buttons, menu items, etc.
-        mainWindow.getGuiZoomSlider1().setEnabled(false);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiPanelOptions1().getButtonCutout().setEnabled(true);
         // sets information text
         mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_25"));
@@ -248,7 +250,7 @@ public class GuiStatusHandler {
      */
     private void processCutoutNoRectangleAvailable() {
         // enable/disable buttons, menu items, etc.
-        mainWindow.getGuiZoomSlider1().setEnabled(true);
+        mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
         mainWindow.getGuiPanelOptions1().getButtonCutout().setEnabled(false);
     }
 
@@ -290,21 +292,21 @@ public class GuiStatusHandler {
         guiPanelRightArea.removeAll();
         final JPanel guiPanelOptions1 = mainWindow.getGuiPanelOptions1();
         guiPanelRightArea.add(guiPanelOptions1, BorderLayout.CENTER);
-        final JPanel guiPanelZoom = mainWindow.getGuiPanelZoom();
+        final ZoomPanel guiPanelZoom = mainWindow.getGuiPanelZoom();
         guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
         // init check boxes
         mainWindow.getMainWindowActionHandlers().checkBoxStatus(0, true);
         // init zoom sliders
-        final JSlider guiZoomSlider1 = mainWindow.getGuiZoomSlider1();
+        final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
         guiZoomSlider1.setEnabled(false);
         final int guiZoomSlider1Value = 3;
         guiZoomSlider1.setValue(guiZoomSlider1Value);
-        mainWindow.setGuiZoomSlider1Value(guiZoomSlider1Value);
-        final JSlider guiZoomSlider2 = mainWindow.getGuiZoomSlider2();
+        guiPanelZoom.setGuiZoomSlider1Value(guiZoomSlider1Value);
+        final JSlider guiZoomSlider2 = guiPanelZoom.getGuiZoomSlider2();
         guiZoomSlider2.setEnabled(false);
         final int guiZoomSlider2Value = 3;
         guiZoomSlider2.setValue(guiZoomSlider2Value);
-        mainWindow.setGuiZoomSlider2Value(guiZoomSlider2Value);
+        guiPanelZoom.setGuiZoomSlider2Value(guiZoomSlider2Value);
         mainWindow.getGuiPanelOptions1().processGuiStart();
         // reset images
         dataProcessing.imageReset();

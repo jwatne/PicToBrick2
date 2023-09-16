@@ -18,7 +18,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -45,6 +44,7 @@ import pictobrick.ui.menus.PreprocessingMenu;
 import pictobrick.ui.panels.OptionsPanel1;
 import pictobrick.ui.panels.OptionsPanel2;
 import pictobrick.ui.panels.OptionsPanel3;
+import pictobrick.ui.panels.ZoomPanel;
 
 /**
  * class: MainWindow
@@ -56,6 +56,7 @@ import pictobrick.ui.panels.OptionsPanel3;
 public class MainWindow
 		extends JFrame
 		implements ActionListener, ChangeListener {
+	private static final int SLIDER1_MIN_VALUE = 3;
 	// resource bundle
 	public static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
 	// --------------------------------------------------------------------------------------------------------
@@ -104,16 +105,11 @@ public class MainWindow
 
 	private JPanel guiPanelTopArea;
 	private JPanel guiPanelBottomArea;
-	private JPanel guiPanelRightArea;
-
-	public JPanel getGuiPanelRightArea() {
-		return guiPanelRightArea;
-	}
 
 	private JPanel guiPanelInformation;
-	private JPanel guiPanelZoom;
+	private ZoomPanel guiPanelZoom;
 
-	public JPanel getGuiPanelZoom() {
+	public ZoomPanel getGuiPanelZoom() {
 		return guiPanelZoom;
 	}
 
@@ -131,6 +127,12 @@ public class MainWindow
 
 	public OptionsPanel3 getGuiPanelOptions3() {
 		return guiPanelOptions3;
+	}
+
+	private JPanel guiPanelRightArea;
+
+	public JPanel getGuiPanelRightArea() {
+		return guiPanelRightArea;
 	}
 
 	private JPanel guiPanelTopArea2;
@@ -151,8 +153,6 @@ public class MainWindow
 		return guiPictureElementBottom;
 	}
 
-	private JLabel guiLabelZoom1;
-	private JLabel guiLabelZoom2;
 	private JSplitPane guiSplitPane;
 	private JScrollPane guiScrollPaneTop;
 	private JScrollPane guiScrollPaneBottom;
@@ -166,34 +166,6 @@ public class MainWindow
 	}
 
 	private JTextField guiTextFieldInformation;
-	private JSlider guiZoomSlider1;
-	private JSlider guiZoomSlider2;
-	private int guiZoomSlider1Value;
-	private int guiZoomSlider2Value;
-
-	public void setGuiZoomSlider1Value(final int guiZoomSlider1Value) {
-		this.guiZoomSlider1Value = guiZoomSlider1Value;
-	}
-
-	public void setGuiZoomSlider2Value(final int guiZoomSlider2Value) {
-		this.guiZoomSlider2Value = guiZoomSlider2Value;
-	}
-
-	public JSlider getGuiZoomSlider1() {
-		return guiZoomSlider1;
-	}
-
-	public JSlider getGuiZoomSlider2() {
-		return guiZoomSlider2;
-	}
-
-	public int getGuiZoomSlider1Value() {
-		return guiZoomSlider1Value;
-	}
-
-	public int getGuiZoomSlider2Value() {
-		return guiZoomSlider2Value;
-	}
 
 	private final MainWindowActionHandlers mainWindowActionHandlers;
 
@@ -419,15 +391,20 @@ public class MainWindow
 	 * @param event
 	 */
 	public void stateChanged(final ChangeEvent event) {
+		final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
+		final int guiZoomSlider1Value = guiPanelZoom.getGuiZoomSlider1Value();
+		final int guiZoomSlider2Value = guiPanelZoom.getGuiZoomSlider2Value();
+		final JSlider guiZoomSlider2 = guiPanelZoom.getGuiZoomSlider2();
+
 		if ((JSlider) event.getSource() == guiZoomSlider1) {
 			if (guiZoomSlider1Value != guiZoomSlider1.getValue()) {
-				guiZoomSlider1Value = guiZoomSlider1.getValue();
+				guiPanelZoom.setGuiZoomSlider1Value(guiZoomSlider1.getValue());
 				guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
 				guiPictureElementTop.updateUI();
 			}
 		} else {
 			if (guiZoomSlider2Value != guiZoomSlider2.getValue()) {
-				guiZoomSlider2Value = guiZoomSlider2.getValue();
+				guiPanelZoom.setGuiZoomSlider2Value(guiZoomSlider2.getValue());
 				guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true, guiZoomSlider2.getValue()));
 				guiPictureElementBottom.updateUI();
 			}
@@ -498,9 +475,10 @@ public class MainWindow
 			dataProcessing.replaceImageByCutout(guiPictureElementTop.getCutoutRectangle());
 			dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
 					(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
+			final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
 			guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
-			guiZoomSlider1.setValue(3);
-			guiZoomSlider1Value = 3;
+			guiZoomSlider1.setValue(SLIDER1_MIN_VALUE);
+			guiPanelZoom.setGuiZoomSlider1Value(3);
 			guiPictureElementTop.updateUI();
 		} else {
 			errorDialog(textbundle.getString("output_mainWindow_11"));
@@ -516,10 +494,12 @@ public class MainWindow
 	public void showMosaic() {
 		dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
 				(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
-		guiPictureElementTop.setImage(dataProcessing.getScaledImage(false, guiZoomSlider1.getValue()));
+		guiPictureElementTop
+				.setImage(dataProcessing.getScaledImage(false, guiPanelZoom.getGuiZoomSlider1().getValue()));
 		dataProcessing.computeScaleFactor(true, (double) (guiScrollPaneBottom.getWidth() - 40),
 				(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
-		guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true, guiZoomSlider2.getValue()));
+		guiPictureElementBottom
+				.setImage(dataProcessing.getScaledImage(true, guiPanelZoom.getGuiZoomSlider2().getValue()));
 		guiStatusHandler.guiStatus(GuiStatusHandler.ENABLE_GUI_AFTER_GENERATE_MOSAIC);
 		guiPictureElementBottom.updateUI();
 
@@ -796,6 +776,7 @@ public class MainWindow
 		final File menuFile = d.getSelectedFile();
 
 		if (dataProcessing.imageLoad(menuFile)) {
+			final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
 			guiZoomSlider1.setEnabled(true);
 			dataProcessing.computeScaleFactor(false, (double) (guiScrollPaneTop.getWidth() - 40),
 					(double) ((guiSplitPane.getHeight() - guiSplitPane.getDividerLocation() - 60)));
@@ -919,35 +900,8 @@ public class MainWindow
 		guiPanelOptions3 = new OptionsPanel3(new BorderLayout(), this);
 
 		// zoom area
-		guiPanelZoom = new JPanel(new GridLayout(4, 1));
-		final TitledBorder zoomAreaBorder = BorderFactory
-				.createTitledBorder(textbundle.getString("dialog_mainWindow_border_3"));
-		zoomAreaBorder.setTitleColor(new Color(100, 100, 100));
-		guiPanelZoom.setBorder(zoomAreaBorder);
-		guiPanelRightArea.add(guiPanelZoom, BorderLayout.SOUTH);
-		guiLabelZoom1 = new JLabel(textbundle.getString("dialog_mainWindow_label_7"));
-		guiLabelZoom2 = new JLabel(textbundle.getString("dialog_mainWindow_label_8"));
-		guiZoomSlider1 = new JSlider(1, 7, 3);
-		guiZoomSlider1Value = 3;
-		guiZoomSlider1.setMinorTickSpacing(1);
-		guiZoomSlider1.setPaintTicks(true);
-		guiZoomSlider1.setSnapToTicks(true);
-		guiZoomSlider1.addChangeListener(this);
-		guiZoomSlider1.setFocusable(false);
-		guiZoomSlider2 = new JSlider(1, 7, 3);
-		guiZoomSlider2Value = 3;
-		guiZoomSlider2.setMinorTickSpacing(1);
-		guiZoomSlider2.setPaintTicks(true);
-		guiZoomSlider2.setSnapToTicks(true);
-		guiZoomSlider2.addChangeListener(this);
-		guiZoomSlider2.setFocusable(false);
-		final Dimension d = new Dimension(210, guiLabelZoom1.getHeight());
-		guiLabelZoom1.setPreferredSize(d);
-		guiLabelZoom2.setPreferredSize(d);
-		guiPanelZoom.add(guiLabelZoom1);
-		guiPanelZoom.add(guiZoomSlider1);
-		guiPanelZoom.add(guiLabelZoom2);
-		guiPanelZoom.add(guiZoomSlider2);
+		guiPanelZoom = new ZoomPanel(new GridLayout(4, 1), this);
+
 		// information area
 		guiPanelInformation = new JPanel(new GridLayout(1, 1));
 		guiTextFieldInformation = new JTextField();
