@@ -8,6 +8,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 
+import pictobrick.service.ConfigurationLoader;
 import pictobrick.service.DataProcessor;
 import pictobrick.service.SwingWorker;
 import pictobrick.ui.MainWindow;
@@ -300,7 +301,7 @@ public class MainWindowActionHandlers {
         if (dataProcessing.getWorkingDirectory() == null) {
             mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_9"));
         } else {
-            mainWindow.configurationLoad();
+            new ConfigurationLoader(mainWindow).configurationLoad();
         }
 
         checkIfImageAndConfigLoaded();

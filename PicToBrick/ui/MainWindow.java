@@ -10,7 +10,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -33,7 +32,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import pictobrick.model.ColorObject;
-import pictobrick.model.Configuration;
 import pictobrick.service.DataProcessor;
 import pictobrick.ui.handlers.GuiStatusHandler;
 import pictobrick.ui.handlers.MainWindowActionHandlers;
@@ -602,152 +600,6 @@ public class MainWindow
 	public Vector<Object> dialogStabilityOptimisation() {
 		final StabilityOptimisationDialog stabilityOptimisationDialog = new StabilityOptimisationDialog(this);
 		return stabilityOptimisationDialog.getMethod();
-	}
-
-	/**
-	 * method: configurationLoad
-	 * description: loads a configuration
-	 *
-	 * @author Tobias Reichling
-	 */
-	public void configurationLoad() {
-		final Vector<String> configurationVector = dataProcessing.getConfiguration();
-		ConfigurationLoadingDialog configurationLoadingDialog = new ConfigurationLoadingDialog(this,
-				configurationVector);
-
-		if (!configurationLoadingDialog.isCanceled()) {
-			switch (configurationLoadingDialog.getSelection()) {
-				// new configuration
-				case 1:
-					ConfigurationNewDialog configurationNewDialog = new ConfigurationNewDialog(this);
-
-					if (!configurationNewDialog.isCanceled()) {
-						final Enumeration<Number> results = configurationNewDialog.getValues().elements();
-						final Configuration configurationNew = new Configuration(
-								configurationNewDialog.getName(),
-								configurationNewDialog.getBasisName(),
-								(Integer) results.nextElement(),
-								(Integer) results.nextElement(),
-								(Double) results.nextElement(),
-								(Integer) results.nextElement(),
-								(Integer) results.nextElement(),
-								configurationNewDialog.getMaterial());
-						ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(
-								this, configurationNew, null);
-						boolean cancel = false;
-
-						while (!(cancel)) {
-							if (!configurationDerivationDialog.isCanceled()) {
-								try {
-									dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
-									dataProcessing
-											.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
-									getGuiPanelOptions1().showConfigurationInfo(
-											configurationDerivationDialog.getConfiguration().getName() + ".cfg");
-									showInfo(textbundle.getString("output_mainWindow_13") + " "
-											+ configurationDerivationDialog.getConfiguration().getName() + ".cfg "
-											+ textbundle.getString("output_mainWindow_14") + ".");
-									cancel = true;
-									configurationDerivationDialog = null;
-								} catch (final IOException saveIO) {
-									errorDialog(textbundle.getString("output_mainWindow_15") + ": " + saveIO);
-									configurationDerivationDialog.showDialog();
-								}
-							}
-
-							cancel = true;
-							configurationDerivationDialog = null;
-						}
-					}
-					configurationNewDialog = null;
-					break;
-				// derivate configuration
-				case 2:
-					final String file = (String) configurationVector.elementAt(configurationLoadingDialog.getFile());
-					Configuration configurationOld = new Configuration();
-					if (configurationLoadingDialog.getFile() < 3) {
-						configurationOld = dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile());
-					} else {
-						try {
-							configurationOld = dataProcessing.configurationLoad(file);
-						} catch (final IOException loadIO) {
-							errorDialog(textbundle.getString("output_mainWindow_16") + ": " + loadIO);
-						}
-					}
-					ConfigurationDerivationDialog configurationDerivationDialog = new ConfigurationDerivationDialog(
-							this, null, configurationOld);
-					boolean cancel = false;
-					while (!(cancel)) {
-						if (!configurationDerivationDialog.isCanceled()) {
-							boolean nameAvailable = false;
-							String name = "";
-
-							for (final Enumeration<String> results2 = dataProcessing.getConfiguration()
-									.elements(); results2
-											.hasMoreElements();) {
-								name = ((String) results2.nextElement());
-
-								if ((name.substring(0, name.length() - 4))
-										.equals(configurationDerivationDialog.getConfiguration().getName())) {
-									nameAvailable = true;
-								}
-							}
-
-							if (nameAvailable) {
-								errorDialog(textbundle.getString("output_mainWindow_17"));
-								configurationDerivationDialog.showDialog();
-							} else {
-								try {
-									dataProcessing.configurationSave(configurationDerivationDialog.getConfiguration());
-									dataProcessing
-											.setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
-									getGuiPanelOptions1().showConfigurationInfo(
-											configurationDerivationDialog.getConfiguration().getName() + ".cfg");
-									showInfo(textbundle.getString("output_mainWindow_13") + " "
-											+ configurationDerivationDialog.getConfiguration().getName() + ".cfg  "
-											+ textbundle.getString("output_mainWindow_14") + ".");
-									cancel = true;
-									configurationDerivationDialog = null;
-								} catch (final IOException speicherIO) {
-									errorDialog(textbundle.getString("output_mainWindow_15") + ": " + speicherIO);
-									configurationDerivationDialog.showDialog();
-								}
-							}
-						} else {
-							cancel = true;
-							configurationDerivationDialog = null;
-						}
-					}
-
-					break;
-				// load existing configuration
-				case 3:
-					final String existingFile = (String) configurationVector
-							.elementAt(configurationLoadingDialog.getFile());
-
-					if (configurationLoadingDialog.getFile() < 3) {
-						dataProcessing.setCurrentConfiguration(
-								dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile()));
-						getGuiPanelOptions1().showConfigurationInfo(existingFile);
-						showInfo(textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
-								+ textbundle.getString("output_mainWindow_18") + ".");
-					} else {
-						try {
-							dataProcessing.setCurrentConfiguration(dataProcessing.configurationLoad(existingFile));
-							getGuiPanelOptions1().showConfigurationInfo(existingFile);
-							showInfo(textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
-									+ textbundle.getString("output_mainWindow_18") + ".");
-						} catch (final IOException configurationLoadIO) {
-							errorDialog(textbundle.getString("output_mainWindow_19") + ": " + configurationLoadIO);
-						}
-					}
-
-				default:
-					break;
-			}
-		}
-
-		configurationLoadingDialog = null;
 	}
 
 	/**
