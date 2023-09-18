@@ -52,6 +52,12 @@ import pictobrick.ui.panels.ZoomPanel;
  */
 public class MainWindow extends JFrame
         implements ActionListener, ChangeListener {
+    /** Minimum value for zoom sliders. */
+    public static final int MINIMUM_ZOOM_SLIDER_VALUE = 3;
+    /** Vertical padding around picture elements within panels, in pixels. */
+    public static final int PANEL_VERTICAL_PADDING = 60;
+    /** Horizontal padding around picture element within panel, in pixels. */
+    public static final int PANEL_HORIZONTAL_PADDING = 40;
     /** Dark blue Color. */
     private static final Color DARK_BLUE = new Color(0, 0, 150);
     /** Number of rows for zoom panel. */
@@ -60,306 +66,80 @@ public class MainWindow extends JFrame
     private static final Color MEDIUM_GRAY = new Color(100, 100, 100);
     /** Scroll pane preferred width or height, in pixels. */
     private static final int SCROLL_PANE_SIZE = 100;
-    /** Minimum value for zoom sliders. */
-    public static final int MINIMUM_ZOOM_SLIDER_VALUE = 3;
-    /** Vertical padding around picture elements within panels, in pixels. */
-    public static final int PANEL_VERTICAL_PADDING = 60;
-    /** Horizontal padding around picture element within panel, in pixels. */
-    public static final int PANEL_HORIZONTAL_PADDING = 40;
     /** Minimum available memory for program to run, in MB. */
     private static final int MIN_AVAILABLE_MEMORY_MB = 250;
     /** Bytes per KB. */
     private static final int ONE_K = 1024;
     /** Minimum slider value. */
     private static final int SLIDER1_MIN_VALUE = 3;
-    /**
-     * Resource bundle.
-     */
+    /** Resource bundle. */
     private static ResourceBundle textbundle = ResourceBundle
             .getBundle("Resources.TextResource");
-
-    /**
-     * Returns the text resource bundle.
-     *
-     * @return the text resource bundle.
-     */
-    public static ResourceBundle getTextBundle() {
-        return textbundle;
-    }
-
     // ----------------------------------------------------------------
-    /**
-     * Data processor.
-     */
+    /** Data processor. */
     private final DataProcessor dataProcessing;
     // ----------------------------------------------------------------
     // dialogs
-    /**
-     * Progress bars for algorithms.
-     */
+    /** Progress bars for algorithms. */
     private final ProgressBarsAlgorithms progressBarsAlgorithm;
-    /**
-     * Progress bars for output files.
-     */
+    /** Progress bars for output files. */
     private final ProgressBarsOutputFiles progressBarsOutputFiles;
-    /**
-     * Mosaic width in pixels.
-     */
+    /** Mosaic width in pixels. */
     private int mosaicWidth;
-    /**
-     * Mosaic height in pixels.
-     */
+    /** Mosaic height in pixels. */
     private int mosaicHeight;
     // ---------------------------------------------------------------
     // menu
-    /**
-     * Menu bar.
-     */
+    /** Menu bar. */
     private JMenuBar menuBar;
-    /**
-     * File menu.
-     */
+    /** File menu. */
     private FileMenu menuFile;
-
-    /**
-     * Returns file menu.
-     *
-     * @return file menu.
-     */
-    public final FileMenu getMenuFile() {
-        return menuFile;
-    }
-
-    /**
-     * Preprocessing menu.
-     */
+    /** Preprocessing menu. */
     private PreprocessingMenu menuPreprocessing;
-
-    /**
-     * Returns preprocessing menu.
-     *
-     * @return preprocessing menu.
-     */
-    public final PreprocessingMenu getMenuPreprocessing() {
-        return menuPreprocessing;
-    }
-
-    /**
-     * Mosaic menu.
-     */
+    /** Mosaic menu. */
     private MosaicMenu menuMosaic;
-
-    /**
-     * Returns mosaic menu.
-     *
-     * @return mosaic menu.
-     */
-    public final MosaicMenu getMenuMosaic() {
-        return menuMosaic;
-    }
-
-    /**
-     * Output menu.
-     */
+    /** Output menu. */
     private OutputMenu menuOutput;
-
-    /**
-     * Return output menu.
-     *
-     * @return output menu.
-     */
-    public final OutputMenu getMenuOutput() {
-        return menuOutput;
-    }
-
-    /**
-     * Help menu.
-     */
+    /** Help menu. */
     private JMenu menuHelp;
-
-    /**
-     * About menu item.
-     */
+    /** About menu item. */
     private JMenuItem menuAbout;
-
-    /**
-     * Returns about menu item.
-     *
-     * @return about menu item.
-     */
-    public final JMenuItem getMenuAbout() {
-        return menuAbout;
-    }
-
-    /**
-     * Top area panel.
-     */
+    /** Top area panel. */
     private JPanel guiPanelTopArea;
-    /**
-     * Bottom area panel.
-     */
+    /** Bottom area panel. */
     private JPanel guiPanelBottomArea;
-
-    /**
-     * Information panel.
-     */
+    /** Information panel. */
     private JPanel guiPanelInformation;
-
     /** Zoom panel. */
     private ZoomPanel guiPanelZoom;
-
-    /**
-     * Returns room panel.
-     *
-     * @return room panel.
-     */
-    public final ZoomPanel getGuiPanelZoom() {
-        return guiPanelZoom;
-    }
-
     /** Panel for first set of options. */
     private OptionsPanel1 guiPanelOptions1;
     /** Panel for second set of options. */
     private OptionsPanel2 guiPanelOptions2;
     /** Panel for third set of options. */
     private OptionsPanel3 guiPanelOptions3;
-
-    /**
-     * Returns panel for first set of options.
-     *
-     * @return panel for first set of options.
-     */
-    public final OptionsPanel1 getGuiPanelOptions1() {
-        return guiPanelOptions1;
-    }
-
-    /**
-     * Returns panel for second set of options.
-     *
-     * @return panel for second set of options.
-     */
-    public final OptionsPanel2 getGuiPanelOptions2() {
-        return guiPanelOptions2;
-    }
-
-    /**
-     * Returns panel for third set of options.
-     *
-     * @return panel for third set of options.
-     */
-    public final OptionsPanel3 getGuiPanelOptions3() {
-        return guiPanelOptions3;
-    }
-
     /** Right area panel. */
     private JPanel guiPanelRightArea;
-
-    /**
-     * Returns right area panel.
-     *
-     * @return right area panel.
-     */
-    public final JPanel getGuiPanelRightArea() {
-        return guiPanelRightArea;
-    }
-
     /** Second top area panel. */
     private JPanel guiPanelTopArea2;
     /** Second bottom area panel. */
     private JPanel guiPanelBottomArea2;
-
-    /**
-     * Returns second top area panel.
-     *
-     * @return second top area panel.
-     */
-    public final JPanel getGuiPanelTopArea2() {
-        return guiPanelTopArea2;
-    }
-
-    /**
-     * Returns second bottom area panel.
-     *
-     * @return second bottom area panel.
-     */
-    public final JPanel getGuiPanelBottomArea2() {
-        return guiPanelBottomArea2;
-    }
-
     /** Top picture element. */
     private PictureElement guiPictureElementTop;
     /** Bottom picture element. */
     private PictureElement guiPictureElementBottom;
-
-    /**
-     * Returns bottom picture element.
-     *
-     * @return bottom picture element.
-     */
-    public final PictureElement getGuiPictureElementBottom() {
-        return guiPictureElementBottom;
-    }
-
     /** Split pane. */
     private JSplitPane guiSplitPane;
-
-    /**
-     * Returns split pane.
-     *
-     * @return split pane.
-     */
-    public JSplitPane getGuiSplitPane() {
-        return guiSplitPane;
-    }
-
     /** Top scroll pane. */
     private JScrollPane guiScrollPaneTop;
     /** Bottom scroll pane. */
     private JScrollPane guiScrollPaneBottom;
-
-    /**
-     * Returns top scroll pane.
-     *
-     * @return top scroll pane.
-     */
-    public final JScrollPane getGuiScrollPaneTop() {
-        return guiScrollPaneTop;
-    }
-
-    /**
-     * Returns bottom scroll pane.
-     *
-     * @return bottom scroll pane.
-     */
-    public final JScrollPane getGuiScrollPaneBottom() {
-        return guiScrollPaneBottom;
-    }
-
     /** Information text field. */
     private JTextField guiTextFieldInformation;
     /** Action handlers for main window. */
     private final MainWindowActionHandlers mainWindowActionHandlers;
-
-    /**
-     * Returns action handlers for main window.
-     *
-     * @return action handlers for main window.
-     */
-    public final MainWindowActionHandlers getMainWindowActionHandlers() {
-        return mainWindowActionHandlers;
-    }
-
     /** GUI status handler. */
     private final GuiStatusHandler guiStatusHandler;
-
-    /**
-     * Returns GUI status handler.
-     *
-     * @return GUI status handler.
-     */
-    public final GuiStatusHandler getGuiStatusHandler() {
-        return guiStatusHandler;
-    }
 
     /**
      * Constructor.
@@ -391,241 +171,24 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * Returns data processor.
+     * Returns the text resource bundle.
      *
-     * @return data processor.
+     * @return the text resource bundle.
      */
-    public final DataProcessor getDataProcessing() {
-        return dataProcessing;
+    public static ResourceBundle getTextBundle() {
+        return textbundle;
     }
 
     /**
-     * Returns mosaic width in pixels.
+     * Main method of pictobrick.
      *
-     * @return mosaic width in pixels.
-     */
-    public final int getMosaicWidth() {
-        return mosaicWidth;
-    }
-
-    /**
-     * Sets mosaic width in pixels.
-     *
-     * @param width mosaic width in pixels.
-     */
-    public final void setMosaicWidth(final int width) {
-        this.mosaicWidth = width;
-    }
-
-    /**
-     * Returns mosaic height in pixels.
-     *
-     * @return mosaic height in pixels.
-     */
-    public final int getMosaicHeight() {
-        return mosaicHeight;
-    }
-
-    /**
-     * Sets mosaic height in pixels.
-     *
-     * @param height mosaic height in pixels.
-     */
-    public final void setMosaicHeight(final int height) {
-        this.mosaicHeight = height;
-    }
-
-    /**
-     * Returns top picture element.
-     *
-     * @return top picture element.
-     */
-    public final PictureElement getGuiPictureElementTop() {
-        return guiPictureElementTop;
-    }
-
-    /**
-     * Sets top picture element.
-     *
-     * @param element top picture element.
-     */
-    public final void setGuiPictureElementTop(final PictureElement element) {
-        this.guiPictureElementTop = element;
-    }
-
-    /**
-     * Dialog for choosing workingDirectory.
-     *
-     * @param newDirectory <code>true</code> if the directory is newly
-     *                     specified.
+     * @param args Command-line arguments; not used.
      *
      * @author Tobias Reichling
      */
-    public void workingDirectory(final boolean newDirectory) {
-        File wdFile = null;
-
-        if (!newDirectory) {
-            // Load working directory information from filesystem (if available)
-            wdFile = dataProcessing.loadWorkingDirectory();
-        }
-
-        if (wdFile == null || !(wdFile.isDirectory())) {
-            // Working Directory dialog
-            final JFileChooser d = new JFileChooser();
-            d.setDialogTitle(textbundle.getString("output_mainWindow_1"));
-            d.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            d.setFileFilter(new FileFilter() {
-                public boolean accept(final File f) {
-                    return f.isDirectory();
-                }
-
-                public String getDescription() {
-                    return textbundle.getString("output_mainWindow_2");
-                }
-            });
-
-            d.showOpenDialog(this);
-            wdFile = d.getSelectedFile();
-        }
-
-        if (wdFile != null) {
-            dataProcessing.setWorkingDirectory(wdFile);
-            showInfo(textbundle.getString("output_mainWindow_3") + ": " + wdFile
-                    + ".    " + textbundle.getString("output_mainWindow_4")
-                    + "!");
-            // Save information about current working directory
-            dataProcessing.saveWorkingDirectory(wdFile);
-        } else {
-            errorDialog(textbundle.getString("output_mainWindow_5") + "!");
-        }
-    }
-
-    /**
-     * Refreshes the Progress Bars.
-     *
-     * @author Tobias Reichling
-     * @param value
-     * @param number of progressBar
-     */
-    public void refreshProgressBarAlgorithm(final int value, final int number) {
-        progressBarsAlgorithm.showValue(value, number);
-    }
-
-    /**
-     * Hide dialog.
-     *
-     * @author Tobias Reichling
-     */
-    public void hideProgressBarAlgorithm() {
-        progressBarsAlgorithm.hideDialog();
-    }
-
-    /**
-     * Show dialog.
-     *
-     * @author Tobias Reichling
-     */
-    public void showProgressBarAlgorithm() {
-        progressBarsAlgorithm.showDialog();
-    }
-
-    /**
-     * Sets status for file output status progress bars..
-     *
-     * @author Tobias Reichling
-     * @param graphic       <code>true</code> if enabled.
-     * @param configuration <code>true</code> if enabled.
-     * @param material      <code>true</code> if enabled.
-     * @param instruction   <code>true</code> if enabled.
-     * @param xml           <code>true</code> if enabled.
-     * @param miscellaneous <code>true</code> if enabled.
-     */
-    public void setStatusProgressBarOutputFiles(final boolean graphic,
-            final boolean configuration, final boolean material,
-            final boolean instruction, final boolean xml,
-            final boolean miscellaneous) {
-        progressBarsOutputFiles.setStatus(graphic, configuration, material,
-                instruction, xml, miscellaneous);
-    }
-
-    /**
-     * Sets status forprogressBar statistic.
-     *
-     * @author Tobias Reichling
-     * @param active (false = disabled, true = enabled)
-     */
-    public void setStatusProgressBarAlgorithm(final boolean active) {
-        progressBarsAlgorithm.setStatus(active);
-    }
-
-    /**
-     * Refreshes progressBars.
-     *
-     * @author Tobias Reichling
-     * @param value
-     * @param number of progressBar
-     */
-    public void refreshProgressBarOutputFiles(final int value,
-            final int number) {
-        progressBarsOutputFiles.showValue(value, number);
-    }
-
-    /**
-     * Hide dialog.
-     *
-     * @author Tobias Reichling
-     */
-    public void hideProgressBarOutputFiles() {
-        progressBarsOutputFiles.hideDialog();
-    }
-
-    /**
-     * Show dialog.
-     *
-     * @author Tobias Reichling
-     */
-    public void showProgressBarOutputFiles() {
-        progressBarsOutputFiles.showDialog();
-    }
-
-    /**
-     * Animate progressBar grafic while saving.
-     *
-     * @author Tobias Reichling
-     * @param active <code>true</code> if the progress bar should change to
-     *               indeterminate mode; false if it should revert to normal.
-     */
-    public void animateGraficProgressBarOutputFiles(final boolean active) {
-        progressBarsOutputFiles.animateGraphic(active);
-    }
-
-    /**
-     * ChangeListener (zoom slider).
-     *
-     * @author Tobias Reichling
-     * @param event
-     */
-    public void stateChanged(final ChangeEvent event) {
-        final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
-        final int guiZoomSlider1Value = guiPanelZoom.getGuiZoomSlider1Value();
-        final int guiZoomSlider2Value = guiPanelZoom.getGuiZoomSlider2Value();
-        final JSlider guiZoomSlider2 = guiPanelZoom.getGuiZoomSlider2();
-
-        if ((JSlider) event.getSource() == guiZoomSlider1) {
-            if (guiZoomSlider1Value != guiZoomSlider1.getValue()) {
-                guiPanelZoom.setGuiZoomSlider1Value(guiZoomSlider1.getValue());
-                guiPictureElementTop.setImage(dataProcessing
-                        .getScaledImage(false, guiZoomSlider1.getValue()));
-                guiPictureElementTop.updateUI();
-            }
-        } else {
-            if (guiZoomSlider2Value != guiZoomSlider2.getValue()) {
-                guiPanelZoom.setGuiZoomSlider2Value(guiZoomSlider2.getValue());
-                guiPictureElementBottom.setImage(dataProcessing
-                        .getScaledImage(true, guiZoomSlider2.getValue()));
-                guiPictureElementBottom.updateUI();
-            }
-        }
+    public static void main(final String[] args) {
+        final MainWindow mainWindow = new MainWindow();
+        mainWindow.setVisible(true);
     }
 
     /**
@@ -679,194 +242,6 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * Cutout the user defined rectangle button: cutout or double click within
-     * the rectangle.
-     *
-     * @author Tobias Reichling
-     */
-    public void cutout() {
-        if (guiPictureElementTop.isCutout()) {
-            guiPictureElementTop.removeMouseListener(guiPictureElementTop);
-            guiPictureElementTop
-                    .removeMouseMotionListener(guiPictureElementTop);
-            guiStatusHandler.guiStatus(GuiStatusHandler.GENERATE_MOSAIC);
-            dataProcessing.replaceImageByCutout(
-                    guiPictureElementTop.getCutoutRectangle());
-            dataProcessing.computeScaleFactor(false,
-                    (double) (guiScrollPaneTop.getWidth()
-                            - PANEL_HORIZONTAL_PADDING),
-                    (double) ((guiSplitPane.getHeight()
-                            - guiSplitPane.getDividerLocation()
-                            - PANEL_VERTICAL_PADDING)));
-            final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
-            guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
-                    guiZoomSlider1.getValue()));
-            guiZoomSlider1.setValue(SLIDER1_MIN_VALUE);
-            guiPanelZoom.setGuiZoomSlider1Value(MINIMUM_ZOOM_SLIDER_VALUE);
-            guiPictureElementTop.updateUI();
-        } else {
-            errorDialog(textbundle.getString("output_mainWindow_11"));
-        }
-    }
-
-    /**
-     * Shows the mosaic (started in tiling thread).
-     *
-     * @author Tobias Reichling
-     */
-    public void showMosaic() {
-        dataProcessing.computeScaleFactor(false,
-                (double) (guiScrollPaneTop.getWidth()
-                        - PANEL_HORIZONTAL_PADDING),
-                (double) ((guiSplitPane.getHeight()
-                        - guiSplitPane.getDividerLocation()
-                        - PANEL_VERTICAL_PADDING)));
-        guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
-                guiPanelZoom.getGuiZoomSlider1().getValue()));
-        dataProcessing.computeScaleFactor(true,
-                (double) (guiScrollPaneBottom.getWidth()
-                        - PANEL_HORIZONTAL_PADDING),
-                (double) ((guiSplitPane.getHeight()
-                        - guiSplitPane.getDividerLocation()
-                        - PANEL_VERTICAL_PADDING)));
-        guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true,
-                guiPanelZoom.getGuiZoomSlider2().getValue()));
-        guiStatusHandler
-                .guiStatus(GuiStatusHandler.ENABLE_GUI_AFTER_GENERATE_MOSAIC);
-        guiPictureElementBottom.updateUI();
-
-        if (guiPanelOptions2.getGuiStatistic().isSelected()) {
-            final Enumeration<String> statisticInformation = dataProcessing
-                    .getInfo(1);
-            String statisticInformationString = "";
-
-            while (statisticInformation.hasMoreElements()) {
-                statisticInformationString = statisticInformationString
-                        + (String) statisticInformation.nextElement() + "\n\r";
-            }
-
-            JOptionPane.showMessageDialog(this, statisticInformationString,
-                    textbundle.getString("output_mainWindow_12"),
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    /**
-     * Dialog for choosing colors and threshold.
-     *
-     * @author Tobias Reichling
-     * @param colors possible colors
-     * @return vector (colors and threshold)
-     */
-    public Vector<Object> dialogFloydSteinberg(
-            final Enumeration<ColorObject> colors) {
-        final Vector<Object> result = new Vector<>();
-        FloydSteinbergColorDialog colorDialog = new FloydSteinbergColorDialog(
-                this, colors);
-        result.add(colorDialog.getDark());
-        result.add(colorDialog.getLight());
-        result.add(colorDialog.getMethod());
-        colorDialog = null;
-        return result;
-    }
-
-    /**
-     * Dialog for setting maximum luminance value distance.
-     *
-     * @author Tobias Reichling
-     * @return vector result
-     */
-    public Vector<Object> dialogPatternDithering() {
-        final Vector<Object> result = new Vector<>();
-        PatternDitheringDialog ditheringDialog = new PatternDitheringDialog(
-                this);
-        result.add(ditheringDialog.getDistance());
-        ditheringDialog = null;
-        return result;
-    }
-
-    /**
-     * Dialog for choosing color quantity for slicing.
-     *
-     * @author Tobias Reichling
-     * @return color quantity
-     */
-    public int dialogSlicingColor() {
-        final int min = 1;
-        final int max = 8;
-        final SlicingColorNumberDialog colorsDlg = new SlicingColorNumberDialog(
-                this, min, max);
-        return colorsDlg.getQuantity();
-    }
-
-    /**
-     * Dialog for choosing thresholds for slicing.
-     *
-     * @author Tobias Reichling
-     * @param colorQuantity
-     * @param colors        (Enumeration)
-     * @return thresholds (vector)
-     */
-    public Vector<Object> dialogSlicingThreshold(final int colorQuantity,
-            final Enumeration<ColorObject> colors) {
-        final SlicingThresholdDialog thresholdDlg = new SlicingThresholdDialog(
-                this, colorQuantity, colors);
-        return thresholdDlg.getSelection();
-    }
-
-    /**
-     * Dialog for choosing additinal optimization methods.
-     *
-     * @author Tobias Reichling
-     * @param method       number indicating optimization choice.
-     * @param quantisation algorithm description.
-     * @return method (vector)
-     */
-    public Vector<Object> dialogMoldingOptimisation(final int method,
-            final String quantisation) {
-        final MoldingOptimisationDialog optDlog = new MoldingOptimisationDialog(
-                this, method, quantisation);
-        return optDlog.getMethod();
-    }
-
-    /**
-     * Dialog for choosing additional optimization methods.
-     *
-     * @author Tobias Reichling
-     * @return Vector: optimisation y/n; border/complete; maximum gap height
-     */
-    public Vector<Object> dialogStabilityOptimisation() {
-        final var stabilityDialog = new StabilityOptimisationDialog(this);
-        return stabilityDialog.getMethod();
-    }
-
-    /**
-     * Shows an error dialog.
-     *
-     * @author Tobias Reichling
-     * @param errorMessage
-     */
-    public void errorDialog(final String errorMessage) {
-        JOptionPane.showMessageDialog(this, errorMessage,
-                textbundle.getString("dialog_error_frame"),
-                JOptionPane.ERROR_MESSAGE);
-    }
-
-    /**
-     * Synchronize radio buttons gui and menu.
-     *
-     * @author Tobias Reichling
-     * @param groupNumber
-     * @param buttonNumber
-     */
-    public void radioButtonStatus(final int groupNumber,
-            final int buttonNumber) {
-        menuMosaic.radioButtonStatus(groupNumber, buttonNumber);
-        guiPanelOptions2.radioButtonStatus(groupNumber, buttonNumber);
-
-    }
-
-    /**
      * Adjust divider location (split pane).
      *
      * @author Tobias Reichling
@@ -876,13 +251,14 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * Shows an information text.
+     * Animate progressBar grafic while saving.
      *
      * @author Tobias Reichling
-     * @param text
+     * @param active <code>true</code> if the progress bar should change to
+     *               indeterminate mode; false if it should revert to normal.
      */
-    public void showInfo(final String text) {
-        guiTextFieldInformation.setText(text);
+    public void animateGraficProgressBarOutputFiles(final boolean active) {
+        progressBarsOutputFiles.animateGraphic(active);
     }
 
     /**
@@ -1004,14 +380,589 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * Main method of pictobrick.
-     *
-     * @param args Command-line arguments; not used.
+     * Cutout the user defined rectangle button: cutout or double click within
+     * the rectangle.
      *
      * @author Tobias Reichling
      */
-    public static void main(final String[] args) {
-        final MainWindow mainWindow = new MainWindow();
-        mainWindow.setVisible(true);
+    public void cutout() {
+        if (guiPictureElementTop.isCutout()) {
+            guiPictureElementTop.removeMouseListener(guiPictureElementTop);
+            guiPictureElementTop
+                    .removeMouseMotionListener(guiPictureElementTop);
+            guiStatusHandler.guiStatus(GuiStatusHandler.GENERATE_MOSAIC);
+            dataProcessing.replaceImageByCutout(
+                    guiPictureElementTop.getCutoutRectangle());
+            dataProcessing.computeScaleFactor(false,
+                    (double) (guiScrollPaneTop.getWidth()
+                            - PANEL_HORIZONTAL_PADDING),
+                    (double) ((guiSplitPane.getHeight()
+                            - guiSplitPane.getDividerLocation()
+                            - PANEL_VERTICAL_PADDING)));
+            final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
+            guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
+                    guiZoomSlider1.getValue()));
+            guiZoomSlider1.setValue(SLIDER1_MIN_VALUE);
+            guiPanelZoom.setGuiZoomSlider1Value(MINIMUM_ZOOM_SLIDER_VALUE);
+            guiPictureElementTop.updateUI();
+        } else {
+            errorDialog(textbundle.getString("output_mainWindow_11"));
+        }
+    }
+
+    /**
+     * Dialog for choosing colors and threshold.
+     *
+     * @author Tobias Reichling
+     * @param colors possible colors
+     * @return vector (colors and threshold)
+     */
+    public Vector<Object> dialogFloydSteinberg(
+            final Enumeration<ColorObject> colors) {
+        final Vector<Object> result = new Vector<>();
+        FloydSteinbergColorDialog colorDialog = new FloydSteinbergColorDialog(
+                this, colors);
+        result.add(colorDialog.getDark());
+        result.add(colorDialog.getLight());
+        result.add(colorDialog.getMethod());
+        colorDialog = null;
+        return result;
+    }
+
+    /**
+     * Dialog for choosing additinal optimization methods.
+     *
+     * @author Tobias Reichling
+     * @param method       number indicating optimization choice.
+     * @param quantisation algorithm description.
+     * @return method (vector)
+     */
+    public Vector<Object> dialogMoldingOptimisation(final int method,
+            final String quantisation) {
+        final MoldingOptimisationDialog optDlog = new MoldingOptimisationDialog(
+                this, method, quantisation);
+        return optDlog.getMethod();
+    }
+
+    /**
+     * Dialog for setting maximum luminance value distance.
+     *
+     * @author Tobias Reichling
+     * @return vector result
+     */
+    public Vector<Object> dialogPatternDithering() {
+        final Vector<Object> result = new Vector<>();
+        PatternDitheringDialog ditheringDialog = new PatternDitheringDialog(
+                this);
+        result.add(ditheringDialog.getDistance());
+        ditheringDialog = null;
+        return result;
+    }
+
+    /**
+     * Dialog for choosing color quantity for slicing.
+     *
+     * @author Tobias Reichling
+     * @return color quantity
+     */
+    public int dialogSlicingColor() {
+        final int min = 1;
+        final int max = 8;
+        final SlicingColorNumberDialog colorsDlg = new SlicingColorNumberDialog(
+                this, min, max);
+        return colorsDlg.getQuantity();
+    }
+
+    /**
+     * Dialog for choosing thresholds for slicing.
+     *
+     * @author Tobias Reichling
+     * @param colorQuantity
+     * @param colors        (Enumeration)
+     * @return thresholds (vector)
+     */
+    public Vector<Object> dialogSlicingThreshold(final int colorQuantity,
+            final Enumeration<ColorObject> colors) {
+        final SlicingThresholdDialog thresholdDlg = new SlicingThresholdDialog(
+                this, colorQuantity, colors);
+        return thresholdDlg.getSelection();
+    }
+
+    /**
+     * Dialog for choosing additional optimization methods.
+     *
+     * @author Tobias Reichling
+     * @return Vector: optimisation y/n; border/complete; maximum gap height
+     */
+    public Vector<Object> dialogStabilityOptimisation() {
+        final var stabilityDialog = new StabilityOptimisationDialog(this);
+        return stabilityDialog.getMethod();
+    }
+
+    /**
+     * Shows an error dialog.
+     *
+     * @author Tobias Reichling
+     * @param errorMessage
+     */
+    public void errorDialog(final String errorMessage) {
+        JOptionPane.showMessageDialog(this, errorMessage,
+                textbundle.getString("dialog_error_frame"),
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Returns data processor.
+     *
+     * @return data processor.
+     */
+    public final DataProcessor getDataProcessing() {
+        return dataProcessing;
+    }
+
+    /**
+     * Returns second bottom area panel.
+     *
+     * @return second bottom area panel.
+     */
+    public final JPanel getGuiPanelBottomArea2() {
+        return guiPanelBottomArea2;
+    }
+
+    /**
+     * Returns panel for first set of options.
+     *
+     * @return panel for first set of options.
+     */
+    public final OptionsPanel1 getGuiPanelOptions1() {
+        return guiPanelOptions1;
+    }
+
+    /**
+     * Returns panel for second set of options.
+     *
+     * @return panel for second set of options.
+     */
+    public final OptionsPanel2 getGuiPanelOptions2() {
+        return guiPanelOptions2;
+    }
+
+    /**
+     * Returns panel for third set of options.
+     *
+     * @return panel for third set of options.
+     */
+    public final OptionsPanel3 getGuiPanelOptions3() {
+        return guiPanelOptions3;
+    }
+
+    /**
+     * Returns right area panel.
+     *
+     * @return right area panel.
+     */
+    public final JPanel getGuiPanelRightArea() {
+        return guiPanelRightArea;
+    }
+
+    /**
+     * Returns second top area panel.
+     *
+     * @return second top area panel.
+     */
+    public final JPanel getGuiPanelTopArea2() {
+        return guiPanelTopArea2;
+    }
+
+    /**
+     * Returns room panel.
+     *
+     * @return room panel.
+     */
+    public final ZoomPanel getGuiPanelZoom() {
+        return guiPanelZoom;
+    }
+
+    /**
+     * Returns bottom picture element.
+     *
+     * @return bottom picture element.
+     */
+    public final PictureElement getGuiPictureElementBottom() {
+        return guiPictureElementBottom;
+    }
+
+    /**
+     * Returns top picture element.
+     *
+     * @return top picture element.
+     */
+    public final PictureElement getGuiPictureElementTop() {
+        return guiPictureElementTop;
+    }
+
+    /**
+     * Returns bottom scroll pane.
+     *
+     * @return bottom scroll pane.
+     */
+    public final JScrollPane getGuiScrollPaneBottom() {
+        return guiScrollPaneBottom;
+    }
+
+    /**
+     * Returns top scroll pane.
+     *
+     * @return top scroll pane.
+     */
+    public final JScrollPane getGuiScrollPaneTop() {
+        return guiScrollPaneTop;
+    }
+
+    /**
+     * Returns split pane.
+     *
+     * @return split pane.
+     */
+    public JSplitPane getGuiSplitPane() {
+        return guiSplitPane;
+    }
+
+    /**
+     * Returns GUI status handler.
+     *
+     * @return GUI status handler.
+     */
+    public final GuiStatusHandler getGuiStatusHandler() {
+        return guiStatusHandler;
+    }
+
+    /**
+     * Returns action handlers for main window.
+     *
+     * @return action handlers for main window.
+     */
+    public final MainWindowActionHandlers getMainWindowActionHandlers() {
+        return mainWindowActionHandlers;
+    }
+
+    /**
+     * Returns about menu item.
+     *
+     * @return about menu item.
+     */
+    public final JMenuItem getMenuAbout() {
+        return menuAbout;
+    }
+
+    /**
+     * Returns file menu.
+     *
+     * @return file menu.
+     */
+    public final FileMenu getMenuFile() {
+        return menuFile;
+    }
+
+    /**
+     * Returns mosaic menu.
+     *
+     * @return mosaic menu.
+     */
+    public final MosaicMenu getMenuMosaic() {
+        return menuMosaic;
+    }
+
+    /**
+     * Return output menu.
+     *
+     * @return output menu.
+     */
+    public final OutputMenu getMenuOutput() {
+        return menuOutput;
+    }
+
+    /**
+     * Returns preprocessing menu.
+     *
+     * @return preprocessing menu.
+     */
+    public final PreprocessingMenu getMenuPreprocessing() {
+        return menuPreprocessing;
+    }
+
+    /**
+     * Returns mosaic height in pixels.
+     *
+     * @return mosaic height in pixels.
+     */
+    public final int getMosaicHeight() {
+        return mosaicHeight;
+    }
+
+    /**
+     * Returns mosaic width in pixels.
+     *
+     * @return mosaic width in pixels.
+     */
+    public final int getMosaicWidth() {
+        return mosaicWidth;
+    }
+
+    /**
+     * Hide dialog.
+     *
+     * @author Tobias Reichling
+     */
+    public void hideProgressBarAlgorithm() {
+        progressBarsAlgorithm.hideDialog();
+    }
+
+    /**
+     * Hide dialog.
+     *
+     * @author Tobias Reichling
+     */
+    public void hideProgressBarOutputFiles() {
+        progressBarsOutputFiles.hideDialog();
+    }
+
+    /**
+     * Synchronize radio buttons gui and menu.
+     *
+     * @author Tobias Reichling
+     * @param groupNumber
+     * @param buttonNumber
+     */
+    public void radioButtonStatus(final int groupNumber,
+            final int buttonNumber) {
+        menuMosaic.radioButtonStatus(groupNumber, buttonNumber);
+        guiPanelOptions2.radioButtonStatus(groupNumber, buttonNumber);
+
+    }
+
+    /**
+     * Refreshes the Progress Bars.
+     *
+     * @author Tobias Reichling
+     * @param value
+     * @param number of progressBar
+     */
+    public void refreshProgressBarAlgorithm(final int value, final int number) {
+        progressBarsAlgorithm.showValue(value, number);
+    }
+
+    /**
+     * Refreshes progressBars.
+     *
+     * @author Tobias Reichling
+     * @param value
+     * @param number of progressBar
+     */
+    public void refreshProgressBarOutputFiles(final int value,
+            final int number) {
+        progressBarsOutputFiles.showValue(value, number);
+    }
+
+    /**
+     * Sets top picture element.
+     *
+     * @param element top picture element.
+     */
+    public final void setGuiPictureElementTop(final PictureElement element) {
+        this.guiPictureElementTop = element;
+    }
+
+    /**
+     * Sets mosaic height in pixels.
+     *
+     * @param height mosaic height in pixels.
+     */
+    public final void setMosaicHeight(final int height) {
+        this.mosaicHeight = height;
+    }
+
+    /**
+     * Sets mosaic width in pixels.
+     *
+     * @param width mosaic width in pixels.
+     */
+    public final void setMosaicWidth(final int width) {
+        this.mosaicWidth = width;
+    }
+
+    /**
+     * Sets status forprogressBar statistic.
+     *
+     * @author Tobias Reichling
+     * @param active (false = disabled, true = enabled)
+     */
+    public void setStatusProgressBarAlgorithm(final boolean active) {
+        progressBarsAlgorithm.setStatus(active);
+    }
+
+    /**
+     * Sets status for file output status progress bars..
+     *
+     * @author Tobias Reichling
+     * @param graphic       <code>true</code> if enabled.
+     * @param configuration <code>true</code> if enabled.
+     * @param material      <code>true</code> if enabled.
+     * @param instruction   <code>true</code> if enabled.
+     * @param xml           <code>true</code> if enabled.
+     * @param miscellaneous <code>true</code> if enabled.
+     */
+    public void setStatusProgressBarOutputFiles(final boolean graphic,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final boolean miscellaneous) {
+        progressBarsOutputFiles.setStatus(graphic, configuration, material,
+                instruction, xml, miscellaneous);
+    }
+
+    /**
+     * Shows an information text.
+     *
+     * @author Tobias Reichling
+     * @param text
+     */
+    public void showInfo(final String text) {
+        guiTextFieldInformation.setText(text);
+    }
+
+    /**
+     * Shows the mosaic (started in tiling thread).
+     *
+     * @author Tobias Reichling
+     */
+    public void showMosaic() {
+        dataProcessing.computeScaleFactor(false,
+                (double) (guiScrollPaneTop.getWidth()
+                        - PANEL_HORIZONTAL_PADDING),
+                (double) ((guiSplitPane.getHeight()
+                        - guiSplitPane.getDividerLocation()
+                        - PANEL_VERTICAL_PADDING)));
+        guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
+                guiPanelZoom.getGuiZoomSlider1().getValue()));
+        dataProcessing.computeScaleFactor(true,
+                (double) (guiScrollPaneBottom.getWidth()
+                        - PANEL_HORIZONTAL_PADDING),
+                (double) ((guiSplitPane.getHeight()
+                        - guiSplitPane.getDividerLocation()
+                        - PANEL_VERTICAL_PADDING)));
+        guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true,
+                guiPanelZoom.getGuiZoomSlider2().getValue()));
+        guiStatusHandler
+                .guiStatus(GuiStatusHandler.ENABLE_GUI_AFTER_GENERATE_MOSAIC);
+        guiPictureElementBottom.updateUI();
+
+        if (guiPanelOptions2.getGuiStatistic().isSelected()) {
+            final Enumeration<String> statisticInformation = dataProcessing
+                    .getInfo(1);
+            String statisticInformationString = "";
+
+            while (statisticInformation.hasMoreElements()) {
+                statisticInformationString = statisticInformationString
+                        + (String) statisticInformation.nextElement() + "\n\r";
+            }
+
+            JOptionPane.showMessageDialog(this, statisticInformationString,
+                    textbundle.getString("output_mainWindow_12"),
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    /**
+     * Show dialog.
+     *
+     * @author Tobias Reichling
+     */
+    public void showProgressBarAlgorithm() {
+        progressBarsAlgorithm.showDialog();
+    }
+
+    /**
+     * Show dialog.
+     *
+     * @author Tobias Reichling
+     */
+    public void showProgressBarOutputFiles() {
+        progressBarsOutputFiles.showDialog();
+    }
+
+    /**
+     * ChangeListener (zoom slider).
+     *
+     * @author Tobias Reichling
+     * @param event
+     */
+    public void stateChanged(final ChangeEvent event) {
+        final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
+        final int guiZoomSlider1Value = guiPanelZoom.getGuiZoomSlider1Value();
+        final int guiZoomSlider2Value = guiPanelZoom.getGuiZoomSlider2Value();
+        final JSlider guiZoomSlider2 = guiPanelZoom.getGuiZoomSlider2();
+
+        if ((JSlider) event.getSource() == guiZoomSlider1) {
+            if (guiZoomSlider1Value != guiZoomSlider1.getValue()) {
+                guiPanelZoom.setGuiZoomSlider1Value(guiZoomSlider1.getValue());
+                guiPictureElementTop.setImage(dataProcessing
+                        .getScaledImage(false, guiZoomSlider1.getValue()));
+                guiPictureElementTop.updateUI();
+            }
+        } else {
+            if (guiZoomSlider2Value != guiZoomSlider2.getValue()) {
+                guiPanelZoom.setGuiZoomSlider2Value(guiZoomSlider2.getValue());
+                guiPictureElementBottom.setImage(dataProcessing
+                        .getScaledImage(true, guiZoomSlider2.getValue()));
+                guiPictureElementBottom.updateUI();
+            }
+        }
+    }
+
+    /**
+     * Dialog for choosing workingDirectory.
+     *
+     * @param newDirectory <code>true</code> if the directory is newly
+     *                     specified.
+     *
+     * @author Tobias Reichling
+     */
+    public void workingDirectory(final boolean newDirectory) {
+        File wdFile = null;
+
+        if (!newDirectory) {
+            // Load working directory information from filesystem (if available)
+            wdFile = dataProcessing.loadWorkingDirectory();
+        }
+
+        if (wdFile == null || !(wdFile.isDirectory())) {
+            // Working Directory dialog
+            final JFileChooser d = new JFileChooser();
+            d.setDialogTitle(textbundle.getString("output_mainWindow_1"));
+            d.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            d.setFileFilter(new FileFilter() {
+                public boolean accept(final File f) {
+                    return f.isDirectory();
+                }
+
+                public String getDescription() {
+                    return textbundle.getString("output_mainWindow_2");
+                }
+            });
+
+            d.showOpenDialog(this);
+            wdFile = d.getSelectedFile();
+        }
+
+        if (wdFile != null) {
+            dataProcessing.setWorkingDirectory(wdFile);
+            showInfo(textbundle.getString("output_mainWindow_3") + ": " + wdFile
+                    + ".    " + textbundle.getString("output_mainWindow_4")
+                    + "!");
+            // Save information about current working directory
+            dataProcessing.saveWorkingDirectory(wdFile);
+        } else {
+            errorDialog(textbundle.getString("output_mainWindow_5") + "!");
+        }
     }
 }
