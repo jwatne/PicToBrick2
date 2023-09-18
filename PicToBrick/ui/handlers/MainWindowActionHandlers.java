@@ -40,9 +40,11 @@ public class MainWindowActionHandlers {
     }
 
     /**
-     * Synchronize the status of the check boxes and the corresponding menu items.
+     * Synchronize the status of the check boxes and the corresponding menu
+     * items.
      *
-     * @param actionCommand The action triggering the need to synchronize the two.
+     * @param actionCommand The action triggering the need to synchronize the
+     *                      two.
      */
     public void setCheckboxGuiToMenuValue(final String actionCommand) {
         if (actionCommand.contains("grafic")) {
@@ -78,8 +80,8 @@ public class MainWindowActionHandlers {
     }
 
     /**
-     * method: checkBoxStatus
-     * description: synchronisize check boxes gui and menu
+     * method: checkBoxStatus description: synchronisize check boxes gui and
+     * menu
      *
      * @author Tobias Reichling
      * @param checkBoxNumber
@@ -89,16 +91,21 @@ public class MainWindowActionHandlers {
         final OutputMenu menuOutput = mainWindow.getMenuOutput();
         final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
         final JCheckBoxMenuItem menuGraphic = menuOutput.getMenuGraphic();
-        final JCheckBox guiOutputGraphic = guiPanelOptions3.getGuiOutputGraphic();
+        final JCheckBox guiOutputGraphic = guiPanelOptions3
+                .getGuiOutputGraphic();
         final JCheckBoxMenuItem menuXml = menuOutput.getMenuXml();
         final JCheckBox guiOutputXml = guiPanelOptions3.getGuiOutputXml();
-        final JCheckBoxMenuItem menuConfiguration = menuOutput.getMenuConfiguration();
-        final JCheckBox guiOutputConfiguration = guiPanelOptions3.getGuiOutputConfiguration();
-        final JCheckBoxMenuItem menuBuildingInstruction = menuOutput.getMenuBuildingInstruction();
+        final JCheckBoxMenuItem menuConfiguration = menuOutput
+                .getMenuConfiguration();
+        final JCheckBox guiOutputConfiguration = guiPanelOptions3
+                .getGuiOutputConfiguration();
+        final JCheckBoxMenuItem menuBuildingInstruction = menuOutput
+                .getMenuBuildingInstruction();
         final JCheckBox guiOutputBuildingInstruction = guiPanelOptions3
                 .getGuiOutputBuildingInstruction();
         final JCheckBoxMenuItem menuMaterial = menuOutput.getMenuMaterial();
-        final JCheckBox guiOutputMaterial = guiPanelOptions3.getGuiOutputMaterial();
+        final JCheckBox guiOutputMaterial = guiPanelOptions3
+                .getGuiOutputMaterial();
 
         if (reset) {
             menuGraphic.setSelected(false);
@@ -121,78 +128,78 @@ public class MainWindowActionHandlers {
             // x5 = material
             // x6 = configuration
             switch (checkBoxNumber) {
-                case 11:
-                    if (menuGraphic.isSelected()) {
-                        guiOutputGraphic.setSelected(true);
-                    } else {
-                        guiOutputGraphic.setSelected(false);
-                    }
-                    break;
-                case 13:
-                    if (menuXml.isSelected()) {
-                        guiOutputXml.setSelected(true);
-                    } else {
-                        guiOutputXml.setSelected(false);
-                    }
-                    break;
-                case 14:
-                    if (menuBuildingInstruction.isSelected()) {
-                        guiOutputBuildingInstruction.setSelected(true);
-                    } else {
-                        guiOutputBuildingInstruction.setSelected(false);
-                    }
-                    break;
-                case 15:
-                    if (menuMaterial.isSelected()) {
-                        guiOutputMaterial.setSelected(true);
-                    } else {
-                        guiOutputMaterial.setSelected(false);
-                    }
-                    break;
-                case 16:
-                    if (menuConfiguration.isSelected()) {
-                        guiOutputConfiguration.setSelected(true);
-                    } else {
-                        guiOutputConfiguration.setSelected(false);
-                    }
-                    break;
-                case 21:
-                    if (guiOutputGraphic.isSelected()) {
-                        menuGraphic.setSelected(true);
-                    } else {
-                        menuGraphic.setSelected(false);
-                    }
-                    break;
-                case 23:
-                    if (guiOutputXml.isSelected()) {
-                        menuXml.setSelected(true);
-                    } else {
-                        menuXml.setSelected(false);
-                    }
-                    break;
-                case 24:
-                    if (guiOutputBuildingInstruction.isSelected()) {
-                        menuBuildingInstruction.setSelected(true);
-                    } else {
-                        menuBuildingInstruction.setSelected(false);
-                    }
-                    break;
-                case 25:
-                    if (guiOutputMaterial.isSelected()) {
-                        menuMaterial.setSelected(true);
-                    } else {
-                        menuMaterial.setSelected(false);
-                    }
-                    break;
-                case 26:
-                    if (guiOutputConfiguration.isSelected()) {
-                        menuConfiguration.setSelected(true);
-                    } else {
-                        menuConfiguration.setSelected(false);
-                    }
-                    break;
-                default:
-                    break;
+            case 11:
+                if (menuGraphic.isSelected()) {
+                    guiOutputGraphic.setSelected(true);
+                } else {
+                    guiOutputGraphic.setSelected(false);
+                }
+                break;
+            case 13:
+                if (menuXml.isSelected()) {
+                    guiOutputXml.setSelected(true);
+                } else {
+                    guiOutputXml.setSelected(false);
+                }
+                break;
+            case 14:
+                if (menuBuildingInstruction.isSelected()) {
+                    guiOutputBuildingInstruction.setSelected(true);
+                } else {
+                    guiOutputBuildingInstruction.setSelected(false);
+                }
+                break;
+            case 15:
+                if (menuMaterial.isSelected()) {
+                    guiOutputMaterial.setSelected(true);
+                } else {
+                    guiOutputMaterial.setSelected(false);
+                }
+                break;
+            case 16:
+                if (menuConfiguration.isSelected()) {
+                    guiOutputConfiguration.setSelected(true);
+                } else {
+                    guiOutputConfiguration.setSelected(false);
+                }
+                break;
+            case 21:
+                if (guiOutputGraphic.isSelected()) {
+                    menuGraphic.setSelected(true);
+                } else {
+                    menuGraphic.setSelected(false);
+                }
+                break;
+            case 23:
+                if (guiOutputXml.isSelected()) {
+                    menuXml.setSelected(true);
+                } else {
+                    menuXml.setSelected(false);
+                }
+                break;
+            case 24:
+                if (guiOutputBuildingInstruction.isSelected()) {
+                    menuBuildingInstruction.setSelected(true);
+                } else {
+                    menuBuildingInstruction.setSelected(false);
+                }
+                break;
+            case 25:
+                if (guiOutputMaterial.isSelected()) {
+                    menuMaterial.setSelected(true);
+                } else {
+                    menuMaterial.setSelected(false);
+                }
+                break;
+            case 26:
+                if (guiOutputConfiguration.isSelected()) {
+                    menuConfiguration.setSelected(true);
+                } else {
+                    menuConfiguration.setSelected(false);
+                }
+                break;
+            default:
+                break;
             }
         }
     }
@@ -200,10 +207,11 @@ public class MainWindowActionHandlers {
     /**
      * Synchronizes radio button and menu item values.
      *
-     * @param actionCommand the action command set by toggling the radio button or
-     *                      corresponding menu item.
+     * @param actionCommand the action command set by toggling the radio button
+     *                      or corresponding menu item.
      */
-    public void synchronizeRadioButtonsAndMenuItems(final String actionCommand) {
+    public void synchronizeRadioButtonsAndMenuItems(
+            final String actionCommand) {
         if (actionCommand.contains("11")) {
             mainWindow.radioButtonStatus(1, 1);
         } else if (actionCommand.contains("12")) {
@@ -245,7 +253,9 @@ public class MainWindowActionHandlers {
     public void startNewMosaic() {
         getGuiStatusHandler().guiStatus(GuiStatusHandler.GUI_START);
         mainWindow.adjustDividerLocation();
-        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_4") + "!");
+        mainWindow.showInfo(
+                MainWindow.getTextBundle().getString("output_mainWindow_4")
+                        + "!");
     }
 
     /**
@@ -253,33 +263,47 @@ public class MainWindowActionHandlers {
      */
     public void generateMosaic() {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
-        final JComboBox<String> guiComboBoxInterpolation = mainWindow.getGuiPanelOptions2()
-                .getGuiComboBoxInterpolation();
-        final ButtonGroup guiGroupQuantisation = mainWindow.getGuiPanelOptions2().getGuiGroupQuantisation();
-        final ButtonGroup guiGroupTiling = mainWindow.getGuiPanelOptions2().getGuiGroupTiling();
+        final JComboBox<String> guiComboBoxInterpolation = mainWindow
+                .getGuiPanelOptions2().getGuiComboBoxInterpolation();
+        final ButtonGroup guiGroupQuantisation = mainWindow
+                .getGuiPanelOptions2().getGuiGroupQuantisation();
+        final ButtonGroup guiGroupTiling = mainWindow.getGuiPanelOptions2()
+                .getGuiGroupTiling();
         dataProcessing.initInfo();
-        dataProcessing.setInterpolation(guiComboBoxInterpolation.getSelectedIndex() + 1);
-        final int quantisation = Integer.parseInt(
-                guiGroupQuantisation.getSelection().getActionCommand().substring(9, 11)) - 10;
-        final int tiling = Integer.parseInt(guiGroupTiling.getSelection().getActionCommand().substring(9, 11))
-                - 20;
+        dataProcessing.setInterpolation(
+                guiComboBoxInterpolation.getSelectedIndex() + 1);
+        final int quantisation = Integer.parseInt(guiGroupQuantisation
+                .getSelection().getActionCommand().substring(9, 11)) - 10;
+        final int tiling = Integer.parseInt(guiGroupTiling.getSelection()
+                .getActionCommand().substring(9, 11)) - 20;
 
-        if (tiling == 2 && !(dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
-            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_6"));
-        } else if (tiling == 4 && ((dataProcessing.getCurrentConfiguration().getMaterial() == 3)
-                || (dataProcessing.getCurrentConfiguration().getMaterial() == 1))) {
-            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_7"));
-        } else if (tiling == 3 && (dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
-            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_8"));
+        if (tiling == 2 && !(dataProcessing.getCurrentConfiguration()
+                .getMaterial() == 3)) {
+            mainWindow.errorDialog(MainWindow.getTextBundle()
+                    .getString("output_mainWindow_6"));
+        } else if (tiling == 4 && ((dataProcessing.getCurrentConfiguration()
+                .getMaterial() == 3)
+                || (dataProcessing.getCurrentConfiguration()
+                        .getMaterial() == 1))) {
+            mainWindow.errorDialog(MainWindow.getTextBundle()
+                    .getString("output_mainWindow_7"));
+        } else if (tiling == 3 && (dataProcessing.getCurrentConfiguration()
+                .getMaterial() == 3)) {
+            mainWindow.errorDialog(MainWindow.getTextBundle()
+                    .getString("output_mainWindow_8"));
         } else {
             final int mosaicWidth = mainWindow.getMosaicWidth();
             final int mosaicHeight = mainWindow.getMosaicHeight();
-            final JCheckBox guiThreeDEffect = mainWindow.getGuiPanelOptions2().getGuiThreeDEffect();
-            final JCheckBox guiStatistic = mainWindow.getGuiPanelOptions2().getGuiStatistic();
+            final JCheckBox guiThreeDEffect = mainWindow.getGuiPanelOptions2()
+                    .getGuiThreeDEffect();
+            final JCheckBox guiStatistic = mainWindow.getGuiPanelOptions2()
+                    .getGuiStatistic();
             mainWindow.adjustDividerLocation();
-            getGuiStatusHandler().guiStatus(GuiStatusHandler.DISABLE_GUI_WHILE_GENERATE_MOSAIC);
-            dataProcessing.generateMosaic(mosaicWidth, mosaicHeight, quantisation, tiling,
-                    guiThreeDEffect.isSelected(), guiStatistic.isSelected());
+            getGuiStatusHandler().guiStatus(
+                    GuiStatusHandler.DISABLE_GUI_WHILE_GENERATE_MOSAIC);
+            dataProcessing.generateMosaic(mosaicWidth, mosaicHeight,
+                    quantisation, tiling, guiThreeDEffect.isSelected(),
+                    guiStatistic.isSelected());
         }
     }
 
@@ -288,7 +312,7 @@ public class MainWindowActionHandlers {
      */
     public void loadImage() {
         mainWindow.adjustDividerLocation();
-        mainWindow.imageLoad();
+        ImageLoader.imageLoad(mainWindow);
         checkIfImageAndConfigLoaded();
     }
 
@@ -299,7 +323,8 @@ public class MainWindowActionHandlers {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
 
         if (dataProcessing.getWorkingDirectory() == null) {
-            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_9"));
+            mainWindow.errorDialog(MainWindow.getTextBundle()
+                    .getString("output_mainWindow_9"));
         } else {
             new ConfigurationLoader(mainWindow).configurationLoad();
         }
@@ -312,8 +337,8 @@ public class MainWindowActionHandlers {
      */
     public void setWorkingDirectory() {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
-        WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(mainWindow,
-                dataProcessing.getWorkingDirectory());
+        WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(
+                mainWindow, dataProcessing.getWorkingDirectory());
 
         if (workingDirectoryDialog.getButton() == 1) {
             mainWindow.workingDirectory(true);
@@ -327,16 +352,20 @@ public class MainWindowActionHandlers {
      */
     public void setMosaicDimensions() {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
-        MosaicSizeDialog mosaicDimensionDialog = new MosaicSizeDialog(mainWindow,
-                dataProcessing.getCurrentConfiguration());
-        final PictureElement guiPictureElementTop = mainWindow.getGuiPictureElementTop();
+        MosaicSizeDialog mosaicDimensionDialog = new MosaicSizeDialog(
+                mainWindow, dataProcessing.getCurrentConfiguration());
+        final PictureElement guiPictureElementTop = mainWindow
+                .getGuiPictureElementTop();
 
         if (!mosaicDimensionDialog.isCanceled()) {
             guiPictureElementTop.removeMouseListener(guiPictureElementTop);
-            guiPictureElementTop.removeMouseMotionListener(guiPictureElementTop);
+            guiPictureElementTop
+                    .removeMouseMotionListener(guiPictureElementTop);
             guiPictureElementTop.setCutoutRatio(new Dimension(
-                    mosaicDimensionDialog.getArea().width * dataProcessing.getConfigurationDimension().width,
-                    mosaicDimensionDialog.getArea().height * dataProcessing.getConfigurationDimension().height));
+                    mosaicDimensionDialog.getArea().width
+                            * dataProcessing.getConfigurationDimension().width,
+                    mosaicDimensionDialog.getArea().height * dataProcessing
+                            .getConfigurationDimension().height));
             guiPictureElementTop.addMouseListener(guiPictureElementTop);
             guiPictureElementTop.addMouseMotionListener(guiPictureElementTop);
             guiPictureElementTop.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -344,7 +373,8 @@ public class MainWindowActionHandlers {
             mainWindow.setMosaicWidth(mosaicWidth);
             final int mosaicHeight = mosaicDimensionDialog.getArea().height;
             mainWindow.setMosaicHeight(mosaicHeight);
-            mainWindow.getGuiPanelOptions1().showDimensionInfo(mosaicWidth, mosaicHeight, false);
+            mainWindow.getGuiPanelOptions1().showDimensionInfo(mosaicWidth,
+                    mosaicHeight, false);
             getGuiStatusHandler().guiStatus(GuiStatusHandler.CUTOUT);
         }
 
@@ -356,31 +386,34 @@ public class MainWindowActionHandlers {
      */
     public void generateDocument() {
         final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
-        final JCheckBox guiOutputGrafic = guiPanelOptions3.getGuiOutputGraphic();
-        final JCheckBox guiOutputConfiguration = guiPanelOptions3.getGuiOutputConfiguration();
-        final JCheckBox guiOutputMaterial = guiPanelOptions3.getGuiOutputMaterial();
+        final JCheckBox guiOutputGrafic = guiPanelOptions3
+                .getGuiOutputGraphic();
+        final JCheckBox guiOutputConfiguration = guiPanelOptions3
+                .getGuiOutputConfiguration();
+        final JCheckBox guiOutputMaterial = guiPanelOptions3
+                .getGuiOutputMaterial();
         final JCheckBox guiOutputBuildingInstruction = guiPanelOptions3
                 .getGuiOutputBuildingInstruction();
         final JCheckBox guiOutputXml = guiPanelOptions3.getGuiOutputXml();
 
-        if (guiOutputGrafic.isSelected() ||
-                guiOutputConfiguration.isSelected() ||
-                guiOutputMaterial.isSelected() ||
-                guiOutputBuildingInstruction.isSelected() ||
-                guiOutputXml.isSelected()) {
-            getGuiStatusHandler().guiStatus(GuiStatusHandler.DISABLE_GUI_WHILE_GENERATING_OUTPUT);
+        if (guiOutputGrafic.isSelected() || guiOutputConfiguration.isSelected()
+                || guiOutputMaterial.isSelected()
+                || guiOutputBuildingInstruction.isSelected()
+                || guiOutputXml.isSelected()) {
+            getGuiStatusHandler().guiStatus(
+                    GuiStatusHandler.DISABLE_GUI_WHILE_GENERATING_OUTPUT);
             mainWindow.refreshProgressBarOutputFiles(0, 1);
             mainWindow.refreshProgressBarOutputFiles(0, 2);
             mainWindow.refreshProgressBarOutputFiles(0, 3);
             mainWindow.refreshProgressBarOutputFiles(0, 4);
             mainWindow.refreshProgressBarOutputFiles(0, 5);
             mainWindow.refreshProgressBarOutputFiles(0, 6);
-            mainWindow.setStatusProgressBarOutputFiles(guiOutputGrafic.isSelected(),
+            mainWindow.setStatusProgressBarOutputFiles(
+                    guiOutputGrafic.isSelected(),
                     guiOutputConfiguration.isSelected(),
                     guiOutputMaterial.isSelected(),
                     guiOutputBuildingInstruction.isSelected(),
-                    guiOutputXml.isSelected(),
-                    true);
+                    guiOutputXml.isSelected(), true);
             mainWindow.showProgressBarOutputFiles();
 
             // SwingWorker
@@ -389,7 +422,8 @@ public class MainWindowActionHandlers {
             // after finshing aforesaid (construct-)thread
             final SwingWorker worker = new SwingWorker() {
                 public Object construct() {
-                    final DataProcessor dataProcessing = mainWindow.getDataProcessing();
+                    final DataProcessor dataProcessing = mainWindow
+                            .getDataProcessing();
                     final String message = dataProcessing.generateDocuments(
                             guiOutputGrafic.isSelected(),
                             guiOutputConfiguration.isSelected(),
@@ -401,14 +435,16 @@ public class MainWindowActionHandlers {
                     if (!message.equals("")) {
                         mainWindow.errorDialog(message);
                     } else {
-                        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_10"));
+                        mainWindow.showInfo(MainWindow.getTextBundle()
+                                .getString("output_mainWindow_10"));
                     }
 
                     return true;
                 }
 
                 public void finished() {
-                    getGuiStatusHandler().guiStatus(GuiStatusHandler.ENABLE_GUI_AFTER_GENERATING_OUTPUT);
+                    getGuiStatusHandler().guiStatus(
+                            GuiStatusHandler.ENABLE_GUI_AFTER_GENERATING_OUTPUT);
                     mainWindow.hideProgressBarOutputFiles();
                 }
             };
@@ -425,7 +461,8 @@ public class MainWindowActionHandlers {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
 
         if (dataProcessing.isImage() && dataProcessing.isConfiguration()) {
-            getGuiStatusHandler().guiStatus(GuiStatusHandler.IMAGE_AND_CONFIG_LOADED);
+            getGuiStatusHandler()
+                    .guiStatus(GuiStatusHandler.IMAGE_AND_CONFIG_LOADED);
         }
     }
 }

@@ -61,11 +61,11 @@ public class MainWindow extends JFrame
     /** Scroll pane preferred width or height, in pixels. */
     private static final int SCROLL_PANE_SIZE = 100;
     /** Minimum value for zoom sliders. */
-    private static final int MINIMUM_ZOOM_SLIDER_VALUE = 3;
+    public static final int MINIMUM_ZOOM_SLIDER_VALUE = 3;
     /** Vertical padding around picture elements within panels, in pixels. */
-    private static final int PANEL_VERTICAL_PADDING = 60;
+    public static final int PANEL_VERTICAL_PADDING = 60;
     /** Horizontal padding around picture element within panel, in pixels. */
-    private static final int PANEL_HORIZONTAL_PADDING = 40;
+    public static final int PANEL_HORIZONTAL_PADDING = 40;
     /** Minimum available memory for program to run, in MB. */
     private static final int MIN_AVAILABLE_MEMORY_MB = 250;
     /** Bytes per KB. */
@@ -302,6 +302,16 @@ public class MainWindow extends JFrame
 
     /** Split pane. */
     private JSplitPane guiSplitPane;
+
+    /**
+     * Returns split pane.
+     *
+     * @return split pane.
+     */
+    public JSplitPane getGuiSplitPane() {
+        return guiSplitPane;
+    }
+
     /** Top scroll pane. */
     private JScrollPane guiScrollPaneTop;
     /** Bottom scroll pane. */
@@ -828,54 +838,6 @@ public class MainWindow extends JFrame
     public Vector<Object> dialogStabilityOptimisation() {
         final var stabilityDialog = new StabilityOptimisationDialog(this);
         return stabilityDialog.getMethod();
-    }
-
-    /**
-     * System dialog for image loading.
-     *
-     * @author Tobias Reichling
-     * @exception IOExcepion
-     */
-    public void imageLoad() {
-        // system dialog
-        final JFileChooser d = new JFileChooser();
-        d.setFileFilter(new FileFilter() {
-            public boolean accept(final File f) {
-                return f.isDirectory()
-                        || f.getName().toLowerCase().endsWith(".jpg")
-                        || f.getName().toLowerCase().endsWith(".jpeg")
-                        || f.getName().toLowerCase().endsWith(".gif")
-                        || f.getName().toLowerCase().endsWith(".png");
-            }
-
-            public String getDescription() {
-                return "*.jpg;*.gif;*.png";
-            }
-        });
-
-        d.showOpenDialog(this);
-        final File selectedFile = d.getSelectedFile();
-
-        if (dataProcessing.imageLoad(selectedFile)) {
-            final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
-            guiZoomSlider1.setEnabled(true);
-            dataProcessing.computeScaleFactor(false,
-                    (double) (guiScrollPaneTop.getWidth()
-                            - PANEL_HORIZONTAL_PADDING),
-                    (double) ((guiSplitPane.getHeight()
-                            - guiSplitPane.getDividerLocation()
-                            - PANEL_VERTICAL_PADDING)));
-            guiZoomSlider1.setValue(MINIMUM_ZOOM_SLIDER_VALUE);
-            guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
-                    guiZoomSlider1.getValue()));
-            guiPictureElementTop.updateUI();
-            getGuiPanelOptions1().showImageInfo(selectedFile.getName());
-            showInfo(textbundle.getString("output_mainWindow_20") + " "
-                    + selectedFile.getName() + " "
-                    + textbundle.getString("output_mainWindow_18") + ".");
-        } else {
-            errorDialog(textbundle.getString("output_mainWindow_21"));
-        }
     }
 
     /**
