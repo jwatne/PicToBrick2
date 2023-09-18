@@ -245,7 +245,7 @@ public class MainWindowActionHandlers {
     public void startNewMosaic() {
         getGuiStatusHandler().guiStatus(GuiStatusHandler.GUI_START);
         mainWindow.adjustDividerLocation();
-        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_4") + "!");
+        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_4") + "!");
     }
 
     /**
@@ -265,12 +265,12 @@ public class MainWindowActionHandlers {
                 - 20;
 
         if (tiling == 2 && !(dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
-            mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_6"));
+            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_6"));
         } else if (tiling == 4 && ((dataProcessing.getCurrentConfiguration().getMaterial() == 3)
                 || (dataProcessing.getCurrentConfiguration().getMaterial() == 1))) {
-            mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_7"));
+            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_7"));
         } else if (tiling == 3 && (dataProcessing.getCurrentConfiguration().getMaterial() == 3)) {
-            mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_8"));
+            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_8"));
         } else {
             final int mosaicWidth = mainWindow.getMosaicWidth();
             final int mosaicHeight = mainWindow.getMosaicHeight();
@@ -299,7 +299,7 @@ public class MainWindowActionHandlers {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
 
         if (dataProcessing.getWorkingDirectory() == null) {
-            mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_9"));
+            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_9"));
         } else {
             new ConfigurationLoader(mainWindow).configurationLoad();
         }
@@ -401,7 +401,7 @@ public class MainWindowActionHandlers {
                     if (!message.equals("")) {
                         mainWindow.errorDialog(message);
                     } else {
-                        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_10"));
+                        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_10"));
                     }
 
                     return true;

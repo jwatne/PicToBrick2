@@ -25,7 +25,7 @@ public class PreprocessingMenu extends JMenu {
      */
     public PreprocessingMenu(final String s, final MainWindow mainWindow) {
         super(s);
-        menuMosaicDimension = new JMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_21"));
+        menuMosaicDimension = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_21"));
         menuMosaicDimension.addActionListener(mainWindow);
         menuMosaicDimension.setActionCommand("mosaicdimension");
         this.add(menuMosaicDimension);

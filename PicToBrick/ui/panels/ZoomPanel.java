@@ -24,12 +24,12 @@ public class ZoomPanel extends JPanel {
     public ZoomPanel(final LayoutManager layout, final MainWindow mainWindow) {
         super(layout);
         final TitledBorder zoomAreaBorder = BorderFactory
-                .createTitledBorder(MainWindow.textbundle.getString("dialog_mainWindow_border_3"));
+                .createTitledBorder(MainWindow.getTextBundle().getString("dialog_mainWindow_border_3"));
         zoomAreaBorder.setTitleColor(new Color(100, 100, 100));
         this.setBorder(zoomAreaBorder);
         mainWindow.getGuiPanelRightArea().add(this, BorderLayout.SOUTH);
-        guiLabelZoom1 = new JLabel(MainWindow.textbundle.getString("dialog_mainWindow_label_7"));
-        guiLabelZoom2 = new JLabel(MainWindow.textbundle.getString("dialog_mainWindow_label_8"));
+        guiLabelZoom1 = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_7"));
+        guiLabelZoom2 = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_8"));
         guiZoomSlider1 = new JSlider(1, 7, 3);
         guiZoomSlider1Value = 3;
         guiZoomSlider1.setMinorTickSpacing(1);

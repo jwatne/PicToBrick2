@@ -19,7 +19,7 @@ public interface OptionsPanel {
      */
     default TitledBorder getOptionAreaBorder() {
         final TitledBorder optionAreaBorder = BorderFactory
-                .createTitledBorder(MainWindow.textbundle.getString("dialog_mainWindow_border_2"));
+                .createTitledBorder(MainWindow.getTextBundle().getString("dialog_mainWindow_border_2"));
         optionAreaBorder.setTitleColor(new Color(100, 100, 100));
         return optionAreaBorder;
     }

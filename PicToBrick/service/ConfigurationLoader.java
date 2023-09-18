@@ -68,14 +68,14 @@ public class ConfigurationLoader {
                                             .setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
                                     mainWindow.getGuiPanelOptions1().showConfigurationInfo(
                                             configurationDerivationDialog.getConfiguration().getName() + ".cfg");
-                                    mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_13") + " "
+                                    mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_13") + " "
                                             + configurationDerivationDialog.getConfiguration().getName() + ".cfg "
-                                            + MainWindow.textbundle.getString("output_mainWindow_14") + ".");
+                                            + MainWindow.getTextBundle().getString("output_mainWindow_14") + ".");
                                     cancel = true;
                                     configurationDerivationDialog = null;
                                 } catch (final IOException saveIO) {
                                     mainWindow.errorDialog(
-                                            MainWindow.textbundle.getString("output_mainWindow_15") + ": " + saveIO);
+                                            MainWindow.getTextBundle().getString("output_mainWindow_15") + ": " + saveIO);
                                     configurationDerivationDialog.showDialog();
                                 }
                             }
@@ -98,7 +98,7 @@ public class ConfigurationLoader {
                             configurationOld = dataProcessing.configurationLoad(file);
                         } catch (final IOException loadIO) {
                             mainWindow.errorDialog(
-                                    MainWindow.textbundle.getString("output_mainWindow_16") + ": " + loadIO);
+                                    MainWindow.getTextBundle().getString("output_mainWindow_16") + ": " + loadIO);
                         }
                     }
 
@@ -123,7 +123,7 @@ public class ConfigurationLoader {
                             }
 
                             if (nameAvailable) {
-                                mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_17"));
+                                mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_17"));
                                 configurationDerivationDialog.showDialog();
                             } else {
                                 try {
@@ -132,14 +132,14 @@ public class ConfigurationLoader {
                                             .setCurrentConfiguration(configurationDerivationDialog.getConfiguration());
                                     mainWindow.getGuiPanelOptions1().showConfigurationInfo(
                                             configurationDerivationDialog.getConfiguration().getName() + ".cfg");
-                                    mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_13") + " "
+                                    mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_13") + " "
                                             + configurationDerivationDialog.getConfiguration().getName() + ".cfg  "
-                                            + MainWindow.textbundle.getString("output_mainWindow_14") + ".");
+                                            + MainWindow.getTextBundle().getString("output_mainWindow_14") + ".");
                                     cancel = true;
                                     configurationDerivationDialog = null;
                                 } catch (final IOException speicherIO) {
                                     mainWindow
-                                            .errorDialog(MainWindow.textbundle.getString("output_mainWindow_15") + ": "
+                                            .errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_15") + ": "
                                                     + speicherIO);
                                     configurationDerivationDialog.showDialog();
                                 }
@@ -161,17 +161,17 @@ public class ConfigurationLoader {
                                 dataProcessing.getSystemConfiguration(configurationLoadingDialog.getFile()));
                         mainWindow.getGuiPanelOptions1().showConfigurationInfo(existingFile);
                         mainWindow.showInfo(
-                                MainWindow.textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
-                                        + MainWindow.textbundle.getString("output_mainWindow_18") + ".");
+                                MainWindow.getTextBundle().getString("output_mainWindow_13") + " " + existingFile + " "
+                                        + MainWindow.getTextBundle().getString("output_mainWindow_18") + ".");
                     } else {
                         try {
                             dataProcessing.setCurrentConfiguration(dataProcessing.configurationLoad(existingFile));
                             mainWindow.getGuiPanelOptions1().showConfigurationInfo(existingFile);
                             mainWindow.showInfo(
-                                    MainWindow.textbundle.getString("output_mainWindow_13") + " " + existingFile + " "
-                                            + MainWindow.textbundle.getString("output_mainWindow_18") + ".");
+                                    MainWindow.getTextBundle().getString("output_mainWindow_13") + " " + existingFile + " "
+                                            + MainWindow.getTextBundle().getString("output_mainWindow_18") + ".");
                         } catch (final IOException configurationLoadIO) {
-                            mainWindow.errorDialog(MainWindow.textbundle.getString("output_mainWindow_19") + ": "
+                            mainWindow.errorDialog(MainWindow.getTextBundle().getString("output_mainWindow_19") + ": "
                                     + configurationLoadIO);
                         }
                     }

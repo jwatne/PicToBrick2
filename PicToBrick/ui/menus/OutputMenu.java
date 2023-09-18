@@ -51,19 +51,19 @@ public class OutputMenu extends JMenu {
      */
     public OutputMenu(final String s, final MainWindow mainWindow) {
         super(s);
-        menuGraphic = new JCheckBoxMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_41"));
+        menuGraphic = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_41"));
         menuGraphic.addActionListener(mainWindow);
         menuGraphic.setActionCommand("menugrafic");
-        menuXml = new JCheckBoxMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_42"));
+        menuXml = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_42"));
         menuXml.addActionListener(mainWindow);
         menuXml.setActionCommand("menuxml");
-        menuBuildingInstruction = new JCheckBoxMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_43"));
+        menuBuildingInstruction = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_43"));
         menuBuildingInstruction.addActionListener(mainWindow);
         menuBuildingInstruction.setActionCommand("menubuildinginstruction");
-        menuMaterial = new JCheckBoxMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_44"));
+        menuMaterial = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_44"));
         menuMaterial.addActionListener(mainWindow);
         menuMaterial.setActionCommand("menumaterial");
-        menuConfiguration = new JCheckBoxMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_45"));
+        menuConfiguration = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_45"));
         menuConfiguration.addActionListener(mainWindow);
         menuConfiguration.setActionCommand("menuconfiguration");
         add(menuGraphic);
@@ -72,7 +72,7 @@ public class OutputMenu extends JMenu {
         add(menuBuildingInstruction);
         add(menuXml);
         addSeparator();
-        menuDocumentGenerate = new JMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_46"));
+        menuDocumentGenerate = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_46"));
         menuDocumentGenerate.addActionListener(mainWindow);
         menuDocumentGenerate.setActionCommand("documentgenerate");
         add(menuDocumentGenerate);

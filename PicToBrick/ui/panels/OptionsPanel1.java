@@ -38,22 +38,22 @@ public class OptionsPanel1 extends JPanel implements OptionsPanel {
         setBorder(getOptionAreaBorder());
         guiPanelOptions1Empty = new JPanel();
         guiPanelOptions1Top = new JPanel(new GridLayout(8, 1));
-        buttonImageLoad = new JButton(MainWindow.textbundle.getString("dialog_mainWindow_button_2"));
+        buttonImageLoad = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_2"));
         buttonImageLoad.addActionListener(mainWindow);
         buttonImageLoad.setActionCommand("imageload");
-        buttonConfigurationLoad = new JButton(MainWindow.textbundle.getString("dialog_mainWindow_button_3"));
+        buttonConfigurationLoad = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_3"));
         buttonConfigurationLoad.addActionListener(mainWindow);
         buttonConfigurationLoad.setActionCommand("configurationload");
-        buttonMosaicDimension = new JButton(MainWindow.textbundle.getString("dialog_mainWindow_button_4"));
+        buttonMosaicDimension = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_4"));
         buttonMosaicDimension.addActionListener(mainWindow);
         buttonMosaicDimension.setActionCommand("mosaicdimension");
-        buttonCutout = new JButton(MainWindow.textbundle.getString("dialog_mainWindow_button_5"));
+        buttonCutout = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_5"));
         buttonCutout.addActionListener(mainWindow);
         buttonCutout.setActionCommand("cutout");
-        guiLabelImage = new JLabel(MainWindow.textbundle.getString("dialog_mainWindow_label_1") + ": ");
-        guiLabelConfiguration = new JLabel(MainWindow.textbundle.getString("dialog_mainWindow_label_9") + ": ");
-        guiLabelWidth = new JLabel(MainWindow.textbundle.getString("dialog_mainWindow_label_2") + ": ");
-        guiLabelHeight = new JLabel(MainWindow.textbundle.getString("dialog_mainWindow_label_3") + ": ");
+        guiLabelImage = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_1") + ": ");
+        guiLabelConfiguration = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_9") + ": ");
+        guiLabelWidth = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_2") + ": ");
+        guiLabelHeight = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_3") + ": ");
         add(guiPanelOptions1Top, BorderLayout.NORTH);
         add(guiPanelOptions1Empty, BorderLayout.CENTER);
         add(buttonCutout, BorderLayout.SOUTH);
@@ -96,7 +96,7 @@ public class OptionsPanel1 extends JPanel implements OptionsPanel {
             fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
         }
 
-        guiLabelImage.setText(MainWindow.textbundle.getString("output_mainWindow_20") + ": " + fileName);
+        guiLabelImage.setText(MainWindow.getTextBundle().getString("output_mainWindow_20") + ": " + fileName);
     }
 
     /**
@@ -127,13 +127,13 @@ public class OptionsPanel1 extends JPanel implements OptionsPanel {
      */
     public void showDimensionInfo(final int widthValue, final int heightValue, final boolean reset) {
         if (reset) {
-            guiLabelWidth.setText(MainWindow.textbundle.getString("output_mainWindow_29") + ": ");
-            guiLabelHeight.setText(MainWindow.textbundle.getString("output_mainWindow_30") + ": ");
+            guiLabelWidth.setText(MainWindow.getTextBundle().getString("output_mainWindow_29") + ": ");
+            guiLabelHeight.setText(MainWindow.getTextBundle().getString("output_mainWindow_30") + ": ");
         } else {
-            guiLabelWidth.setText(MainWindow.textbundle.getString("output_mainWindow_29") + ": " + widthValue + " "
-                    + MainWindow.textbundle.getString("output_mainWindow_31"));
-            guiLabelHeight.setText(MainWindow.textbundle.getString("output_mainWindow_30") + ": " + heightValue + " "
-                    + MainWindow.textbundle.getString("output_mainWindow_31"));
+            guiLabelWidth.setText(MainWindow.getTextBundle().getString("output_mainWindow_29") + ": " + widthValue + " "
+                    + MainWindow.getTextBundle().getString("output_mainWindow_31"));
+            guiLabelHeight.setText(MainWindow.getTextBundle().getString("output_mainWindow_30") + ": " + heightValue + " "
+                    + MainWindow.getTextBundle().getString("output_mainWindow_31"));
         }
     }
 

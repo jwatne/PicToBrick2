@@ -155,7 +155,7 @@ public class GuiStatusHandler {
      */
     private void processOutput() {
         // sets information text
-        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_28"));
+        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_28"));
         // sets option panel 3
         final JPanel guiPanelRightArea = mainWindow.getGuiPanelRightArea();
         final JPanel guiPanelOptions2 = mainWindow.getGuiPanelOptions2();
@@ -182,7 +182,7 @@ public class GuiStatusHandler {
      */
     private void processEnableGuiAfterGeneratingMosaic() {
         // sets information text
-        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_27"));
+        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_27"));
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiPanelOptions2().processEnableGuiAfterGeneratingMosaic();
         final ZoomPanel guiPanelZoom = mainWindow.getGuiPanelZoom();
@@ -215,7 +215,7 @@ public class GuiStatusHandler {
      */
     private void processGenerateMosaic() {
         // sets information text
-        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_26"));
+        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_26"));
         // sets option panel 2
         final JPanel guiPanelRightArea = mainWindow.getGuiPanelRightArea();
         final JPanel guiPanelOptions1 = mainWindow.getGuiPanelOptions1();
@@ -242,7 +242,7 @@ public class GuiStatusHandler {
         mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiPanelOptions1().getButtonCutout().setEnabled(true);
         // sets information text
-        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_25"));
+        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_25"));
     }
 
     /**
@@ -261,9 +261,9 @@ public class GuiStatusHandler {
         // set information text
         final int mosaicWidth = mainWindow.getMosaicWidth();
         final int mosaicHeight = mainWindow.getMosaicHeight();
-        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_23") + ": " + mosaicWidth + " x "
+        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_23") + ": " + mosaicWidth + " x "
                 + mosaicHeight + ". "
-                + MainWindow.textbundle.getString("output_mainWindow_24") + ".");
+                + MainWindow.getTextBundle().getString("output_mainWindow_24") + ".");
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiPanelOptions1().processCutoutState();
         mainWindow.getMenuFile().processCutoutState();
@@ -278,7 +278,7 @@ public class GuiStatusHandler {
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(true);
         mainWindow.getGuiPanelOptions1().getButtonMosaicDimension().setEnabled(true);
         // set information text
-        mainWindow.showInfo(MainWindow.textbundle.getString("output_mainWindow_22"));
+        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_22"));
     }
 
     /**

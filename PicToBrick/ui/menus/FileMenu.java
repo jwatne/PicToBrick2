@@ -42,23 +42,23 @@ public class FileMenu extends JMenu {
      */
     public FileMenu(final String s, final MainWindow mainWindow) {
         super(s);
-        menuNewMosaic = new JMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_11"));
+        menuNewMosaic = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_11"));
         menuNewMosaic.addActionListener(mainWindow);
         menuNewMosaic.setActionCommand("mosaicnew");
         this.add(menuNewMosaic);
-        menuImageLoad = new JMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_12"));
+        menuImageLoad = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_12"));
         menuImageLoad.addActionListener(mainWindow);
         menuImageLoad.setActionCommand("imageload");
         this.add(menuImageLoad);
-        menuConfigurationLoad = new JMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_13"));
+        menuConfigurationLoad = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_13"));
         menuConfigurationLoad.addActionListener(mainWindow);
         menuConfigurationLoad.setActionCommand("configurationload");
         this.add(menuConfigurationLoad);
-        menuSettings = new JMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_14"));
+        menuSettings = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_14"));
         menuSettings.addActionListener(mainWindow);
         menuSettings.setActionCommand("settings");
         this.add(menuSettings);
-        menuEnd = new JMenuItem(MainWindow.textbundle.getString("dialog_mainWindow_menu_15"));
+        menuEnd = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_15"));
         menuEnd.addActionListener(mainWindow);
         menuEnd.setActionCommand("exit");
         this.add(menuEnd);
