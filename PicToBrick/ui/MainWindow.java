@@ -52,6 +52,20 @@ import pictobrick.ui.panels.ZoomPanel;
  */
 public class MainWindow extends JFrame
         implements ActionListener, ChangeListener {
+    /** Dark blue Color. */
+    private static final Color DARK_BLUE = new Color(0, 0, 150);
+    /** Number of rows for zoom panel. */
+    private static final int ZOOM_PANEL_ROWS = 4;
+    /** Medium gray Color. */
+    private static final Color MEDIUM_GRAY = new Color(100, 100, 100);
+    /** Scroll pane preferred width or height, in pixels. */
+    private static final int SCROLL_PANE_SIZE = 100;
+    /** Minimum value for zoom sliders. */
+    private static final int MINIMUM_ZOOM_SLIDER_VALUE = 3;
+    /** Vertical padding around picture elements within panels, in pixels. */
+    private static final int PANEL_VERTICAL_PADDING = 60;
+    /** Horizontal padding around picture element within panel, in pixels. */
+    private static final int PANEL_HORIZONTAL_PADDING = 40;
     /** Minimum available memory for program to run, in MB. */
     private static final int MIN_AVAILABLE_MEMORY_MB = 250;
     /** Bytes per KB. */
@@ -326,7 +340,7 @@ public class MainWindow extends JFrame
     }
 
     /** GUI status handler. */
-    private GuiStatusHandler guiStatusHandler;
+    private final GuiStatusHandler guiStatusHandler;
 
     /**
      * Returns GUI status handler.
@@ -506,10 +520,15 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * Sets status.
+     * Sets status for file output status progress bars..
      *
      * @author Tobias Reichling
-     * @param graphic <code>true</code> if progress bar is shown.
+     * @param graphic       <code>true</code> if enabled.
+     * @param configuration <code>true</code> if enabled.
+     * @param material      <code>true</code> if enabled.
+     * @param instruction   <code>true</code> if enabled.
+     * @param xml           <code>true</code> if enabled.
+     * @param miscellaneous <code>true</code> if enabled.
      */
     public void setStatusProgressBarOutputFiles(final boolean graphic,
             final boolean configuration, final boolean material,
@@ -520,18 +539,17 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: setStatusProgressBarAlgorithm description: sets status to
-     * progressBar statistic
+     * Sets status forprogressBar statistic.
      *
      * @author Tobias Reichling
-     * @param true/false
+     * @param active (false = disabled, true = enabled)
      */
     public void setStatusProgressBarAlgorithm(final boolean active) {
         progressBarsAlgorithm.setStatus(active);
     }
 
     /**
-     * method: refreshProgressBarOutputFiles description: refreshes progressBars
+     * Refreshes progressBars.
      *
      * @author Tobias Reichling
      * @param value
@@ -543,7 +561,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: hideProgressBarOutputFiles description: hide dialog
+     * Hide dialog.
      *
      * @author Tobias Reichling
      */
@@ -552,7 +570,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: showProgressBarOutputFiles description: show dialog
+     * Show dialog.
      *
      * @author Tobias Reichling
      */
@@ -561,18 +579,18 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: animateGraficProgressBarOutputFiles description: animate
-     * progressBar grafic while saving
+     * Animate progressBar grafic while saving.
      *
      * @author Tobias Reichling
-     * @param true/false
+     * @param active <code>true</code> if the progress bar should change to
+     *               indeterminate mode; false if it should revert to normal.
      */
     public void animateGraficProgressBarOutputFiles(final boolean active) {
         progressBarsOutputFiles.animateGraphic(active);
     }
 
     /**
-     * method: stateChanged description: ChangeListener (zoom slider)
+     * ChangeListener (zoom slider).
      *
      * @author Tobias Reichling
      * @param event
@@ -651,8 +669,8 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: cutout description: cutout the user defined rectangle button:
-     * cutout or double click within the rectangle
+     * Cutout the user defined rectangle button: cutout or double click within
+     * the rectangle.
      *
      * @author Tobias Reichling
      */
@@ -665,14 +683,16 @@ public class MainWindow extends JFrame
             dataProcessing.replaceImageByCutout(
                     guiPictureElementTop.getCutoutRectangle());
             dataProcessing.computeScaleFactor(false,
-                    (double) (guiScrollPaneTop.getWidth() - 40),
+                    (double) (guiScrollPaneTop.getWidth()
+                            - PANEL_HORIZONTAL_PADDING),
                     (double) ((guiSplitPane.getHeight()
-                            - guiSplitPane.getDividerLocation() - 60)));
+                            - guiSplitPane.getDividerLocation()
+                            - PANEL_VERTICAL_PADDING)));
             final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
             guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
                     guiZoomSlider1.getValue()));
             guiZoomSlider1.setValue(SLIDER1_MIN_VALUE);
-            guiPanelZoom.setGuiZoomSlider1Value(3);
+            guiPanelZoom.setGuiZoomSlider1Value(MINIMUM_ZOOM_SLIDER_VALUE);
             guiPictureElementTop.updateUI();
         } else {
             errorDialog(textbundle.getString("output_mainWindow_11"));
@@ -680,22 +700,25 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: showMosaic description: shows the mosaic (started in tiling
-     * thread)
+     * Shows the mosaic (started in tiling thread).
      *
      * @author Tobias Reichling
      */
     public void showMosaic() {
         dataProcessing.computeScaleFactor(false,
-                (double) (guiScrollPaneTop.getWidth() - 40),
+                (double) (guiScrollPaneTop.getWidth()
+                        - PANEL_HORIZONTAL_PADDING),
                 (double) ((guiSplitPane.getHeight()
-                        - guiSplitPane.getDividerLocation() - 60)));
+                        - guiSplitPane.getDividerLocation()
+                        - PANEL_VERTICAL_PADDING)));
         guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
                 guiPanelZoom.getGuiZoomSlider1().getValue()));
         dataProcessing.computeScaleFactor(true,
-                (double) (guiScrollPaneBottom.getWidth() - 40),
+                (double) (guiScrollPaneBottom.getWidth()
+                        - PANEL_HORIZONTAL_PADDING),
                 (double) ((guiSplitPane.getHeight()
-                        - guiSplitPane.getDividerLocation() - 60)));
+                        - guiSplitPane.getDividerLocation()
+                        - PANEL_VERTICAL_PADDING)));
         guiPictureElementBottom.setImage(dataProcessing.getScaledImage(true,
                 guiPanelZoom.getGuiZoomSlider2().getValue()));
         guiStatusHandler
@@ -719,44 +742,41 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: dialogFloydSteinberg description: dialog for choosing colors and
-     * threshold
+     * Dialog for choosing colors and threshold.
      *
      * @author Tobias Reichling
-     * @param possible colors
+     * @param colors possible colors
      * @return vector (colors and threshold)
      */
     public Vector<Object> dialogFloydSteinberg(
             final Enumeration<ColorObject> colors) {
         final Vector<Object> result = new Vector<>();
-        FloydSteinbergColorDialog floydSteinbergColorDialog = new FloydSteinbergColorDialog(
+        FloydSteinbergColorDialog colorDialog = new FloydSteinbergColorDialog(
                 this, colors);
-        result.add(floydSteinbergColorDialog.getDark());
-        result.add(floydSteinbergColorDialog.getLight());
-        result.add(floydSteinbergColorDialog.getMethod());
-        floydSteinbergColorDialog = null;
+        result.add(colorDialog.getDark());
+        result.add(colorDialog.getLight());
+        result.add(colorDialog.getMethod());
+        colorDialog = null;
         return result;
     }
 
     /**
-     * method: dialogPatternDithering description: dialog for setting maximum
-     * luminance value distance
+     * Dialog for setting maximum luminance value distance.
      *
      * @author Tobias Reichling
      * @return vector result
      */
     public Vector<Object> dialogPatternDithering() {
         final Vector<Object> result = new Vector<>();
-        PatternDitheringDialog patternDitheringDialog = new PatternDitheringDialog(
+        PatternDitheringDialog ditheringDialog = new PatternDitheringDialog(
                 this);
-        result.add(patternDitheringDialog.getDistance());
-        patternDitheringDialog = null;
+        result.add(ditheringDialog.getDistance());
+        ditheringDialog = null;
         return result;
     }
 
     /**
-     * method: dialogSlicingColor description: dialog for choosing color
-     * quantity for slicing
+     * Dialog for choosing color quantity for slicing.
      *
      * @author Tobias Reichling
      * @return color quantity
@@ -764,14 +784,13 @@ public class MainWindow extends JFrame
     public int dialogSlicingColor() {
         final int min = 1;
         final int max = 8;
-        final SlicingColorNumberDialog slicingColorNumberDialog = new SlicingColorNumberDialog(
+        final SlicingColorNumberDialog colorsDlg = new SlicingColorNumberDialog(
                 this, min, max);
-        return slicingColorNumberDialog.getQuantity();
+        return colorsDlg.getQuantity();
     }
 
     /**
-     * method: dialogSlicingThreshold description: dialog for choosing
-     * thresholds for slicing
+     * Dialog for choosing thresholds for slicing.
      *
      * @author Tobias Reichling
      * @param colorQuantity
@@ -780,41 +799,39 @@ public class MainWindow extends JFrame
      */
     public Vector<Object> dialogSlicingThreshold(final int colorQuantity,
             final Enumeration<ColorObject> colors) {
-        final SlicingThresholdDialog slicingThresholdDialog = new SlicingThresholdDialog(
+        final SlicingThresholdDialog thresholdDlg = new SlicingThresholdDialog(
                 this, colorQuantity, colors);
-        return slicingThresholdDialog.getSelection();
+        return thresholdDlg.getSelection();
     }
 
     /**
-     * method: dialogMoldingOptimisation description: dialog for choosing
-     * additinal optimisation methods
+     * Dialog for choosing additinal optimization methods.
      *
      * @author Tobias Reichling
-     * @param quantisation (string)
+     * @param method       number indicating optimization choice.
+     * @param quantisation algorithm description.
      * @return method (vector)
      */
     public Vector<Object> dialogMoldingOptimisation(final int method,
             final String quantisation) {
-        final MoldingOptimisationDialog moldingOptimisationDialog = new MoldingOptimisationDialog(
+        final MoldingOptimisationDialog optDlog = new MoldingOptimisationDialog(
                 this, method, quantisation);
-        return moldingOptimisationDialog.getMethod();
+        return optDlog.getMethod();
     }
 
     /**
-     * method: dialogStabilityOptimisation description: dialog for choosing
-     * additinal optimisation methods
+     * Dialog for choosing additional optimization methods.
      *
      * @author Tobias Reichling
      * @return Vector: optimisation y/n; border/complete; maximum gap height
      */
     public Vector<Object> dialogStabilityOptimisation() {
-        final StabilityOptimisationDialog stabilityOptimisationDialog = new StabilityOptimisationDialog(
-                this);
-        return stabilityOptimisationDialog.getMethod();
+        final var stabilityDialog = new StabilityOptimisationDialog(this);
+        return stabilityDialog.getMethod();
     }
 
     /**
-     * method: imageLoad description: system dialog for image loading
+     * System dialog for image loading.
      *
      * @author Tobias Reichling
      * @exception IOExcepion
@@ -837,22 +854,24 @@ public class MainWindow extends JFrame
         });
 
         d.showOpenDialog(this);
-        final File menuFile = d.getSelectedFile();
+        final File selectedFile = d.getSelectedFile();
 
-        if (dataProcessing.imageLoad(menuFile)) {
+        if (dataProcessing.imageLoad(selectedFile)) {
             final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
             guiZoomSlider1.setEnabled(true);
             dataProcessing.computeScaleFactor(false,
-                    (double) (guiScrollPaneTop.getWidth() - 40),
+                    (double) (guiScrollPaneTop.getWidth()
+                            - PANEL_HORIZONTAL_PADDING),
                     (double) ((guiSplitPane.getHeight()
-                            - guiSplitPane.getDividerLocation() - 60)));
-            guiZoomSlider1.setValue(3);
+                            - guiSplitPane.getDividerLocation()
+                            - PANEL_VERTICAL_PADDING)));
+            guiZoomSlider1.setValue(MINIMUM_ZOOM_SLIDER_VALUE);
             guiPictureElementTop.setImage(dataProcessing.getScaledImage(false,
                     guiZoomSlider1.getValue()));
             guiPictureElementTop.updateUI();
-            getGuiPanelOptions1().showImageInfo(menuFile.getName());
+            getGuiPanelOptions1().showImageInfo(selectedFile.getName());
             showInfo(textbundle.getString("output_mainWindow_20") + " "
-                    + menuFile.getName() + " "
+                    + selectedFile.getName() + " "
                     + textbundle.getString("output_mainWindow_18") + ".");
         } else {
             errorDialog(textbundle.getString("output_mainWindow_21"));
@@ -860,7 +879,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: errorDialog description: shows an error dialog
+     * Shows an error dialog.
      *
      * @author Tobias Reichling
      * @param errorMessage
@@ -872,8 +891,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: radioButtonStatus description: Synchronize radio buttons gui and
-     * menu
+     * Synchronize radio buttons gui and menu.
      *
      * @author Tobias Reichling
      * @param groupNumber
@@ -887,8 +905,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: adjustDividerLocation description: adjust divider location (split
-     * pane)
+     * Adjust divider location (split pane).
      *
      * @author Tobias Reichling
      */
@@ -897,7 +914,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: showInfo description: shows an information text
+     * Shows an information text.
      *
      * @author Tobias Reichling
      * @param text
@@ -907,7 +924,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: buildGui description: builds gui
+     * Builds gui.
      *
      * @author Tobias Reichling
      */
@@ -932,7 +949,8 @@ public class MainWindow extends JFrame
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         guiScrollPaneTop.setMinimumSize(new Dimension(0, 0));
-        guiScrollPaneTop.setPreferredSize(new Dimension(100, 100));
+        guiScrollPaneTop.setPreferredSize(
+                new Dimension(SCROLL_PANE_SIZE, SCROLL_PANE_SIZE));
         // image area bottom
         guiPictureElementBottom = new PictureElement(this);
         final GridBagLayout bottom2gbl = new GridBagLayout();
@@ -945,7 +963,8 @@ public class MainWindow extends JFrame
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         guiScrollPaneBottom.setMinimumSize(new Dimension(0, 0));
-        guiScrollPaneBottom.setPreferredSize(new Dimension(100, 100));
+        guiScrollPaneBottom.setPreferredSize(
+                new Dimension(SCROLL_PANE_SIZE, SCROLL_PANE_SIZE));
         // split pane
         guiSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
         guiSplitPane.setDividerLocation(0);
@@ -953,14 +972,14 @@ public class MainWindow extends JFrame
         final TitledBorder imageAreaBorder = BorderFactory.createTitledBorder(
                 textbundle.getString("dialog_mainWindow_border_1"));
         guiSplitPane.setBorder(imageAreaBorder);
-        imageAreaBorder.setTitleColor(new Color(100, 100, 100));
+        imageAreaBorder.setTitleColor(MEDIUM_GRAY);
         guiSplitPane.setTopComponent(guiScrollPaneTop);
         guiSplitPane.setBottomComponent(guiScrollPaneBottom);
         guiPanelTopArea.add(guiSplitPane, BorderLayout.CENTER);
         // option panels all
         final TitledBorder optionAreaBorder = BorderFactory.createTitledBorder(
                 textbundle.getString("dialog_mainWindow_border_2"));
-        optionAreaBorder.setTitleColor(new Color(100, 100, 100));
+        optionAreaBorder.setTitleColor(MEDIUM_GRAY);
         // option panel 1
         guiPanelOptions1 = new OptionsPanel1(new BorderLayout(), this);
         // option panel 2
@@ -969,19 +988,19 @@ public class MainWindow extends JFrame
         guiPanelOptions3 = new OptionsPanel3(new BorderLayout(), this);
 
         // zoom area
-        guiPanelZoom = new ZoomPanel(new GridLayout(4, 1), this);
+        guiPanelZoom = new ZoomPanel(new GridLayout(ZOOM_PANEL_ROWS, 1), this);
 
         // information area
         guiPanelInformation = new JPanel(new GridLayout(1, 1));
         guiTextFieldInformation = new JTextField();
         guiTextFieldInformation.setEditable(false);
-        guiTextFieldInformation.setBackground(new Color(255, 255, 255));
-        guiTextFieldInformation.setForeground(new Color(0, 0, 150));
+        guiTextFieldInformation.setBackground(Color.WHITE);
+        guiTextFieldInformation.setForeground(DARK_BLUE);
         guiPanelBottomArea.add(guiPanelInformation, BorderLayout.CENTER);
         final TitledBorder informationAreaBorder = BorderFactory
                 .createTitledBorder(
                         textbundle.getString("dialog_mainWindow_border_4"));
-        informationAreaBorder.setTitleColor(new Color(100, 100, 100));
+        informationAreaBorder.setTitleColor(MEDIUM_GRAY);
         guiPanelInformation.setBorder(informationAreaBorder);
         guiPanelInformation.add(guiTextFieldInformation);
         guiStatusHandler.guiStatus(GuiStatusHandler.GUI_START);
@@ -989,7 +1008,7 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: buildMenu description: generate Menu
+     * Generate Menu.
      *
      * @author Tobias Reichling
      */
@@ -1023,7 +1042,9 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * method: main description: main method of pictobrick
+     * Main method of pictobrick.
+     *
+     * @param args Command-line arguments; not used.
      *
      * @author Tobias Reichling
      */

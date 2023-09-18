@@ -9,28 +9,29 @@ import java.awt.event.*;
 import java.util.*;
 
 /**
- * class: MoldingOptimisationDialog
- * layer: Gui (three tier architecture)
+ * class: MoldingOptimisationDialog layer: Gui (three tier architecture)
  * description: dialog for choosing parameter for molding optimisation
  *
  * @author Tobias Reichling
  */
-public class MoldingOptimisationDialog
-		extends JDialog
+public class MoldingOptimisationDialog extends JDialog
 		implements ActionListener {
-	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
+	private static ResourceBundle textbundle = ResourceBundle
+			.getBundle("Resources.TextResource");
 	private final ButtonGroup optimisation = new ButtonGroup();
 
 	/**
-	 * method: MoldingOptimisationDialog
-	 * description: constructor
+	 * Constructor.
 	 *
 	 * @author Tobias Reichling
-	 * @param owner
-	 * @param quantisation
+	 * @param owner              the Frame from which the dialog is displayed.
+	 * @param quantisationNumber number indicating optimization choice.
+	 * @param quantisation       algorithm description.
 	 */
-	public MoldingOptimisationDialog(final Frame owner, final int quantisationNumber, final String quantisation) {
-		super(owner, textbundle.getString("dialog_moldingOptimisation_frame"), true);
+	public MoldingOptimisationDialog(final Frame owner,
+			final int quantisationNumber, final String quantisation) {
+		super(owner, textbundle.getString("dialog_moldingOptimisation_frame"),
+				true);
 		this.setLocation(100, 100);
 		this.setResizable(false);
 		JPanel radio;
@@ -44,10 +45,23 @@ public class MoldingOptimisationDialog
 		}
 		final JPanel buttons = new JPanel();
 		// Label
-		JLabel text1, text2, text3, text4, text5, text6, text7, text8, text9, text10;
-		text1 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_1") + " " + quantisation + ".");
-		text2 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_2"));
-		text3 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_3"));
+		JLabel text1;
+		JLabel text2;
+		JLabel text3;
+		JLabel text4;
+		JLabel text5;
+		JLabel text6;
+		JLabel text7;
+		JLabel text8;
+		JLabel text9;
+		JLabel text10;
+		text1 = new JLabel(
+				textbundle.getString("dialog_moldingOptimisation_label_1") + " "
+						+ quantisation + ".");
+		text2 = new JLabel(
+				textbundle.getString("dialog_moldingOptimisation_label_2"));
+		text3 = new JLabel(
+				textbundle.getString("dialog_moldingOptimisation_label_3"));
 		text4 = new JLabel("");
 		// BUTTON
 		final JButton ok = new JButton(textbundle.getString("button_ok"));
@@ -73,12 +87,18 @@ public class MoldingOptimisationDialog
 		// must be greater because it must show more information
 		if (quantisationNumber == 2) {
 			text5 = new JLabel("");
-			text6 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_6a") + " " + quantisation + " "
-					+ textbundle.getString("dialog_moldingOptimisation_label_6b"));
-			text7 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_7"));
-			text8 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_8"));
-			text9 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_9"));
-			text10 = new JLabel(textbundle.getString("dialog_moldingOptimisation_label_10"));
+			text6 = new JLabel(
+					textbundle.getString("dialog_moldingOptimisation_label_6a")
+							+ " " + quantisation + " " + textbundle.getString(
+									"dialog_moldingOptimisation_label_6b"));
+			text7 = new JLabel(
+					textbundle.getString("dialog_moldingOptimisation_label_7"));
+			text8 = new JLabel(
+					textbundle.getString("dialog_moldingOptimisation_label_8"));
+			text9 = new JLabel(
+					textbundle.getString("dialog_moldingOptimisation_label_9"));
+			text10 = new JLabel(textbundle
+					.getString("dialog_moldingOptimisation_label_10"));
 			radio.add(text5);
 			radio.add(text6);
 			radio.add(text7);
@@ -87,8 +107,8 @@ public class MoldingOptimisationDialog
 			radio.add(text10);
 		}
 		buttons.add(ok);
-		final TitledBorder optimierungBorder = BorderFactory
-				.createTitledBorder(textbundle.getString("dialog_moldingOptimisation_border"));
+		final TitledBorder optimierungBorder = BorderFactory.createTitledBorder(
+				textbundle.getString("dialog_moldingOptimisation_border"));
 		radio.setBorder(optimierungBorder);
 		optimierungBorder.setTitleColor(new Color(100, 100, 100));
 		content.add(radio, BorderLayout.CENTER);
@@ -99,8 +119,7 @@ public class MoldingOptimisationDialog
 	}
 
 	/**
-	 * method: getMethod
-	 * description: returns the method
+	 * method: getMethod description: returns the method
 	 *
 	 * @author Tobias Reichling
 	 * @return action command (vector)
@@ -112,8 +131,7 @@ public class MoldingOptimisationDialog
 	}
 
 	/**
-	 * method: actionPerformed
-	 * description: ActionListener
+	 * method: actionPerformed description: ActionListener
 	 *
 	 * @author Tobias Reichling
 	 * @param event

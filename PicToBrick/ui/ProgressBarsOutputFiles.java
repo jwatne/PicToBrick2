@@ -136,12 +136,12 @@ public class ProgressBarsOutputFiles extends JDialog {
 	 * Sets the progress bar status (enabled/disabled).
 	 *
 	 * @author Adrian Schuetz
-	 * @param graphic
-	 * @param configuration
-	 * @param material
-	 * @param instruction
-	 * @param xml
-	 * @param miscellaneous
+	 * @param graphic       <code>true</code> if enabled.
+	 * @param configuration <code>true</code> if enabled.
+	 * @param material      <code>true</code> if enabled.
+	 * @param instruction   <code>true</code> if enabled.
+	 * @param xml           <code>true</code> if enabled.
+	 * @param miscellaneous <code>true</code> if enabled.
 	 */
 	public void setStatus(final boolean graphic, final boolean configuration,
 			final boolean material, final boolean instruction,
