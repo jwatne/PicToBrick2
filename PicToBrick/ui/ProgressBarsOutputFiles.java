@@ -223,7 +223,7 @@ public class ProgressBarsOutputFiles extends JDialog {
 	}
 
 	/**
-	 * method: hideDialog description: hides the dialog
+	 * Hides the dialog.
 	 *
 	 * @author Adrian Schuetz
 	 */

@@ -23,15 +23,71 @@ import pictobrick.ui.panels.OptionsPanel3;
  * by John Watne 09/2023.
  */
 public class MainWindowActionHandlers {
+    /** Number for miscellaneous progress bar. */
+    private static final int MISCELLANEOUS_PROGRESS_BAR = 6;
+    /** Number for XML progress bar. */
+    private static final int XML_PROGRESS_BAR = 5;
+    /** Number for instruction progress bar. */
+    private static final int INSTRUCTION_PROGRESS_BAR = 4;
+    /** Number for material progress bar. */
+    private static final int MATERIAL_PROGRESS_BAR = 3;
+    /** Tiling value 3. */
+    private static final int TILING_3 = 3;
+    /** Tiling value 4. */
+    private static final int TILING_4 = 4;
+    /** Molding optimization. */
+    private static final int MOLDING = 3;
+    /** Button number 7. */
+    private static final int BUTTON_7 = 7;
+    /** Button number 6. */
+    private static final int BUTTON_6 = 6;
+    /** Button number 5. */
+    private static final int BUTTON_5 = 5;
+    /** Button number 4. */
+    private static final int BUTTON_4 = 4;
+    /** Button number 3. */
+    private static final int BUTTON_3 = 3;
+    /** Index for configuration menu checkbox. */
+    private static final int MENU_CONFIGURATION_CHECKBOX = 26;
+    /** Index for material menu checkbox. */
+    private static final int MENU_MATERIAL_CHECKBOX = 25;
+    /** Index for building instruction menu checkbox. */
+    private static final int MENU_BUILDING_INSTRUCTION_CHECKBOX = 24;
+    /** Index for XML menu checkbox. */
+    private static final int MENU_XML_CHECKBOX = 23;
+    /** Index for graphic menu checkbox. */
+    private static final int MENU_GRAPHIC_CHECKBOX = 21;
+    /** Index for configuration checkbox. */
+    private static final int CONFIGURATION_CHECKBOX = 16;
+    /** Index for material checkbox. */
+    private static final int MATERIAL_CHECKBOX = 15;
+    /** Index for building instruction checkbox. */
+    private static final int BUILDING_INSTRUCTION_CHECKBOX = 14;
+    /** Index for XML checkbox. */
+    private static final int XML_CHECKBOX = 13;
+    /** Index for grafic checkbox. */
+    private static final int GRAPHIC_CHECKBOX = 11;
+    /** The main window of the application. */
     private final MainWindow mainWindow;
+    /** Handler for updating the GUI status of the main window. */
     private GuiStatusHandler guiStatusHandler;
 
-    public MainWindowActionHandlers(final MainWindow mainWindow) {
-        this.mainWindow = mainWindow;
-        this.guiStatusHandler = mainWindow.getGuiStatusHandler();
+    /**
+     * Constructor.
+     *
+     * @param owner the main window whose actions are handled by this instance.
+     */
+    public MainWindowActionHandlers(final MainWindow owner) {
+        this.mainWindow = owner;
+        this.guiStatusHandler = owner.getGuiStatusHandler();
     }
 
-    public GuiStatusHandler getGuiStatusHandler() {
+    /**
+     * Returns the handler for updating the GUI status of the main window.
+     *
+     * @return the handler for updating the GUI status of the main window.
+     */
+    public final GuiStatusHandler getGuiStatusHandler() {
         if (guiStatusHandler == null) {
             guiStatusHandler = mainWindow.getGuiStatusHandler();
         }
@@ -48,15 +104,15 @@ public class MainWindowActionHandlers {
      */
     public void setCheckboxGuiToMenuValue(final String actionCommand) {
         if (actionCommand.contains("grafic")) {
-            checkBoxStatus(11, false);
+            checkBoxStatus(GRAPHIC_CHECKBOX, false);
         } else if (actionCommand.contains("xml")) {
-            checkBoxStatus(13, false);
+            checkBoxStatus(XML_CHECKBOX, false);
         } else if (actionCommand.contains("buildinginstruction")) {
-            checkBoxStatus(14, false);
+            checkBoxStatus(BUILDING_INSTRUCTION_CHECKBOX, false);
         } else if (actionCommand.contains("material")) {
-            checkBoxStatus(15, false);
+            checkBoxStatus(MATERIAL_CHECKBOX, false);
         } else if (actionCommand.contains("configuration")) {
-            checkBoxStatus(16, false);
+            checkBoxStatus(CONFIGURATION_CHECKBOX, false);
         }
     }
 
@@ -67,21 +123,20 @@ public class MainWindowActionHandlers {
      */
     public void setCheckboxMenuToGuiValue(final String actionCommand) {
         if (actionCommand.contains("grafic")) {
-            checkBoxStatus(21, false);
+            checkBoxStatus(MENU_GRAPHIC_CHECKBOX, false);
         } else if (actionCommand.contains("xml")) {
-            checkBoxStatus(23, false);
+            checkBoxStatus(MENU_XML_CHECKBOX, false);
         } else if (actionCommand.contains("buildinginstruction")) {
-            checkBoxStatus(24, false);
+            checkBoxStatus(MENU_BUILDING_INSTRUCTION_CHECKBOX, false);
         } else if (actionCommand.contains("material")) {
-            checkBoxStatus(25, false);
+            checkBoxStatus(MENU_MATERIAL_CHECKBOX, false);
         } else if (actionCommand.contains("configuration")) {
-            checkBoxStatus(26, false);
+            checkBoxStatus(MENU_CONFIGURATION_CHECKBOX, false);
         }
     }
 
     /**
-     * method: checkBoxStatus description: synchronisize check boxes gui and
-     * menu
+     * Synchronisize check boxes gui and menu.
      *
      * @author Tobias Reichling
      * @param checkBoxNumber
@@ -128,75 +183,85 @@ public class MainWindowActionHandlers {
             // x5 = material
             // x6 = configuration
             switch (checkBoxNumber) {
-            case 11:
+            case GRAPHIC_CHECKBOX:
                 if (menuGraphic.isSelected()) {
                     guiOutputGraphic.setSelected(true);
                 } else {
                     guiOutputGraphic.setSelected(false);
                 }
+
                 break;
-            case 13:
+            case XML_CHECKBOX:
                 if (menuXml.isSelected()) {
                     guiOutputXml.setSelected(true);
                 } else {
                     guiOutputXml.setSelected(false);
                 }
+
                 break;
-            case 14:
+            case BUILDING_INSTRUCTION_CHECKBOX:
                 if (menuBuildingInstruction.isSelected()) {
                     guiOutputBuildingInstruction.setSelected(true);
                 } else {
                     guiOutputBuildingInstruction.setSelected(false);
                 }
+
                 break;
-            case 15:
+            case MATERIAL_CHECKBOX:
                 if (menuMaterial.isSelected()) {
                     guiOutputMaterial.setSelected(true);
                 } else {
                     guiOutputMaterial.setSelected(false);
                 }
+
                 break;
-            case 16:
+            case CONFIGURATION_CHECKBOX:
                 if (menuConfiguration.isSelected()) {
                     guiOutputConfiguration.setSelected(true);
                 } else {
                     guiOutputConfiguration.setSelected(false);
                 }
+
                 break;
-            case 21:
+            case MENU_GRAPHIC_CHECKBOX:
                 if (guiOutputGraphic.isSelected()) {
                     menuGraphic.setSelected(true);
                 } else {
                     menuGraphic.setSelected(false);
                 }
+
                 break;
-            case 23:
+            case MENU_XML_CHECKBOX:
                 if (guiOutputXml.isSelected()) {
                     menuXml.setSelected(true);
                 } else {
                     menuXml.setSelected(false);
                 }
+
                 break;
-            case 24:
+            case MENU_BUILDING_INSTRUCTION_CHECKBOX:
                 if (guiOutputBuildingInstruction.isSelected()) {
                     menuBuildingInstruction.setSelected(true);
                 } else {
                     menuBuildingInstruction.setSelected(false);
                 }
+
                 break;
-            case 25:
+            case MENU_MATERIAL_CHECKBOX:
                 if (guiOutputMaterial.isSelected()) {
                     menuMaterial.setSelected(true);
                 } else {
                     menuMaterial.setSelected(false);
                 }
+
                 break;
-            case 26:
+            case MENU_CONFIGURATION_CHECKBOX:
                 if (guiOutputConfiguration.isSelected()) {
                     menuConfiguration.setSelected(true);
                 } else {
                     menuConfiguration.setSelected(false);
                 }
+
                 break;
             default:
                 break;
@@ -217,25 +282,25 @@ public class MainWindowActionHandlers {
         } else if (actionCommand.contains("12")) {
             mainWindow.radioButtonStatus(1, 2);
         } else if (actionCommand.contains("13")) {
-            mainWindow.radioButtonStatus(1, 3);
+            mainWindow.radioButtonStatus(1, BUTTON_3);
         } else if (actionCommand.contains("14")) {
-            mainWindow.radioButtonStatus(1, 4);
+            mainWindow.radioButtonStatus(1, BUTTON_4);
         } else if (actionCommand.contains("15")) {
-            mainWindow.radioButtonStatus(1, 5);
+            mainWindow.radioButtonStatus(1, BUTTON_5);
         } else if (actionCommand.contains("16")) {
-            mainWindow.radioButtonStatus(1, 6);
+            mainWindow.radioButtonStatus(1, BUTTON_6);
         } else if (actionCommand.contains("17")) {
-            mainWindow.radioButtonStatus(1, 7);
+            mainWindow.radioButtonStatus(1, BUTTON_7);
         } else if (actionCommand.contains("21")) {
             mainWindow.radioButtonStatus(2, 1);
         } else if (actionCommand.contains("22")) {
             mainWindow.radioButtonStatus(2, 2);
         } else if (actionCommand.contains("23")) {
-            mainWindow.radioButtonStatus(2, 3);
+            mainWindow.radioButtonStatus(2, BUTTON_3);
         } else if (actionCommand.contains("24")) {
-            mainWindow.radioButtonStatus(2, 4);
+            mainWindow.radioButtonStatus(2, BUTTON_4);
         } else if (actionCommand.contains("25")) {
-            mainWindow.radioButtonStatus(2, 5);
+            mainWindow.radioButtonStatus(2, BUTTON_5);
         }
     }
 
@@ -278,17 +343,17 @@ public class MainWindowActionHandlers {
                 .getActionCommand().substring(9, 11)) - 20;
 
         if (tiling == 2 && !(dataProcessing.getCurrentConfiguration()
-                .getMaterial() == 3)) {
+                .getMaterial() == MOLDING)) {
             mainWindow.errorDialog(MainWindow.getTextBundle()
                     .getString("output_mainWindow_6"));
-        } else if (tiling == 4 && ((dataProcessing.getCurrentConfiguration()
-                .getMaterial() == 3)
+        } else if (tiling == TILING_4 && ((dataProcessing
+                .getCurrentConfiguration().getMaterial() == MOLDING)
                 || (dataProcessing.getCurrentConfiguration()
                         .getMaterial() == 1))) {
             mainWindow.errorDialog(MainWindow.getTextBundle()
                     .getString("output_mainWindow_7"));
-        } else if (tiling == 3 && (dataProcessing.getCurrentConfiguration()
-                .getMaterial() == 3)) {
+        } else if (tiling == TILING_3 && (dataProcessing
+                .getCurrentConfiguration().getMaterial() == MOLDING)) {
             mainWindow.errorDialog(MainWindow.getTextBundle()
                     .getString("output_mainWindow_8"));
         } else {
@@ -337,8 +402,8 @@ public class MainWindowActionHandlers {
      */
     public void setWorkingDirectory() {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
-        WorkingDirectoryDialog workingDirectoryDialog = new WorkingDirectoryDialog(
-                mainWindow, dataProcessing.getWorkingDirectory());
+        var workingDirectoryDialog = new WorkingDirectoryDialog(mainWindow,
+                dataProcessing.getWorkingDirectory());
 
         if (workingDirectoryDialog.getButton() == 1) {
             mainWindow.workingDirectory(true);
@@ -404,10 +469,12 @@ public class MainWindowActionHandlers {
                     GuiStatusHandler.DISABLE_GUI_WHILE_GENERATING_OUTPUT);
             mainWindow.refreshProgressBarOutputFiles(0, 1);
             mainWindow.refreshProgressBarOutputFiles(0, 2);
-            mainWindow.refreshProgressBarOutputFiles(0, 3);
-            mainWindow.refreshProgressBarOutputFiles(0, 4);
-            mainWindow.refreshProgressBarOutputFiles(0, 5);
-            mainWindow.refreshProgressBarOutputFiles(0, 6);
+            mainWindow.refreshProgressBarOutputFiles(0, MATERIAL_PROGRESS_BAR);
+            mainWindow.refreshProgressBarOutputFiles(0,
+                    INSTRUCTION_PROGRESS_BAR);
+            mainWindow.refreshProgressBarOutputFiles(0, XML_PROGRESS_BAR);
+            mainWindow.refreshProgressBarOutputFiles(0,
+                    MISCELLANEOUS_PROGRESS_BAR);
             mainWindow.setStatusProgressBarOutputFiles(
                     guiOutputGrafic.isSelected(),
                     guiOutputConfiguration.isSelected(),
@@ -444,7 +511,7 @@ public class MainWindowActionHandlers {
 
                 public void finished() {
                     getGuiStatusHandler().guiStatus(
-                            GuiStatusHandler.ENABLE_GUI_AFTER_GENERATING_OUTPUT);
+                            GuiStatusHandler.ENABLE_GUI_AFTER_GEN_OUTPUT);
                     mainWindow.hideProgressBarOutputFiles();
                 }
             };

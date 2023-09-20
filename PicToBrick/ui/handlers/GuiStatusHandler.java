@@ -59,7 +59,7 @@ public class GuiStatusHandler {
     /**
      * Enable GUI after generating output files state.
      */
-    public static final int ENABLE_GUI_AFTER_GENERATING_OUTPUT = 32;
+    public static final int ENABLE_GUI_AFTER_GEN_OUTPUT = 32;
     private final MainWindow mainWindow;
 
     public GuiStatusHandler(final MainWindow mainWindow) {
@@ -67,69 +67,70 @@ public class GuiStatusHandler {
     }
 
     /**
-     * method: guiStatus
-     * description: changes gui status
+     * method: guiStatus description: changes gui status
      *
      * @author Tobias Reichling
      * @param status
      */
     public void guiStatus(final int status) {
         switch (status) {
-            // gui start
-            case GUI_START:
-                processGuiStart();
-                break;
-            // image and configuration are loaded
-            case IMAGE_AND_CONFIG_LOADED:
-                processImageAndConfigurationLoaded();
-                break;
-            // cutout situation
-            case CUTOUT:
-                processCutoutState();
-                break;
-            // cutout situation - no rectangle available
-            case CUTOUT_NO_RECTANGLE_AVAILABLE:
-                processCutoutNoRectangleAvailable();
-                break;
-            // cutout situation - rectangle available
-            case CUTOUT_WITH_RECTANGLE_AVAILABLE:
-                processCutoutWithRectangleAvailable();
-                break;
-            // generate mosaic
-            case GENERATE_MOSAIC:
-                processGenerateMosaic();
-                break;
-            // disable gui while generating mosaic
-            case DISABLE_GUI_WHILE_GENERATE_MOSAIC:
-                processDisableGuiWhileGeneratingMosaic();
-                break;
-            // enable gui after generating mosaic
-            case ENABLE_GUI_AFTER_GENERATE_MOSAIC:
-                processEnableGuiAfterGeneratingMosaic();
-                break;
-            // output
-            case OUTPUT:
-                processOutput();
-                break;
-            // disable gui while generating output documents
-            case DISABLE_GUI_WHILE_GENERATING_OUTPUT:
-                processDisableGuiWhileGeneratingOutput();
-                break;
-            // enable gui after generating output documents
-            case ENABLE_GUI_AFTER_GENERATING_OUTPUT: // enable/disable buttons, menu items, etc.
-                mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
-                mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(true);
-                mainWindow.getMenuOutput().enableGuiAfterGeneratingOutput();
-                final OptionsPanel3 guiPanelOptions3 = mainWindow.getGuiPanelOptions3();
-                guiPanelOptions3.getGuiOutputGraphic().setEnabled(true);
-                guiPanelOptions3.getGuiOutputXml().setEnabled(true);
-                guiPanelOptions3.getGuiOutputBuildingInstruction().setEnabled(true);
-                guiPanelOptions3.getGuiOutputMaterial().setEnabled(true);
-                guiPanelOptions3.getGuiOutputConfiguration().setEnabled(true);
-                guiPanelOptions3.getButtonDocumentsGenerate().setEnabled(true);
-                break;
-            default:
-                break;
+        // gui start
+        case GUI_START:
+            processGuiStart();
+            break;
+        // image and configuration are loaded
+        case IMAGE_AND_CONFIG_LOADED:
+            processImageAndConfigurationLoaded();
+            break;
+        // cutout situation
+        case CUTOUT:
+            processCutoutState();
+            break;
+        // cutout situation - no rectangle available
+        case CUTOUT_NO_RECTANGLE_AVAILABLE:
+            processCutoutNoRectangleAvailable();
+            break;
+        // cutout situation - rectangle available
+        case CUTOUT_WITH_RECTANGLE_AVAILABLE:
+            processCutoutWithRectangleAvailable();
+            break;
+        // generate mosaic
+        case GENERATE_MOSAIC:
+            processGenerateMosaic();
+            break;
+        // disable gui while generating mosaic
+        case DISABLE_GUI_WHILE_GENERATE_MOSAIC:
+            processDisableGuiWhileGeneratingMosaic();
+            break;
+        // enable gui after generating mosaic
+        case ENABLE_GUI_AFTER_GENERATE_MOSAIC:
+            processEnableGuiAfterGeneratingMosaic();
+            break;
+        // output
+        case OUTPUT:
+            processOutput();
+            break;
+        // disable gui while generating output documents
+        case DISABLE_GUI_WHILE_GENERATING_OUTPUT:
+            processDisableGuiWhileGeneratingOutput();
+            break;
+        // enable gui after generating output documents
+        case ENABLE_GUI_AFTER_GEN_OUTPUT: // enable/disable buttons, menu items,
+                                          // etc.
+            mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
+            mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(true);
+            mainWindow.getMenuOutput().enableGuiAfterGeneratingOutput();
+            final OptionsPanel3 guiPanelOptions3 = mainWindow
+                    .getGuiPanelOptions3();
+            guiPanelOptions3.getGuiOutputGraphic().setEnabled(true);
+            guiPanelOptions3.getGuiOutputXml().setEnabled(true);
+            guiPanelOptions3.getGuiOutputBuildingInstruction().setEnabled(true);
+            guiPanelOptions3.getGuiOutputMaterial().setEnabled(true);
+            guiPanelOptions3.getGuiOutputConfiguration().setEnabled(true);
+            guiPanelOptions3.getButtonDocumentsGenerate().setEnabled(true);
+            break;
+        default:
+            break;
         }
     }
 
@@ -155,7 +156,8 @@ public class GuiStatusHandler {
      */
     private void processOutput() {
         // sets information text
-        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_28"));
+        mainWindow.showInfo(
+                MainWindow.getTextBundle().getString("output_mainWindow_28"));
         // sets option panel 3
         final JPanel guiPanelRightArea = mainWindow.getGuiPanelRightArea();
         final JPanel guiPanelOptions2 = mainWindow.getGuiPanelOptions2();
@@ -171,7 +173,8 @@ public class GuiStatusHandler {
         mainWindow.radioButtonStatus(2, 5);
         guiPanelOptions3.updateUI();
         mainWindow.getMenuFile().processOutput();
-        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension()
+                .setEnabled(false);
         mainWindow.getMenuMosaic().processOutput();
         mainWindow.getGuiPanelOptions2().processOutput();
         mainWindow.getMenuOutput().processOutput();
@@ -182,9 +185,11 @@ public class GuiStatusHandler {
      */
     private void processEnableGuiAfterGeneratingMosaic() {
         // sets information text
-        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_27"));
+        mainWindow.showInfo(
+                MainWindow.getTextBundle().getString("output_mainWindow_27"));
         // enable/disable buttons, menu items, etc.
-        mainWindow.getGuiPanelOptions2().processEnableGuiAfterGeneratingMosaic();
+        mainWindow.getGuiPanelOptions2()
+                .processEnableGuiAfterGeneratingMosaic();
         final ZoomPanel guiPanelZoom = mainWindow.getGuiPanelZoom();
         final JSlider guiZoomSlider1 = guiPanelZoom.getGuiZoomSlider1();
         final int guiZoomSlider1Value = 3;
@@ -205,7 +210,8 @@ public class GuiStatusHandler {
     private void processDisableGuiWhileGeneratingMosaic() {
         // enable/disable buttons, menu items, etc.
         mainWindow.getMenuMosaic().processDisableGuiWhileGeneratingMosaic();
-        mainWindow.getGuiPanelOptions2().processDisableGuiWhileGeneratingMosaic();
+        mainWindow.getGuiPanelOptions2()
+                .processDisableGuiWhileGeneratingMosaic();
         mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(false);
     }
@@ -215,7 +221,8 @@ public class GuiStatusHandler {
      */
     private void processGenerateMosaic() {
         // sets information text
-        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_26"));
+        mainWindow.showInfo(
+                MainWindow.getTextBundle().getString("output_mainWindow_26"));
         // sets option panel 2
         final JPanel guiPanelRightArea = mainWindow.getGuiPanelRightArea();
         final JPanel guiPanelOptions1 = mainWindow.getGuiPanelOptions1();
@@ -228,7 +235,8 @@ public class GuiStatusHandler {
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
         mainWindow.getMenuFile().processGenerateMosaic();
-        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension()
+                .setEnabled(false);
         mainWindow.getMenuMosaic().processGenerateMosaic();
         mainWindow.getGuiPanelOptions2().processGenerateMosaic();
         mainWindow.getMenuOutput().processGenerateMosaic();
@@ -242,7 +250,8 @@ public class GuiStatusHandler {
         mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(false);
         mainWindow.getGuiPanelOptions1().getButtonCutout().setEnabled(true);
         // sets information text
-        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_25"));
+        mainWindow.showInfo(
+                MainWindow.getTextBundle().getString("output_mainWindow_25"));
     }
 
     /**
@@ -261,9 +270,12 @@ public class GuiStatusHandler {
         // set information text
         final int mosaicWidth = mainWindow.getMosaicWidth();
         final int mosaicHeight = mainWindow.getMosaicHeight();
-        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_23") + ": " + mosaicWidth + " x "
-                + mosaicHeight + ". "
-                + MainWindow.getTextBundle().getString("output_mainWindow_24") + ".");
+        mainWindow.showInfo(
+                MainWindow.getTextBundle().getString("output_mainWindow_23")
+                        + ": " + mosaicWidth + " x " + mosaicHeight + ". "
+                        + MainWindow.getTextBundle()
+                                .getString("output_mainWindow_24")
+                        + ".");
         // enable/disable buttons, menu items, etc.
         mainWindow.getGuiPanelOptions1().processCutoutState();
         mainWindow.getMenuFile().processCutoutState();
@@ -275,10 +287,13 @@ public class GuiStatusHandler {
      */
     private void processImageAndConfigurationLoaded() {
         // enable/disable buttons, menu items, etc.
-        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(true);
-        mainWindow.getGuiPanelOptions1().getButtonMosaicDimension().setEnabled(true);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension()
+                .setEnabled(true);
+        mainWindow.getGuiPanelOptions1().getButtonMosaicDimension()
+                .setEnabled(true);
         // set information text
-        mainWindow.showInfo(MainWindow.getTextBundle().getString("output_mainWindow_22"));
+        mainWindow.showInfo(
+                MainWindow.getTextBundle().getString("output_mainWindow_22"));
     }
 
     /**
@@ -312,7 +327,8 @@ public class GuiStatusHandler {
         dataProcessing.imageReset();
         final JPanel guiPanelTopArea2 = mainWindow.getGuiPanelTopArea2();
         guiPanelTopArea2.removeAll();
-        final PictureElement guiPictureElementTop = new PictureElement(mainWindow);
+        final PictureElement guiPictureElementTop = new PictureElement(
+                mainWindow);
         mainWindow.setGuiPictureElementTop(guiPictureElementTop);
         guiPanelTopArea2.add(guiPictureElementTop);
         guiPictureElementTop.setImage(null);
@@ -322,7 +338,8 @@ public class GuiStatusHandler {
         // enable/disable buttons, menu items, etc.
         guiPanelOptions1.updateUI();
         mainWindow.getMenuFile().processGuiStart();
-        mainWindow.getMenuPreprocessing().getMenuMosaicDimension().setEnabled(false);
+        mainWindow.getMenuPreprocessing().getMenuMosaicDimension()
+                .setEnabled(false);
         mainWindow.getMenuMosaic().processGuiStart();
         mainWindow.getGuiPanelOptions2().processGuiStart();
         mainWindow.getMenuOutput().processGuiStart();
