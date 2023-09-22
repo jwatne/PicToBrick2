@@ -1,84 +1,77 @@
 package pictobrick.model;
 
 import java.awt.Color;
-import java.io.*;
+import java.io.Serializable;
 
 /**
- * class: ColorObject.
- * layer: DataManagement (three tier architecture).
+ * class: ColorObject. layer: DataManagement (three tier architecture).
  * description: contains all information about a color-object.
  *
  * @author Tobias Reichling
  */
-public class ColorObject
-		implements Serializable {
+public class ColorObject implements Serializable {
+    /** Name of color? */
+    private String name;
+    /** Color value. */
+    private Color rgb;
 
-	String name;
-	Color rgb;
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling
+     */
+    public ColorObject() {
+    }
 
-	/**
-	 * method: ColorObject
-	 * description: constructor
-	 *
-	 * @author Tobias Reichling
-	 */
-	public ColorObject() {
-	}
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling
+     * @param colorName
+     * @param rgbValue
+     */
+    public ColorObject(final String colorName, final Color rgbValue) {
+        this.name = colorName;
+        this.rgb = rgbValue;
+    }
 
-	/**
-	 * method: ColorObject
-	 * description: constructor
-	 *
-	 * @author Tobias Reichling
-	 * @param name
-	 * @param rgb
-	 */
-	public ColorObject(final String name, final Color rgb) {
-		this.name = name;
-		this.rgb = rgb;
-	}
+    /**
+     * Sets the name of the color-object.
+     *
+     * @author Tobias Reichling
+     * @param colorName
+     */
+    public void setName(final String colorName) {
+        this.name = colorName;
+    }
 
-	/**
-	 * method: setName
-	 * description: sets the name of the color-object
-	 *
-	 * @author Tobias Reichling
-	 * @param name
-	 */
-	public void setName(final String name) {
-		this.name = name;
-	}
+    /**
+     * Sets the color values of the rgb-color-object.
+     *
+     * @author Tobias Reichling
+     * @param rgbValue
+     */
+    public void setRGB(final Color rgbValue) {
+        this.rgb = rgbValue;
+    }
 
-	/**
-	 * method: setRGB
-	 * description: sets the color values of the rgb-color-object
-	 *
-	 * @author Tobias Reichling
-	 * @param rgb
-	 */
-	public void setRGB(final Color rgb) {
-		this.rgb = rgb;
-	}
+    /**
+     * Returns the name of the color-object.
+     *
+     * @author Tobias Reichling
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * method: getName
-	 * description: returns the name of the color-object
-	 *
-	 * @author Tobias Reichling
-	 * @return name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * method: getRGB
-	 * description: returns the rgb-object of the color-object
-	 *
-	 * @author Tobias Reichling
-	 * @return rgb
-	 */
-	public Color getRGB() {
-		return rgb;
-	}
+    /**
+     * Returns the rgb-object of the color-object.
+     *
+     * @author Tobias Reichling
+     * @return rgb
+     */
+    public Color getRGB() {
+        return rgb;
+    }
 }
