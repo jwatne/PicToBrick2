@@ -1,42 +1,81 @@
 package pictobrick.model;
 
-import java.io.*;
-import javax.imageio.*;
-import javax.imageio.stream.*;
-
 import pictobrick.service.DataProcessor;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.image.*;
-import java.awt.*;
-import java.text.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.text.DecimalFormat;
 
 /**
- * class: DataManagement layer: Data management (three tier architecture)
- * description: Contains all program data and provides appropriate methods
+ * Contains all program data and provides appropriate methods.
  *
  * @author Adrian Schuetz
  */
 public class DataManagement {
-
+    /** Material index for Ministeck configuration. */
+    private static final int MINISTECK_MATERIAL_INDEX = 3;
+    /** Basis width for Ministeck configuration. */
+    private static final double MINISTECK_BASIS_WIDTH = 4.16666;
+    /** Stability for LEGO side view configuration. */
+    private static final int LEGO_SIDE_STABILITY = 7;
+    /** Basis width for LEGO side view configuration. */
+    private static final int LEGO_SIDE_BASIS_WIDTH = 5;
+    /** Basis width in Millimeters for the two LEGO view configurations. */
+    private static final double LEGO_BASIS_WIDTH_MM = 8.0;
+    /** Cost for the two LEGO view configurations. */
+    private static final int LEGO_COSTS = 4;
+    /** Text resource bundle. */
     private static ResourceBundle textbundle = ResourceBundle
             .getBundle("Resources.TextResource");
+    /** Original image. */
     private Picture originalImage = null;
+    /** Mosaic image. */
     private Picture mosaicImage = null;
-    private Configuration current, legoTop, legoSide, ministeck;
+    /** Current configuration. */
+    private Configuration current;
+    /** LEGO top view configuration. */
+    private Configuration legoTop;
+    /** LEGO side view configuration. */
+    private Configuration legoSide;
+    /** Ministeck configuration. */
+    private Configuration ministeck;
+    /** Working directory. */
     private File workingDirectory = null;
+    /** Project folder. */
     private File projectFolder = null;
+    /** Project name. */
     private String projectName = "";
+    /** Configurations. */
     private Vector<String> configurations;
+    /** Mosaic. */
     private Mosaic mosaic;
+    /** Data processor. */
     private DataProcessor dataProcessing;
 
     /**
-     * method: DataManagement description: constructor
+     * Constructor.
      *
      * @author Adrian Schuetz
      */
@@ -44,13 +83,13 @@ public class DataManagement {
     }
 
     /**
-     * method: DataManagement description: constructor
+     * Constructor.
      *
      * @author Adrian Schuetz
-     * @param dataProcessing
+     * @param processor
      */
-    public DataManagement(final DataProcessor dataProcessing) {
-        this.dataProcessing = dataProcessing;
+    public DataManagement(final DataProcessor processor) {
+        this.dataProcessing = processor;
         configurations = new Vector<>();
         configurations.add("pictobrick_Lego_"
                 + textbundle.getString("output_dataManagement_1") + ".cfg");
@@ -60,21 +99,26 @@ public class DataManagement {
         this.legoTop = new Configuration(
                 "pictobrick_Lego_"
                         + textbundle.getString("output_dataManagement_1"),
-                new BasisElement("Plate_1x1_(3024)", 1, 1, 8.0), 1, 4, 1);
+                new BasisElement("Plate_1x1_(3024)", 1, 1, LEGO_BASIS_WIDTH_MM),
+                1, LEGO_COSTS, 1);
         this.legoSide = new Configuration(
                 "pictobrick_Lego_"
                         + textbundle.getString("output_dataManagement_2"),
-                new BasisElement("Plate_1x1_(3024)", 5, 2, 8.0), 7, 4, 2);
+                new BasisElement("Plate_1x1_(3024)", LEGO_SIDE_BASIS_WIDTH, 2,
+                        LEGO_BASIS_WIDTH_MM),
+                LEGO_SIDE_STABILITY, LEGO_COSTS, 2);
         this.ministeck = new Configuration("pictobrick_Ministeck",
-                new BasisElement("Ministeck_1x1", 1, 1, 4.16666), 1, 1, 3);
-        initConfigurationLegoTop();
-        initConfigurationLegoSide();
-        initConfigurationMinisteck();
+                new BasisElement("Ministeck_1x1", 1, 1, MINISTECK_BASIS_WIDTH),
+                1, 1, MINISTECK_MATERIAL_INDEX);
+        final ConfigurationIntializer initializer = new ConfigurationIntializer(
+                legoTop, legoSide, ministeck);
+        legoTop = initializer.initConfigurationLegoTop();
+        legoSide = initializer.initConfigurationLegoSide();
+        ministeck = initializer.initConfigurationMinisteck();
     }
 
     /**
-     * method: configurationCopy description: returns a copy of the
-     * configuration
+     * Returns a copy of the configuration.
      *
      * @author Adrian Schuetz
      * @param configuration
@@ -108,8 +152,7 @@ public class DataManagement {
     }
 
     /**
-     * method: getSystemconfiguration description: returns the configuration
-     * (specified by number)
+     * Returns the configuration (specified by number).
      *
      * @author Adrian Schuetz
      * @param number
@@ -117,29 +160,25 @@ public class DataManagement {
      */
     public Configuration getSystemConfiguration(final int number) {
         Configuration configuration = new Configuration();
-        ;
         switch (number) {
-        case 0: {
+        case 0:
             configuration = configurationCopy(legoTop);
             break;
-        }
-
-        case 1: {
+        case 1:
             configuration = configurationCopy(legoSide);
             break;
-        }
-
-        case 2: {
+        case 2:
             configuration = configurationCopy(ministeck);
             break;
-        }
+        default:
+            break;
         }
 
         return configuration;
     }
 
     /**
-     * method: getConfigurations description: returns configurations
+     * Returns configurations.
      *
      * @author Adrian Schuetz
      * @return vector containing configurations
@@ -164,7 +203,7 @@ public class DataManagement {
     }
 
     /**
-     * method: getMosaicWidth description: returns mosaic width
+     * Returns mosaic width.
      *
      * @author Adrian Schuetz
      * @return width
@@ -174,7 +213,7 @@ public class DataManagement {
     }
 
     /**
-     * method: getMosaicHeight description: returns mosaic height
+     * Returns mosaic height.
      *
      * @author Adrian Schuetz
      * @return height
@@ -184,7 +223,7 @@ public class DataManagement {
     }
 
     /**
-     * method: getMosaic description: calls the appropriate method in mosaic
+     * Calls the appropriate method in mosaic.
      *
      * @author Adrian Schuetz
      * @return Vector[][]
@@ -194,7 +233,7 @@ public class DataManagement {
     }
 
     /**
-     * method: mosaicCopy description: calls the appropriate method in mosaic
+     * Calls the appropriate method in mosaic.
      *
      * @author Adrian Schuetz
      * @return Vector[][]
@@ -204,8 +243,7 @@ public class DataManagement {
     }
 
     /**
-     * method: getMosaicInstance description: returns the instance of the mosaic
-     * object
+     * Returns the instance of the mosaic object.
      *
      * @author Adrian Schuetz
      * @return mosaic
@@ -215,9 +253,11 @@ public class DataManagement {
     }
 
     /**
-     * method: generateFolderOutput description: Searches the working directory
-     * for folders with same name. If a folder is found a new folder with higher
-     * serial-number is generated. starting with serial-number 001.
+     * Searches the working directory for folders with same name. If a folder is
+     * found a new folder with higher serial-number is generated. starting with
+     * serial-number 001.
+     *
+     * @return Folder name, ending with serial number.
      *
      * @author Adrian Schuetz
      */
@@ -283,8 +323,7 @@ public class DataManagement {
     }
 
     /**
-     * method: generateUTFOutput description: writes the string in a UTF-8
-     * encoded file
+     * Writes the string in a UTF-8 encoded file.
      *
      * @author Adrian Schuetz
      * @param content
@@ -314,8 +353,8 @@ public class DataManagement {
     }
 
     /**
-     * method: generateImageOutput description: Saves the image in the subfolder
-     * data (JPEG compression with maximum quality)
+     * Saves the image in the subfolder data (JPEG compression with maximum
+     * quality).
      *
      * @author Adrian Schuetz
      * @param image
@@ -354,8 +393,8 @@ public class DataManagement {
     }
 
     /**
-     * method: generateColorOutput description: Saves an image of the color in
-     * the subfolder data (JPEG compression with maximum quality)
+     * Saves an image of the color in the subfolder data (JPEG compression with
+     * maximum quality).
      *
      * @author Adrian Schuetz
      * @param color
@@ -369,15 +408,11 @@ public class DataManagement {
         final Graphics2D g = colorImage.createGraphics();
         g.setColor(color);
         g.fillRect(0, 0, 1, 1);
-        if (generateImageOutput(colorImage, colorName)) {
-            return true;
-        } else {
-            return false;
-        }
+        return generateImageOutput(colorImage, colorName);
     }
 
     /**
-     * method: setCurrentConfiguration description: set current configuration
+     * Set current configuration.
      *
      * @author Adrian Schuetz
      * @param configuration
@@ -387,8 +422,7 @@ public class DataManagement {
     }
 
     /**
-     * method: getCurrentConfiguration description: returns current
-     * configuration
+     * Returns current configuration.
      *
      * @author Adrian Schuetz
      * @return configuration
@@ -398,7 +432,7 @@ public class DataManagement {
     }
 
     /**
-     * method: setWorkingDirectory description: set current working directory
+     * Set current working directory.
      *
      * @author Adrian Schuetz
      * @param file
@@ -408,36 +442,27 @@ public class DataManagement {
     }
 
     /**
-     * method: isImage description: true if an image is selected
+     * True if an image is selected.
      *
      * @author Adrian Schuetz
      * @return true or false
      */
     public boolean isImage() {
-        if (originalImage == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(originalImage == null);
     }
 
     /**
-     * method: isConfiguration description: true if a configuration is selected
+     * True if a configuration is selected.
      *
      * @author Adrian Schuetz
      * @return true or false
      */
     public boolean isConfiguration() {
-        if (this.current == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(this.current == null);
     }
 
     /**
-     * method: getWorkingDirectory description: returns the current working
-     * directory
+     * Returns the current working directory.
      *
      * @author Adrian Schuetz
      * @return working directory
@@ -447,7 +472,9 @@ public class DataManagement {
     }
 
     /**
-     * method: configurationSave description: saves the configuration
+     * Saves the configuration.
+     *
+     * @param configuration the configuration to save.
      *
      * @author Adrian Schuetz
      * @exception IOException
@@ -466,7 +493,11 @@ public class DataManagement {
     }
 
     /**
-     * method: configurationLoad description: loads the configuration
+     * Loads the configuration.
+     *
+     * @param configuration the name of the configuration to load.
+     *
+     * @return the cofiguration just loaded.
      *
      * @author Adrian Schuetz
      * @exception IOException
@@ -474,6 +505,7 @@ public class DataManagement {
     public Configuration configurationLoad(final String configuration)
             throws IOException {
         Configuration confi = new Configuration();
+
         try {
             final FileInputStream file = new FileInputStream(
                     workingDirectory + "/" + configuration);
@@ -485,340 +517,12 @@ public class DataManagement {
         } catch (final IOException e) {
             System.out.println(e.toString());
         }
+
         return confi;
     }
 
     /**
-     * method: initConfigurationLegoTop description: creates the system
-     * configuration Lego top view
-     *
-     * @author Adrian Schuetz
-     */
-    private void initConfigurationLegoTop() {
-        final boolean[][] element_2x1 = {{true, true}};
-        final boolean[][] element_1x2 = {{true}, {true}};
-        final boolean[][] element_3x1 = {{true, true, true}};
-        final boolean[][] element_1x3 = {{true}, {true}, {true}};
-        final boolean[][] element_4x1 = {{true, true, true, true}};
-        final boolean[][] element_1x4 = {{true}, {true}, {true}, {true}};
-        final boolean[][] element_6x1 = {{true, true, true, true, true, true}};
-        final boolean[][] element_1x6 = {{true}, {true}, {true}, {true}, {true},
-                {true}};
-        final boolean[][] element_8x1 = {
-                {true, true, true, true, true, true, true, true}};
-        final boolean[][] element_1x8 = {{true}, {true}, {true}, {true}, {true},
-                {true}, {true}, {true}};
-        final boolean[][] element_2x2 = {{true, true}, {true, true}};
-        final boolean[][] element_2x2_Corner = {{true, true}, {true, false}};
-        final boolean[][] element_2x2_Corner_90 = {{true, true}, {false, true}};
-        final boolean[][] element_2x2_Corner_180 = {{false, true},
-                {true, true}};
-        final boolean[][] element_2x2_Corner_270 = {{true, false},
-                {true, true}};
-        final boolean[][] element_3x2 = {{true, true, true},
-                {true, true, true}};
-        final boolean[][] element_2x3 = {{true, true}, {true, true},
-                {true, true}};
-        final boolean[][] element_4x2 = {{true, true, true, true},
-                {true, true, true, true}};
-        final boolean[][] element_2x4 = {{true, true}, {true, true},
-                {true, true}, {true, true}};
-        final boolean[][] element_6x2 = {{true, true, true, true, true, true},
-                {true, true, true, true, true, true}};
-        final boolean[][] element_2x6 = {{true, true}, {true, true},
-                {true, true}, {true, true}, {true, true}, {true, true}};
-        final boolean[][] element_8x2 = {
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true}};
-        final boolean[][] element_2x8 = {{true, true}, {true, true},
-                {true, true}, {true, true}, {true, true}, {true, true},
-                {true, true}, {true, true}};
-        final boolean[][] element_4x4 = {{true, true, true, true},
-                {true, true, true, true}, {true, true, true, true},
-                {true, true, true, true}};
-        final boolean[][] element_4x4_Corner = {{true, true, true, true},
-                {true, true, true, true}, {true, true, false, false},
-                {true, true, false, false}};
-        final boolean[][] element_4x4_Corner_90 = {{true, true, true, true},
-                {true, true, true, true}, {false, false, true, true},
-                {false, false, true, true}};
-        final boolean[][] element_4x4_Corner_180 = {{false, false, true, true},
-                {false, false, true, true}, {true, true, true, true},
-                {true, true, true, true}};
-        final boolean[][] element_4x4_Corner_270 = {{true, true, false, false},
-                {true, true, false, false}, {true, true, true, true},
-                {true, true, true, true}};
-        final boolean[][] element_6x4 = {{true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true}};
-        final boolean[][] element_4x6 = {{true, true, true, true},
-                {true, true, true, true}, {true, true, true, true},
-                {true, true, true, true}, {true, true, true, true},
-                {true, true, true, true}};
-        final boolean[][] element_8x4 = {
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true}};
-        final boolean[][] element_4x8 = {{true, true, true, true},
-                {true, true, true, true}, {true, true, true, true},
-                {true, true, true, true}, {true, true, true, true},
-                {true, true, true, true}, {true, true, true, true},
-                {true, true, true, true}};
-        final boolean[][] element_6x6 = {{true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true}};
-        final boolean[][] element_8x6 = {
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true}};
-        final boolean[][] element_6x8 = {{true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true}};
-        final boolean[][] element_8x8 = {
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true}};
-        legoTop.setElement("Plate_2x1_(3023)", 2, 1, element_2x1, 1, 4);
-        legoTop.setElement("Plate_1x2_(3023)", 1, 2, element_1x2, 1, 4);
-        legoTop.setElement("Plate_3x1_(3623)", 3, 1, element_3x1, 1, 7);
-        legoTop.setElement("Plate_1x3_(3623)", 1, 3, element_1x3, 1, 7);
-        legoTop.setElement("Plate_4x1_(3710)", 4, 1, element_4x1, 1, 6);
-        legoTop.setElement("Plate_1x4_(3710)", 1, 4, element_1x4, 1, 6);
-        legoTop.setElement("Plate_6x1_(3666)", 6, 1, element_6x1, 1, 7);
-        legoTop.setElement("Plate_1x6_(3666)", 1, 6, element_1x6, 1, 7);
-        legoTop.setElement("Plate_8x1_(3460)", 8, 1, element_8x1, 1, 10);
-        legoTop.setElement("Plate_1x8_(3460)", 1, 8, element_1x8, 1, 10);
-        legoTop.setElement("Plate_2x2_Corner_(2420)", 2, 2, element_2x2_Corner,
-                1, 7);
-        legoTop.setElement("Plate_2x2_Corner_90_(2420)", 2, 2,
-                element_2x2_Corner_90, 1, 7);
-        legoTop.setElement("Plate_2x2_Corner_180_(2420)", 2, 2,
-                element_2x2_Corner_180, 1, 7);
-        legoTop.setElement("Plate_2x2_Corner_270_(2420)", 2, 2,
-                element_2x2_Corner_270, 1, 7);
-        legoTop.setElement("Plate_2x2_(3022)", 2, 2, element_2x2, 1, 3);
-        legoTop.setElement("Plate_3x2_(3021)", 3, 2, element_3x2, 1, 4);
-        legoTop.setElement("Plate_2x3_(3021)", 2, 3, element_2x3, 1, 4);
-        legoTop.setElement("Plate_4x2_(3020)", 4, 2, element_4x2, 1, 5);
-        legoTop.setElement("Plate_2x4_(3020)", 2, 4, element_2x4, 1, 5);
-        legoTop.setElement("Plate_6x2_(3795)", 6, 2, element_6x2, 1, 7);
-        legoTop.setElement("Plate_2x6_(3795)", 2, 6, element_2x6, 1, 7);
-        legoTop.setElement("Plate_8x2_(3024)", 8, 2, element_8x2, 1, 9);
-        legoTop.setElement("Plate_2x8_(3024)", 2, 8, element_2x8, 1, 9);
-        legoTop.setElement("Plate_4x4_(3031)", 4, 4, element_4x4, 1, 10);
-        legoTop.setElement("Plate_4x4_Corner_(2639)", 4, 4, element_4x4_Corner,
-                1, 32);
-        legoTop.setElement("Plate_4x4_Corner_90_(2639)", 4, 4,
-                element_4x4_Corner_90, 1, 32);
-        legoTop.setElement("Plate_4x4_Corner_180_(2639)", 4, 4,
-                element_4x4_Corner_180, 1, 32);
-        legoTop.setElement("Plate_4x4_Corner_270_(2639)", 4, 4,
-                element_4x4_Corner_270, 1, 32);
-        legoTop.setElement("Plate_6x4_(3032)", 6, 4, element_6x4, 1, 17);
-        legoTop.setElement("Plate_4x6_(3032)", 4, 6, element_4x6, 1, 17);
-        legoTop.setElement("Plate_8x4_(3035)", 8, 4, element_8x4, 1, 23);
-        legoTop.setElement("Plate_4x8_(3035)", 4, 8, element_4x8, 1, 23);
-        legoTop.setElement("Plate_6x6_(3958)", 6, 6, element_6x6, 1, 28);
-        legoTop.setElement("Plate_8x6_(3036)", 8, 6, element_8x6, 1, 44);
-        legoTop.setElement("Plate_6x8_(3036)", 6, 8, element_6x8, 1, 44);
-        legoTop.setElement("Plate_8x8_(41539)", 8, 8, element_8x8, 1, 74);
-        legoTop.setColor("11_Black", 0, 0, 0);
-        legoTop.setColor("85_Dark_Bluish_Gray", 73, 88, 101);
-        legoTop.setColor("86_Light_Bluish_Gray", 161, 171, 178);
-        legoTop.setColor("99_Very_Light_Bluish_Gray", 198, 205, 209);
-        legoTop.setColor("01_White", 255, 255, 255);
-        legoTop.setColor("03_Yellow", 255, 214, 0);
-        legoTop.setColor("33_Light_Yellow", 255, 233, 143);
-        legoTop.setColor("69_Dark_Tan", 144, 144, 105);
-        legoTop.setColor("02_Tan", 214, 191, 145);
-        legoTop.setColor("88_Reddish_Brown", 104, 46, 47);
-        legoTop.setColor("04_Orange", 244, 123, 32);
-        legoTop.setColor("31_Medium_Orange", 248, 155, 28);
-        legoTop.setColor("59_Dark_Red", 247, 4, 55);
-        legoTop.setColor("05_Red", 238, 46, 36);
-        legoTop.setColor("25_Salmon", 246, 150, 124);
-        legoTop.setColor("26_Light_Salmon", 250, 188, 174);
-        legoTop.setColor("47_Dark_Pink", 205, 127, 181);
-        legoTop.setColor("23_Pink", 247, 179, 204);
-        legoTop.setColor("89_Dark_Purple", 70, 42, 135);
-        legoTop.setColor("24_Purple", 127, 63, 152);
-        legoTop.setColor("93_Light_Purple", 142, 49, 146);
-        legoTop.setColor("71_Magenta", 171, 29, 137);
-        legoTop.setColor("63_Dark_Blue", 0, 54, 96);
-        legoTop.setColor("07_Blue", 0, 87, 164);
-        legoTop.setColor("42_Medium_Blue", 94, 174, 224);
-        legoTop.setColor("62_Light_Blue", 193, 224, 244);
-        legoTop.setColor("39_Dark_Turquoise", 0, 146, 121);
-        legoTop.setColor("40_Light_Turquoise", 0, 179, 176);
-        legoTop.setColor("41_Aqua", 162, 218, 222);
-        legoTop.setColor("80_Dark_Green", 0, 65, 37);
-        legoTop.setColor("06_Green", 0, 148, 74);
-        legoTop.setColor("37_Medium_Green", 151, 211, 184);
-        legoTop.setColor("38_Light_Green", 186, 225, 209);
-        legoTop.setColor("34_Lime", 181, 206, 47);
-        legoTop.setColor("76_Medium_Lime", 193, 216, 55);
-        legoTop.setColor("35_Light_Lime", 197, 225, 170);
-    }
-
-    /**
-     * method: initConfigurationLegoSide description: creates the system
-     * configuration Lego side view
-     *
-     * @author Adrian Schuetz
-     */
-    private void initConfigurationLegoSide() {
-        final boolean[][] element_2x1 = {{true, true}};
-        final boolean[][] element_3x1 = {{true, true, true}};
-        final boolean[][] element_4x1 = {{true, true, true, true}};
-        final boolean[][] element_6x1 = {{true, true, true, true, true, true}};
-        final boolean[][] element_8x1 = {
-                {true, true, true, true, true, true, true, true}};
-        final boolean[][] element_1x3 = {{true}, {true}, {true}};
-        final boolean[][] element_2x3 = {{true, true}, {true, true},
-                {true, true}};
-        final boolean[][] element_3x3 = {{true, true, true}, {true, true, true},
-                {true, true, true}};
-        final boolean[][] element_4x3 = {{true, true, true, true},
-                {true, true, true, true}, {true, true, true, true},
-                {true, true, true, true}};
-        final boolean[][] element_6x3 = {{true, true, true, true, true, true},
-                {true, true, true, true, true, true},
-                {true, true, true, true, true, true}};
-        final boolean[][] element_8x3 = {
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true},
-                {true, true, true, true, true, true, true, true}};
-        legoSide.setElement("Plate_1x2_(3023)", 2, 1, element_2x1, 8, 4);
-        legoSide.setElement("Plate_1x3_(3623)", 3, 1, element_3x1, 9, 7);
-        legoSide.setElement("Plate_1x4_(3710)", 4, 1, element_4x1, 10, 6);
-        legoSide.setElement("Plate_1x6_(3666)", 6, 1, element_6x1, 11, 7);
-        legoSide.setElement("Plate_1x8_(3460)", 8, 1, element_8x1, 12, 10);
-        legoSide.setElement("Brick_1x1_(3005)", 1, 3, element_1x3, 1, 2);
-        legoSide.setElement("Brick_1x2_(3004)", 2, 3, element_2x3, 2, 2);
-        legoSide.setElement("Brick_1x3_(3622)", 3, 3, element_3x3, 3, 4);
-        legoSide.setElement("Brick_1x4_(3010)", 4, 3, element_4x3, 4, 4);
-        legoSide.setElement("Brick_1x6_(3009)", 6, 3, element_6x3, 5, 7);
-        legoSide.setElement("Brick_1x8_(3008)", 8, 3, element_8x3, 6, 14);
-        legoSide.setColor("11_Black", 0, 0, 0);
-        legoSide.setColor("85_Dark_Bluish_Gray", 73, 88, 101);
-        legoSide.setColor("86_Light_Bluish_Gray", 161, 171, 178);
-        legoSide.setColor("99_Very_Light_Bluish_Gray", 198, 205, 209);
-        legoSide.setColor("01_White", 255, 255, 255);
-        legoSide.setColor("03_Yellow", 255, 214, 0);
-        legoSide.setColor("33_Light_Yellow", 255, 233, 143);
-        legoSide.setColor("69_Dark_Tan", 144, 144, 105);
-        legoSide.setColor("02_Tan", 214, 191, 145);
-        legoSide.setColor("88_Reddish_Brown", 104, 46, 47);
-        legoSide.setColor("04_Orange", 244, 123, 32);
-        legoSide.setColor("31_Medium_Orange", 248, 155, 28);
-        legoSide.setColor("59_Dark_Red", 247, 4, 55);
-        legoSide.setColor("05_Red", 238, 46, 36);
-        legoSide.setColor("25_Salmon", 246, 150, 124);
-        legoSide.setColor("26_Light_Salmon", 250, 188, 174);
-        legoSide.setColor("47_Dark_Pink", 205, 127, 181);
-        legoSide.setColor("23_Pink", 247, 179, 204);
-        legoSide.setColor("89_Dark_Purple", 70, 42, 135);
-        legoSide.setColor("24_Purple", 127, 63, 152);
-        legoSide.setColor("93_Light_Purple", 142, 49, 146);
-        legoSide.setColor("71_Magenta", 171, 29, 137);
-        legoSide.setColor("63_Dark_Blue", 0, 54, 96);
-        legoSide.setColor("07_Blue", 0, 87, 164);
-        legoSide.setColor("42_Medium_Blue", 94, 174, 224);
-        legoSide.setColor("62_Light_Blue", 193, 224, 244);
-        legoSide.setColor("39_Dark_Turquoise", 0, 146, 121);
-        legoSide.setColor("40_Light_Turquoise", 0, 179, 176);
-        legoSide.setColor("41_Aqua", 162, 218, 222);
-        legoSide.setColor("80_Dark_Green", 0, 65, 37);
-        legoSide.setColor("06_Green", 0, 148, 74);
-        legoSide.setColor("37_Medium_Green", 151, 211, 184);
-        legoSide.setColor("38_Light_Green", 186, 225, 209);
-        legoSide.setColor("34_Lime", 181, 206, 47);
-        legoSide.setColor("76_Medium_Lime", 193, 216, 55);
-        legoSide.setColor("35_Light_Lime", 197, 225, 170);
-    }
-
-    /**
-     * method: initConfigurationMinisteck description: creates the system
-     * configuration Ministeck
-     *
-     * @author Adrian Schuetz
-     */
-    private void initConfigurationMinisteck() {
-        final boolean[][] element_2x1 = {{true, true}};
-        final boolean[][] element_1x2 = {{true}, {true}};
-        final boolean[][] element_3x1 = {{true, true, true}};
-        final boolean[][] element_1x3 = {{true}, {true}, {true}};
-        final boolean[][] element_2x2 = {{true, true}, {true, true}};
-        final boolean[][] element_2x2_Corner = {{true, true}, {true, false}};
-        final boolean[][] element_2x2_Corner_90 = {{true, true}, {false, true}};
-        final boolean[][] element_2x2_Corner_180 = {{false, true},
-                {true, true}};
-        final boolean[][] element_2x2_Corner_270 = {{true, false},
-                {true, true}};
-        ministeck.setElement("Ministeck_2x1", 2, 1, element_2x1, 1, 1);
-        ministeck.setElement("Ministeck_1x2", 1, 2, element_1x2, 1, 1);
-        ministeck.setElement("Ministeck_3x1", 3, 1, element_3x1, 1, 1);
-        ministeck.setElement("Ministeck_1x3", 1, 3, element_1x3, 1, 1);
-        ministeck.setElement("Ministeck_2x2_Corner", 2, 2, element_2x2_Corner,
-                1, 1);
-        ministeck.setElement("Ministeck_2x2_Corner_90", 2, 2,
-                element_2x2_Corner_90, 1, 1);
-        ministeck.setElement("Ministeck_2x2_Corner_180", 2, 2,
-                element_2x2_Corner_180, 1, 1);
-        ministeck.setElement("Ministeck_2x2_Corner_270", 2, 2,
-                element_2x2_Corner_270, 1, 1);
-        ministeck.setElement("Ministeck_2x2", 2, 2, element_2x2, 1, 1);
-        ministeck.setColor("601_Black", 0, 0, 0);
-        ministeck.setColor("602_Dark_Blue", 36, 60, 150);
-        ministeck.setColor("624_Medium_Blue", 134, 187, 229);
-        ministeck.setColor("621_Medium_Green", 67, 182, 73);
-        ministeck.setColor("605_Dark_Green", 0, 100, 62);
-        ministeck.setColor("606_Red", 169, 17, 44);
-        ministeck.setColor("607_Orange", 242, 103, 36);
-        ministeck.setColor("608_Yellow", 255, 242, 3);
-        ministeck.setColor("609_Beige", 255, 233, 143);
-        ministeck.setColor("610_Light_Brown", 252, 181, 21);
-        ministeck.setColor("611_Medium_Brown", 160, 94, 18);
-        ministeck.setColor("612_Dark_Brown", 106, 33, 0);
-        ministeck.setColor("613_White", 255, 255, 255);
-        ministeck.setColor("614_Light_Grey", 165, 169, 172);
-        ministeck.setColor("615_Light_Pink", 245, 154, 169);
-        ministeck.setColor("616_Dark_Grey", 121, 124, 130);
-        ministeck.setColor("617_Olive", 76, 55, 4);
-        ministeck.setColor("619_Flesh", 251, 193, 159);
-        ministeck.setColor("620_Purple", 91, 24, 106);
-        ministeck.setColor("604_Light_Green", 0, 169, 79);
-        ministeck.setColor("622_Corn_Gold", 248, 155, 28);
-        ministeck.setColor("623_Pink", 234, 54, 146);
-        ministeck.setColor("603_Light_Blue", 0, 111, 186);
-        ministeck.setColor("635_Grey_1", 28, 43, 57);
-        ministeck.setColor("636_Grey_2", 73, 88, 101);
-        ministeck.setColor("637_Grey_3", 114, 128, 138);
-        ministeck.setColor("638_Grey_4", 161, 171, 178);
-        ministeck.setColor("639_Grey_5", 198, 205, 209);
-        ministeck.setColor("641_Grey_6", 216, 220, 219);
-    }
-
-    /**
-     * method: imageReset description: resets the image object
+     * Resets the image object.
      *
      * @author Adrian Schuetz
      */
@@ -827,8 +531,7 @@ public class DataManagement {
     }
 
     /**
-     * method: imageLoad description: Checks if the image file type is valid and
-     * creates an image
+     * Checks if the image file type is valid and creates an image.
      *
      * @author Adrian Schuetz
      * @param file
@@ -855,8 +558,7 @@ public class DataManagement {
     }
 
     /**
-     * method: replaceImageByCutout description: Calls the method cutout from
-     * originalImage
+     * Calls the method cutout from originalImage.
      *
      * @author Adrian Schuetz
      * @param cutout
@@ -866,17 +568,16 @@ public class DataManagement {
     }
 
     /**
-     * method: getScaledImage description: Calls the method getScaledImage
-     * (scaling by sliderValue)
+     * Calls the method getScaledImage (scaling by sliderValue).
      *
      * @author Adrian Schuetz
-     * @param mosaic      (true/false)
+     * @param isMosaicImage (true/false)
      * @param sliderValue
      * @return BufferedImage (scaled image)
      */
-    public BufferedImage getScaledImage(final boolean mosaic,
+    public BufferedImage getScaledImage(final boolean isMosaicImage,
             final int sliderValue) {
-        if (mosaic) {
+        if (isMosaicImage) {
             return mosaicImage.getScaledImage(sliderValue);
         } else {
             return originalImage.getScaledImage(sliderValue);
@@ -884,14 +585,14 @@ public class DataManagement {
     }
 
     /**
-     * method: getImage description: Calls the method getImage
+     * Calls the method getImage.
      *
      * @author Adrian Schuetz
-     * @param mosaic (true/false)
+     * @param isMosaicImage (true/false)
      * @return BufferedImage
      */
-    public BufferedImage getImage(final boolean mosaic) {
-        if (mosaic) {
+    public BufferedImage getImage(final boolean isMosaicImage) {
+        if (isMosaicImage) {
             return mosaicImage.getImage();
         } else {
             return originalImage.getImage();
@@ -899,7 +600,7 @@ public class DataManagement {
     }
 
     /**
-     * method: generateMosaic description: Generates a new mosaic
+     * Generates a new mosaic.
      *
      * @author Adrian Schuetz
      * @param width
@@ -910,8 +611,9 @@ public class DataManagement {
     }
 
     /**
-     * method: generateMosaicImage description: Generates an image from the
-     * mosaic
+     * Generates an image from the mosaic.
+     *
+     * @param threeDInfo <code>true</code> if 3D effect is on.
      *
      * @author Adrian Schuetz
      */
@@ -922,7 +624,9 @@ public class DataManagement {
     }
 
     /**
-     * method: setMosaicImage description: Sets the variable mosaicImage
+     * Sets the variable mosaicImage.
+     *
+     * @param image the mosaic image.
      *
      * @author Adrian Schuetz
      */
@@ -932,8 +636,7 @@ public class DataManagement {
     }
 
     /**
-     * method: refreshProgressBarAlgorithm description: Changes the value of the
-     * display
+     * Changes the value of the display.
      *
      * @author Adrian Schuetz
      * @param value
@@ -944,8 +647,7 @@ public class DataManagement {
     }
 
     /**
-     * method: getConfigurationDimension description: Returns the aspect ratio
-     * of the basis element
+     * Returns the aspect ratio of the basis element.
      *
      * @author Adrian Schuetz
      * @return aspect ratio basis element
@@ -957,17 +659,16 @@ public class DataManagement {
     }
 
     /**
-     * method: computeScaleFactor description: Calls the method
-     * computeScaleFactor
+     * Calls the method computeScaleFactor.
      *
      * @author Adrian Schuetz
-     * @param mosaic (true/false)
+     * @param isMosaicImage (true/false)
      * @param width
      * @param height
      */
-    public void computeScaleFactor(final boolean mosaic, final double width,
-            final double height) {
-        if (mosaic) {
+    public void computeScaleFactor(final boolean isMosaicImage,
+            final double width, final double height) {
+        if (isMosaicImage) {
             mosaicImage.computeScaleFactor(width, height);
         } else {
             originalImage.computeScaleFactor(width, height);
@@ -975,20 +676,19 @@ public class DataManagement {
     }
 
     /**
-     * method: saveWorkingDirectory description: Saves information about the
-     * current working directory
+     * Saves information about the current working directory.
      *
      * @author Adrian Schuetz
-     * @param working directory
+     * @param currentWorkingDirectory
      * @return true or false
      */
-    public boolean saveWorkingDirectory(final File workingDirectory) {
+    public boolean saveWorkingDirectory(final File currentWorkingDirectory) {
         try {
             final FileOutputStream file = new FileOutputStream(
                     "workingDirectory.ser");
             final ObjectOutputStream outputstream = new ObjectOutputStream(
                     file);
-            outputstream.writeObject(workingDirectory);
+            outputstream.writeObject(currentWorkingDirectory);
             outputstream.close();
             return true;
         } catch (final IOException e) {
@@ -999,21 +699,20 @@ public class DataManagement {
     }
 
     /**
-     * method: loadWorkingDirectory description: Loads information about the
-     * current working directory (if available)
+     * Loads information about the current working directory (if available).
      *
      * @author Adrian Schuetz
      * @return working directory
      */
     public File loadWorkingDirectory() {
         try {
-            File workingDirectory;
+            File currentDirectory;
             final FileInputStream file = new FileInputStream(
                     "workingDirectory.ser");
             final ObjectInputStream inputstream = new ObjectInputStream(file);
-            workingDirectory = (File) inputstream.readObject();
+            currentDirectory = (File) inputstream.readObject();
             inputstream.close();
-            return workingDirectory;
+            return currentDirectory;
         } catch (final IOException io) {
             System.out.println(io.toString());
             return null;

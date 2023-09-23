@@ -37,223 +37,231 @@ public class DataProcessor {
 	private final OutputFileGenerator outputFiles;
 	private final Calculator calculation;
 	private final DataProcessor dataProcessing;
-	private Vector<String> info1, info2;
-	private Vector<Object> quantisationInfo;
-	private Vector<Object> tilingInfo;
-	private boolean threeDEffect, statisticOutput;
-	private int quantisationAlgo, tilingAlgo;
-	private NaiveRgbQuantizer naiveQuantisation;
-	private FloydSteinbergQuantizer floydSteinberg;
-	private NaiveLabQuantizer naiveQuantisationLab;
-	private Slicer slicing;
-	private SolidRegionsQuantizer solidRegions;
-	private PatternDitheringQuantizer patternDithering;
-	private VectorErrorDiffuser vectorErrorDiffusion;
-	private BasicElementsOnlyTiler basicElementsOnly;
-	private StabilityOptimizer stabilityOptimisation;
-	private CostsOptimizer costsOptimisation;
-	private MoldingOptimizer moldingOptimisation;
-	private ElementSizeOptimizer elementSizeOptimisation;
-	private Mosaic statisticMosaic;
-	private int interpolation;
+	private Vector<String> info1;
+    private Vector<String> info2;
+    private Vector<Object> quantisationInfo;
+    private Vector<Object> tilingInfo;
+    private boolean threeDEffect;
+    private boolean statisticOutput;
+    private int quantisationAlgo;
+    private int tilingAlgo;
+    private NaiveRgbQuantizer naiveQuantisation;
+    private FloydSteinbergQuantizer floydSteinberg;
+    private NaiveLabQuantizer naiveQuantisationLab;
+    private Slicer slicing;
+    private SolidRegionsQuantizer solidRegions;
+    private PatternDitheringQuantizer patternDithering;
+    private VectorErrorDiffuser vectorErrorDiffusion;
+    private BasicElementsOnlyTiler basicElementsOnly;
+    private StabilityOptimizer stabilityOptimisation;
+    private CostsOptimizer costsOptimisation;
+    private MoldingOptimizer moldingOptimisation;
+    private ElementSizeOptimizer elementSizeOptimisation;
+    private Mosaic statisticMosaic;
+    private int interpolation;
 
-	/**
-	 * method: DataProcessing
-	 * description: constructor
-	 *
-	 * @author Adrian Schuetz
-	 * @param mainWindow
-	 */
-	public DataProcessor(final MainWindow mainWindow) {
-		dataManagement = new DataManagement(this);
-		this.mainWindow = mainWindow;
-		outputFiles = new OutputFileGenerator(this);
-		calculation = new Calculator();
-		dataProcessing = this;
-		initInfo();
-	}
+    /**
+     * method: DataProcessing description: constructor
+     *
+     * @author Adrian Schuetz
+     * @param mainWindow
+     */
+    public DataProcessor(final MainWindow mainWindow) {
+        dataManagement = new DataManagement(this);
+        this.mainWindow = mainWindow;
+        outputFiles = new OutputFileGenerator(this);
+        calculation = new Calculator();
+        dataProcessing = this;
+        initInfo();
+    }
 
-	/**
-	 * method: generateMosaic
-	 * description: generate mosaic
-	 *
-	 * @author Adrian Schuetz
-	 * @param mosaicWidth
-	 * @param mosaicHeight
-	 * @param quantisation
-	 * @param tiling
-	 * @param threeD
-	 * @param statistic
-	 */
-	public void generateMosaic(final int mosaicWidth, final int mosaicHeight,
-			final int quantisation, final int tiling,
-			final boolean threeD, final boolean statistic) {
-		initInfo();
-		this.threeDEffect = threeD;
-		this.statisticOutput = statistic;
-		this.tilingAlgo = tiling;
-		this.quantisationAlgo = quantisation;
-		dataManagement.generateMosaic(mosaicWidth, mosaicHeight);
-		// Vectors for dialog imput
-		quantisationInfo = new Vector<>();
-		tilingInfo = new Vector<>();
+    /**
+     * method: generateMosaic description: generate mosaic
+     *
+     * @author Adrian Schuetz
+     * @param mosaicWidth
+     * @param mosaicHeight
+     * @param quantisation
+     * @param tiling
+     * @param threeD
+     * @param statistic
+     */
+    public void generateMosaic(final int mosaicWidth, final int mosaicHeight,
+            final int quantisation, final int tiling, final boolean threeD,
+            final boolean statistic) {
+        initInfo();
+        this.threeDEffect = threeD;
+        this.statisticOutput = statistic;
+        this.tilingAlgo = tiling;
+        this.quantisationAlgo = quantisation;
+        dataManagement.generateMosaic(mosaicWidth, mosaicHeight);
+        // Vectors for dialog imput
+        quantisationInfo = new Vector<>();
+        tilingInfo = new Vector<>();
 
-		// Call dialogs -----------------------------------------------------------
-		switch (quantisationAlgo) {
-			case 1:
-				break;
-			case 2:
-				// FloydSteinberg
-				quantisationInfo = mainWindow
-						.dialogFloydSteinberg(dataManagement.getCurrentConfiguration().getAllColors());
-				break;
-			case 3:
-				break;
-			case 4:
-				// Pattern dithering
-				quantisationInfo = mainWindow.dialogPatternDithering();
-				break;
-			case 5:
-				break;
-			case 6:
-				// Slicing
-				quantisationInfo = mainWindow.dialogSlicingThreshold(mainWindow.dialogSlicingColor(),
-						dataManagement.getCurrentConfiguration().getAllColors());
-				break;
-			case 7:
-				break;
-			default:
-				break;
-		}
+        // Call dialogs
+        // -----------------------------------------------------------
+        switch (quantisationAlgo) {
+        case 1:
+            break;
+        case 2:
+            // FloydSteinberg
+            quantisationInfo = mainWindow.dialogFloydSteinberg(
+                    dataManagement.getCurrentConfiguration().getAllColors());
+            break;
+        case 3:
+            break;
+        case 4:
+            // Pattern dithering
+            quantisationInfo = mainWindow.dialogPatternDithering();
+            break;
+        case 5:
+            break;
+        case 6:
+            // Slicing
+            quantisationInfo = mainWindow.dialogSlicingThreshold(
+                    mainWindow.dialogSlicingColor(),
+                    dataManagement.getCurrentConfiguration().getAllColors());
+            break;
+        case 7:
+            break;
+        default:
+            break;
+        }
 
-		switch (tilingAlgo) {
-			case 1:
-				break;
-			case 2:
-				// moldingOptimisation
-				// Optimisation dialog only in combination with the 3 methods below
-				if (quantisationAlgo == 2) {
-					tilingInfo = mainWindow.dialogMoldingOptimisation(2,
-							textbundle.getString("algorithm_errorDiffusion"));
-				} else if (quantisationAlgo == 3) {
-					tilingInfo = mainWindow.dialogMoldingOptimisation(3,
-							textbundle.getString("algorithm_vectorErrorDiffusion"));
-				} else if (quantisationAlgo == 4) {
-					tilingInfo = mainWindow.dialogMoldingOptimisation(4,
-							textbundle.getString("algorithm_patternDithering"));
-				} else
-					break;
-			case 3:
-				break;
-			case 4:
-				// Stability
-				tilingInfo = mainWindow.dialogStabilityOptimisation();
-				tilingInfo.insertElementAt(quantisationAlgo, 0);
+        switch (tilingAlgo) {
+        case 1:
+            break;
+        case 2:
+            // moldingOptimisation
+            // Optimisation dialog only in combination with the 3 methods below
+            if (quantisationAlgo == 2) {
+                tilingInfo = mainWindow.dialogMoldingOptimisation(2,
+                        textbundle.getString("algorithm_errorDiffusion"));
+            } else if (quantisationAlgo == 3) {
+                tilingInfo = mainWindow.dialogMoldingOptimisation(3,
+                        textbundle.getString("algorithm_vectorErrorDiffusion"));
+            } else if (quantisationAlgo == 4) {
+                tilingInfo = mainWindow.dialogMoldingOptimisation(4,
+                        textbundle.getString("algorithm_patternDithering"));
+            } else {
+                break;
+            }
+        case 3:
+            break;
+        case 4:
+            // Stability
+            tilingInfo = mainWindow.dialogStabilityOptimisation();
+            tilingInfo.insertElementAt(quantisationAlgo, 0);
 
-				if (quantisationAlgo == 2) {
-					tilingInfo.add(quantisationInfo.elementAt(0));
-					tilingInfo.add(quantisationInfo.elementAt(1));
-				} else if (quantisationAlgo == 6) {
-					final Enumeration<Object> quantisationInfoEnum = quantisationInfo.elements();
+            if (quantisationAlgo == 2) {
+                tilingInfo.add(quantisationInfo.elementAt(0));
+                tilingInfo.add(quantisationInfo.elementAt(1));
+            } else if (quantisationAlgo == 6) {
+                final Enumeration<Object> quantisationInfoEnum = quantisationInfo
+                        .elements();
 
-					while (quantisationInfoEnum.hasMoreElements()) {
-						tilingInfo.add(quantisationInfoEnum.nextElement());
-					}
-				}
+                while (quantisationInfoEnum.hasMoreElements()) {
+                    tilingInfo.add(quantisationInfoEnum.nextElement());
+                }
+            }
 
-				break;
-			default:
-				break;
-		}
+            break;
+        default:
+            break;
+        }
 
-		// Algorithms
-		// ----------------------------------------------------------------------------
-		mainWindow.refreshProgressBarAlgorithm(0, 1);
-		mainWindow.refreshProgressBarAlgorithm(0, 2);
-		mainWindow.refreshProgressBarAlgorithm(0, 4);
-		mainWindow.refreshProgressBarAlgorithm(0, 3);
-		mainWindow.setStatusProgressBarAlgorithm(statisticOutput);
-		mainWindow.showProgressBarAlgorithm();
-		// SwingWorker
-		// "construct": all commands are startet in a new thread
-		// "finished": all commands are queued to the gui thread
-		// after finshing aforesaid (construct-)thread
-		final SwingWorker worker = new SwingWorker() {
-			public Object construct() {
-				switch (quantisationAlgo) {
-					case 1: {
-						naiveQuantisation = new NaiveRgbQuantizer(dataProcessing, calculation);
-						naiveQuantisation.quantisation(dataManagement.getImage(false),
-								dataManagement.getMosaicWidth(),
-								dataManagement.getMosaicHeight(),
-								dataManagement.getCurrentConfiguration(),
-								dataManagement.getMosaicInstance());
-						naiveQuantisation = null;
-						break;
-					}
-					case 2: {
-						floydSteinberg = new FloydSteinbergQuantizer(dataProcessing, calculation, quantisationInfo);
-						floydSteinberg.quantisation(dataManagement.getImage(false),
-								dataManagement.getMosaicWidth(),
-								dataManagement.getMosaicHeight(),
-								dataManagement.getCurrentConfiguration(),
-								dataManagement.getMosaicInstance());
-						floydSteinberg = null;
-						break;
-					}
-					case 3: {
-						vectorErrorDiffusion = new VectorErrorDiffuser(dataProcessing, calculation);
-						vectorErrorDiffusion.quantisation(dataManagement.getImage(false),
-								dataManagement.getMosaicWidth(),
-								dataManagement.getMosaicHeight(),
-								dataManagement.getCurrentConfiguration(),
-								dataManagement.getMosaicInstance());
-						vectorErrorDiffusion = null;
-						break;
-					}
-					case 4: {
-						patternDithering = new PatternDitheringQuantizer(dataProcessing, calculation, quantisationInfo);
-						patternDithering.quantisation(dataManagement.getImage(false),
-								dataManagement.getMosaicWidth(),
-								dataManagement.getMosaicHeight(),
-								dataManagement.getCurrentConfiguration(),
-								dataManagement.getMosaicInstance());
-						patternDithering = null;
-						break;
-					}
-					case 5: {
-						solidRegions = new SolidRegionsQuantizer(dataProcessing, calculation);
-						solidRegions.quantisation(dataManagement.getImage(false),
-								dataManagement.getMosaicWidth(),
-								dataManagement.getMosaicHeight(),
-								dataManagement.getCurrentConfiguration(),
-								dataManagement.getMosaicInstance());
-						solidRegions = null;
-						break;
-					}
-					case 6: {
-						slicing = new Slicer(dataProcessing, calculation, quantisationInfo);
-						slicing.quantisation(dataManagement.getImage(false),
-								dataManagement.getMosaicWidth(),
-								dataManagement.getMosaicHeight(),
-								dataManagement.getCurrentConfiguration(),
-								dataManagement.getMosaicInstance());
-						slicing = null;
-						break;
-					}
-					case 7: {
-						naiveQuantisationLab = new NaiveLabQuantizer(dataProcessing, calculation);
-						naiveQuantisationLab.quantisation(dataManagement.getImage(false),
-								dataManagement.getMosaicWidth(),
-								dataManagement.getMosaicHeight(),
-								dataManagement.getCurrentConfiguration(),
-								dataManagement.getMosaicInstance());
-						naiveQuantisationLab = null;
-						break;
-					}
-					default: {
-						break;
-					}
+        // Algorithms
+        // ----------------------------------------------------------------------------
+        mainWindow.refreshProgressBarAlgorithm(0, 1);
+        mainWindow.refreshProgressBarAlgorithm(0, 2);
+        mainWindow.refreshProgressBarAlgorithm(0, 4);
+        mainWindow.refreshProgressBarAlgorithm(0, 3);
+        mainWindow.setStatusProgressBarAlgorithm(statisticOutput);
+        mainWindow.showProgressBarAlgorithm();
+        // SwingWorker
+        // "construct": all commands are startet in a new thread
+        // "finished": all commands are queued to the gui thread
+        // after finshing aforesaid (construct-)thread
+        final SwingWorker worker = new SwingWorker() {
+            public Object construct() {
+                switch (quantisationAlgo) {
+                case 1:
+                    naiveQuantisation = new NaiveRgbQuantizer(dataProcessing,
+                            calculation);
+                    naiveQuantisation.quantisation(
+                            dataManagement.getImage(false),
+                            dataManagement.getMosaicWidth(),
+                            dataManagement.getMosaicHeight(),
+                            dataManagement.getCurrentConfiguration(),
+                            dataManagement.getMosaicInstance());
+                    naiveQuantisation = null;
+                    break;
+                case 2:
+                    floydSteinberg = new FloydSteinbergQuantizer(dataProcessing,
+                            calculation, quantisationInfo);
+                    floydSteinberg.quantisation(dataManagement.getImage(false),
+                            dataManagement.getMosaicWidth(),
+                            dataManagement.getMosaicHeight(),
+                            dataManagement.getCurrentConfiguration(),
+                            dataManagement.getMosaicInstance());
+                    floydSteinberg = null;
+                    break;
+                case 3:
+                    vectorErrorDiffusion = new VectorErrorDiffuser(
+                            dataProcessing, calculation);
+                    vectorErrorDiffusion.quantisation(
+                            dataManagement.getImage(false),
+                            dataManagement.getMosaicWidth(),
+                            dataManagement.getMosaicHeight(),
+                            dataManagement.getCurrentConfiguration(),
+                            dataManagement.getMosaicInstance());
+                    vectorErrorDiffusion = null;
+                    break;
+                case 4:
+                    patternDithering = new PatternDitheringQuantizer(
+                            dataProcessing, calculation, quantisationInfo);
+                    patternDithering.quantisation(
+                            dataManagement.getImage(false),
+                            dataManagement.getMosaicWidth(),
+                            dataManagement.getMosaicHeight(),
+                            dataManagement.getCurrentConfiguration(),
+                            dataManagement.getMosaicInstance());
+                    patternDithering = null;
+                    break;
+                case 5:
+                    solidRegions = new SolidRegionsQuantizer(dataProcessing,
+                            calculation);
+                    solidRegions.quantisation(dataManagement.getImage(false),
+                            dataManagement.getMosaicWidth(),
+                            dataManagement.getMosaicHeight(),
+                            dataManagement.getCurrentConfiguration(),
+                            dataManagement.getMosaicInstance());
+                    solidRegions = null;
+                    break;
+                case 6:
+                    slicing = new Slicer(dataProcessing, calculation,
+                            quantisationInfo);
+                    slicing.quantisation(dataManagement.getImage(false),
+                            dataManagement.getMosaicWidth(),
+                            dataManagement.getMosaicHeight(),
+                            dataManagement.getCurrentConfiguration(),
+                            dataManagement.getMosaicInstance());
+                    slicing = null;
+                    break;
+                case 7:
+                    naiveQuantisationLab = new NaiveLabQuantizer(dataProcessing,
+                            calculation);
+                    naiveQuantisationLab.quantisation(
+                            dataManagement.getImage(false),
+                            dataManagement.getMosaicWidth(),
+                            dataManagement.getMosaicHeight(),
+                            dataManagement.getCurrentConfiguration(),
+                            dataManagement.getMosaicInstance());
+                    naiveQuantisationLab = null;
+                    break;
+                default:
+                    break;
 				}
 				return true;
 			}
