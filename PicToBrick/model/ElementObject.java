@@ -1,185 +1,192 @@
 package pictobrick.model;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
- * class:          ElementObject
- * layer:          DataManagement (three tier architecture)
- * description:    contains all information about an element
- * @author         Tobias Reichling
+ * Contains all information about an element.
+ *
+ * @author Tobias Reichling
  */
-public class ElementObject
-implements Serializable{
+public class ElementObject implements Serializable {
+    /** Element width. */
+    private int width;
+    /** Element height. */
+    private int height;
+    /** Element matrix. */
+    private boolean[][] matrix;
+    /** Element name. */
+    private String name;
+    /** Element stability. */
+    private int stability;
+    /** Elements costs in 100ths of Euros. */
+    private int costs;
 
-	private int width;
-	private int height;
-	private boolean[][] matrix;
-	private String name;
-	private int stability;
-	private int costs;
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling
+     */
+    public ElementObject() {
+    }
 
-	/**
-	 * method:         ElementObject
-	 * description:    constructor
-	 * @author         Tobias Reichling
-	 */
-	public ElementObject(){}
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling
+     * @param elementName
+     * @param elementWidth
+     * @param elementHeight
+     * @param elementMatrix
+     */
+    public ElementObject(final String elementName, final int elementWidth,
+            final int elementHeight, final boolean[][] elementMatrix) {
+        this.width = elementWidth;
+        this.height = elementHeight;
+        this.matrix = elementMatrix;
+        this.name = elementName;
+        this.stability = 1;
+        this.costs = 1;
+    }
 
-	/**
-	 * method:         ElementObject
-	 * description:    constructor
-	 * @author         Tobias Reichling
-	 * @param          name
-	 * @param          width
-	 * @param          height
-	 * @param          matrix
-	 */
-	public ElementObject(String name, int width, int height, boolean[][] matrix){
-		this.width = width;
-		this.height = height;
-		this.matrix = matrix;
-		this.name = name;
-		this.stability = 1;
-		this.costs = 1;
-	}
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling
+     * @param elementName
+     * @param elementWidth
+     * @param elementHeight
+     * @param elementMatrix
+     * @param elementStability
+     * @param elementCosts
+     */
+    public ElementObject(final String elementName, final int elementWidth,
+            final int elementHeight, final boolean[][] elementMatrix,
+            final int elementStability, final int elementCosts) {
+        this.width = elementWidth;
+        this.height = elementHeight;
+        this.matrix = elementMatrix;
+        this.name = elementName;
+        this.stability = elementStability;
+        this.costs = elementCosts;
+    }
 
-	/**
-	 * method:         ElementObject
-	 * description:    constructor
-	 * @author         Tobias Reichling
-	 * @param          name
-	 * @param          width
-	 * @param          height
-	 * @param          matrix
-	 * @param          stability
-	 * @param          costs
-	 */
-	public ElementObject(String name, int width, int height, boolean[][] matrix, int stability, int costs){
-		this.width = width;
-		this.height = height;
-		this.matrix = matrix;
-		this.name = name;
-		this.stability = stability;
-		this.costs = costs;
-	}
+    /**
+     * Returns the width.
+     *
+     * @author Tobias Reichling
+     * @return width
+     */
+    public int getWidth() {
+        return width;
+    }
 
-	/**
-	 * method:         getWidth
-	 * description:    returns the width
-	 * @author         Tobias Reichling
-	 * @return         width
-	 */
-	public int getWidth(){
-		return width;
-	}
+    /**
+     * Returns the name.
+     *
+     * @author Tobias Reichling
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * method:         getName
-	 * description:    returns the name
-	 * @author         Tobias Reichling
-	 * @return         name
-	 */
-	public String getName(){
-		return name;
-	}
+    /**
+     * Returns the height.
+     *
+     * @author Tobias Reichling
+     * @return height
+     */
+    public int getHeight() {
+        return height;
+    }
 
-	/**
-	 * method:         getHeight
-	 * description:    returns the height
-	 * @author         Tobias Reichling
-	 * @return         height
-	 */
-	public int getHeight(){
-		return height;
-	}
+    /**
+     * Returns the matrix.
+     *
+     * @author Tobias Reichling
+     * @return msatrix
+     */
+    public boolean[][] getMatrix() {
+        return matrix;
+    }
 
-	/**
-	 * method:         getMatrix
-	 * description:    returns the matrix
-	 * @author         Tobias Reichling
-	 * @return         msatrix
-	 */
-	public boolean[][] getMatrix(){
-		return matrix;
-	}
+    /**
+     * Returns the stability.
+     *
+     * @author Tobias Reichling
+     * @return stability
+     */
+    public int getStability() {
+        return stability;
+    }
 
-	/**
-	 * method:         getStability
-	 * description:    returns the stability
-	 * @author         Tobias Reichling
-	 * @return         stability
-	 */
-	public int getStability(){
-		return stability;
-	}
+    /**
+     * Returns the costs.
+     *
+     * @author Tobias Reichling
+     * @return costs
+     */
+    public int getCosts() {
+        return costs;
+    }
 
-	/**
-	 * method:         getCosts
-	 * description:    returns the costs
-	 * @author         Tobias Reichling
-	 * @return         costs
-	 */
-	public int getCosts(){
-		return costs;
-	}
+    /**
+     * Sets the name.
+     *
+     * @author Tobias Reichling
+     * @param elementName
+     */
+    public void setName(final String elementName) {
+        this.name = elementName;
+    }
 
-	/**
-	 * method:         setName
-	 * description:    sets the name
-	 * @author         Tobias Reichling
-	 * @param          name
-	 */
-	public void setName(String name){
-		this.name = name;
-	}
+    /**
+     * Sets the width.
+     *
+     * @author Tobias Reichling
+     * @param elementWidth
+     */
+    public void setWidth(final int elementWidth) {
+        this.width = elementWidth;
+    }
 
-	/**
-	 * method:         setWidth
-	 * description:    sets the width
-	 * @author         Tobias Reichling
-	 * @param          width
-	 */
-	public void setWidth(int width){
-		this.width = width;
-	}
+    /**
+     * Sets the height.
+     *
+     * @author Tobias Reichling
+     * @param elementHeight
+     */
+    public void setHeight(final int elementHeight) {
+        this.height = elementHeight;
+    }
 
-	/**
-	 * method:         setHeight
-	 * description:    sets the height
-	 * @author         Tobias Reichling
-	 * @param          height
-	 */
-	public void setHeight(int height){
-		this.height = height;
-	}
+    /**
+     * Sets the matrix.
+     *
+     * @author Tobias Reichling
+     * @param elementMatrix
+     */
+    public void setMatrix(final boolean[][] elementMatrix) {
+        this.matrix = elementMatrix;
+    }
 
-	/**
-	 * method:         setMatrix
-	 * description:    sets the matrix
-	 * @author         Tobias Reichling
-	 * @param          matrix
-	 */
-	public void setMatrix(boolean[][] matrix){
-		this.matrix = matrix;
-	}
+    /**
+     * Sets the stability.
+     *
+     * @author Tobias Reichling
+     * @param elementStability
+     */
+    public void setStability(final int elementStability) {
+        this.stability = elementStability;
+    }
 
-	/**
-	 * method:         setStability
-	 * description:    sets the stability
-	 * @author         Tobias Reichling
-	 * @param          stability
-	 */
-	public void setStability(int stability){
-		this.stability = stability;
-	}
-
-	/**
-	 * method:         setCosts
-	 * description:    sets the costs
-	 * @author         Tobias Reichling
-	 * @param          costs
-	 */
-	public void setCosts(int costs){
-		this.costs = costs;
-	}
+    /**
+     * Sets the costs.
+     *
+     * @author Tobias Reichling
+     * @param elementCosts
+     */
+    public void setCosts(final int elementCosts) {
+        this.costs = elementCosts;
+    }
 }
