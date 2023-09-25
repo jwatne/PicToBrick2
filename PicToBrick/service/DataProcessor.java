@@ -458,7 +458,7 @@ public class DataProcessor {
     }
 
     /**
-     * shows mosaic
+     * Shows mosaic.
      *
      * @author Adrian Schuetz
      */
@@ -468,7 +468,7 @@ public class DataProcessor {
     }
 
     /**
-     * retruns the tiling algorithm (important for statistic evaluation)
+     * Retruns the tiling algorithm (important for statistic evaluation).
      *
      * @author Adrian Schuetz
      * @return Number of the algorithm
@@ -478,7 +478,7 @@ public class DataProcessor {
     }
 
     /**
-     * returns the selected interpolation method
+     * Returns the selected interpolation method.
      *
      * @author Adrian Schuetz
      * @return 1=bicubic, 2=bilinear, 3=nearestneighbor
@@ -488,28 +488,28 @@ public class DataProcessor {
     }
 
     /**
-     * sets the interpolation method
+     * Sets the interpolation method.
      *
      * @author Adrian Schuetz
-     * @param 1=bicubic, 2=bilinear, 3=nearestneighbor
+     * @param method 1=bicubic, 2=bilinear, 3=nearestneighbor
      */
-    public void setInterpolation(final int interpolation) {
-        this.interpolation = interpolation;
+    public void setInterpolation(final int method) {
+        this.interpolation = method;
     }
 
     /**
-     * changes the display value
+     * Changes the display value.
      *
      * @author Adrian Schuetz
      * @param value
-     * @param 1:quantisation und 2:tiling
+     * @param number 1:quantisation and 2:tiling
      */
     public void refreshProgressBarAlgorithm(final int value, final int number) {
         mainWindow.refreshProgressBarAlgorithm(value, number);
     }
 
     /**
-     * changes the display value
+     * Changes the display value.
      *
      * @author Adrian Schuetz
      * @param value
@@ -521,7 +521,7 @@ public class DataProcessor {
     }
 
     /**
-     * animates the progressBar
+     * Animates the progressBar.
      *
      * @author Adrian Schuetz
      * @param on (/off)
@@ -531,17 +531,18 @@ public class DataProcessor {
     }
 
     /**
-     * returns an enumation with Information
+     * Returns an enumation with Information.
      *
      * @author Adrian Schuetz
+     * @param displayLocation 1 = dialog; 2 = output file.
      * @return Enumeration
      */
-    public Enumeration<String> getInfo(final int number) {
+    public Enumeration<String> getInfo(final int displayLocation) {
         Enumeration<String> infoEnum = null;
 
-        if (number == 1) {
+        if (displayLocation == 1) {
             infoEnum = info1.elements();
-        } else if (number == 2) {
+        } else if (displayLocation == 2) {
             infoEnum = info2.elements();
         }
 
@@ -549,7 +550,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return mosaicHeight
@@ -559,7 +560,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return mosaicWidth
@@ -569,7 +570,7 @@ public class DataProcessor {
     }
 
     /**
-     * adds the information to the informationvector
+     * Adds the information to the informationvector.
      *
      * @author Adrian Schuetz
      * @param text
@@ -588,7 +589,7 @@ public class DataProcessor {
     }
 
     /**
-     * initialise the informationvector
+     * Initialize the information vector.
      *
      * @author Adrian Schuetz
      */
@@ -598,7 +599,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return Vector[][]
@@ -608,7 +609,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param image
@@ -621,7 +622,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param color
@@ -634,7 +635,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param content
@@ -648,7 +649,7 @@ public class DataProcessor {
     }
 
     /**
-     * generates the output documents
+     * Generates the output documents.
      *
      * @author Adrian Schuetz
      * @param image         true, if document should be generated
@@ -669,7 +670,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      */
@@ -678,7 +679,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param file
@@ -689,7 +690,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param cutout
@@ -699,7 +700,8 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement (scaling with sliderValue)
+     * Calls the appropriate method in dataManagement (scaling with
+     * sliderValue).
      *
      * @author Adrian Schuetz
      * @param mosaic
@@ -712,7 +714,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param mosaic
@@ -723,7 +725,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return true or false
@@ -733,7 +735,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return true or false
@@ -743,7 +745,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param file
@@ -754,7 +756,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param configuration
@@ -764,7 +766,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return configuration
@@ -774,7 +776,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param configuration
@@ -785,10 +787,11 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param configuration
+     * @return the configuration just loaded.
      * @exception IOException
      */
     public Configuration configurationLoad(final String configuration)
@@ -797,7 +800,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param mosaic
@@ -810,7 +813,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param file
@@ -820,7 +823,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return file
@@ -830,7 +833,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return vector with possible configurations
@@ -840,7 +843,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return dimension
@@ -850,7 +853,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @param error
@@ -860,10 +863,10 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
-     * @param working directory
+     * @param workingDirectory
      * @return true or false
      */
     public boolean saveWorkingDirectory(final File workingDirectory) {
@@ -871,7 +874,7 @@ public class DataProcessor {
     }
 
     /**
-     * calls the appropriate method in dataManagement
+     * Calls the appropriate method in dataManagement.
      *
      * @author Adrian Schuetz
      * @return working directory
