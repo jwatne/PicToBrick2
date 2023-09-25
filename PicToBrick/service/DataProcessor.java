@@ -11,12 +11,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import javax.swing.SwingUtilities;
-
 import pictobrick.model.Configuration;
 import pictobrick.model.DataManagement;
-import pictobrick.model.Mosaic;
 import pictobrick.ui.MainWindow;
+import pictobrick.ui.ProgressBarsAlgorithms;
 
 /**
  * Provides appropriate for data processing.
@@ -24,6 +22,26 @@ import pictobrick.ui.MainWindow;
  * @author Adrian Schuetz
  */
 public class DataProcessor {
+    /** Show information in dialog. */
+    public static final int SHOW_IN_DIALOG = 1;
+    /** Show information in output files. */
+    public static final int SHOW_IN_OUTPUT = 2;
+    /** Show information in both dialog and output files. */
+    public static final int SHOW_IN_BOTH = 3;
+    /** Naive RGB quatization. */
+    private static final int NAIVE_RGB = 1;
+    /** Floyd/Steinberg quantization. */
+    private static final int FLOYD_STEINBERG = 2;
+    /** Vector error diffusion quantization. */
+    private static final int VECTOR_ERROR_DIFFUSION = 3;
+    /** Pattern dithering quantization. */
+    private static final int PATTERN_DITHERING = 4;
+    /** Solid regions quantization. */
+    private static final int SOLID_REGIONS = 5;
+    /** Slicing quantization.. */
+    private static final int SLICING = 6;
+    /** Naive LAB quantization. */
+    private static final int NAIVE_LAB = 7;
     /** Element size optimization. */
     private static final int ELEMENT_SIZE_OPTIMIZATION = 1;
     /** Molding optimization. */
@@ -39,12 +57,42 @@ public class DataProcessor {
             .getBundle("Resources.TextResource");
     /** Contains all program data and provides appropriate methods. */
     private final DataManagement dataManagement;
+
+    /**
+     * Returns data manager.
+     *
+     * @return data manager.
+     */
+    public DataManagement getDataManagement() {
+        return dataManagement;
+    }
+
     /** Main application window. */
     private final MainWindow mainWindow;
+
+    /**
+     * Returns main application window.
+     *
+     * @return main application window.
+     */
+    public MainWindow getMainWindow() {
+        return mainWindow;
+    }
+
     /** Output file generator. */
     private final OutputFileGenerator outputFiles;
     /** Calculator. */
     private final Calculator calculation;
+
+    /**
+     * Returns calculator.
+     *
+     * @return calculator.
+     */
+    public Calculator getCalculation() {
+        return calculation;
+    }
+
     /** Reference to DataProcessor instance. */
     private final DataProcessor dataProcessing;
     /** Dialog information. */
@@ -55,10 +103,30 @@ public class DataProcessor {
     private Vector<Object> quantisationInfo;
     /** Tiling info. */
     private Vector<Object> tilingInfo;
+
+    /**
+     * Returns tiling info.
+     *
+     * @return tiling info.
+     */
+    public Vector<Object> getTilingInfo() {
+        return tilingInfo;
+    }
+
     /** Indicates whether to use 3D effect. */
     private boolean threeDEffect;
-    /** Indicates wheter to output statistics. */
+    /** Indicates whether to output statistics. */
     private boolean statisticOutput;
+
+    /**
+     * Indicates whether to output statistics.
+     *
+     * @return <code>true</code> if output statistics.
+     */
+    public boolean isStatisticOutput() {
+        return statisticOutput;
+    }
+
     /** Quantization algorithm. */
     private int quantisationAlgo;
     /** Tiling algorithm. */
@@ -77,18 +145,28 @@ public class DataProcessor {
     private PatternDitheringQuantizer patternDithering;
     /** Vector error diffuser. */
     private VectorErrorDiffuser vectorErrorDiffusion;
-    /** Basic elements only tiler. */
-    private BasicElementsOnlyTiler basicElementsOnly;
-    /** Stability optimizer. */
-    private StabilityOptimizer stabilityOptimisation;
-    /** Costs optimizer. */
-    private CostsOptimizer costsOptimisation;
-    /** Molding optimizer. */
-    private MoldingOptimizer moldingOptimisation;
     /** Element size optimizer. */
     private ElementSizeOptimizer elementSizeOptimisation;
-    /** Mosaic. */
-    private Mosaic statisticMosaic;
+
+    /**
+     * Returns element size optimizer.
+     *
+     * @return element size optimizer.
+     */
+    public ElementSizeOptimizer getElementSizeOptimisation() {
+        return elementSizeOptimisation;
+    }
+
+    /**
+     * Sets element size optimizer.
+     *
+     * @param optimizer element size optimizer.
+     */
+    public void setElementSizeOptimisation(
+            final ElementSizeOptimizer optimizer) {
+        this.elementSizeOptimisation = optimizer;
+    }
+
     /** Interpolation. */
     private int interpolation;
 
@@ -130,85 +208,18 @@ public class DataProcessor {
         // Vectors for dialog imput
         quantisationInfo = new Vector<>();
         tilingInfo = new Vector<>();
-
         // Call dialogs
         // -----------------------------------------------------------
-        switch (quantisationAlgo) {
-        case 1:
-            break;
-        case 2:
-            // FloydSteinberg
-            quantisationInfo = mainWindow.dialogFloydSteinberg(
-                    dataManagement.getCurrentConfiguration().getAllColors());
-            break;
-        case 3:
-            break;
-        case 4:
-            // Pattern dithering
-            quantisationInfo = mainWindow.dialogPatternDithering();
-            break;
-        case 5:
-            break;
-        case 6:
-            // Slicing
-            quantisationInfo = mainWindow.dialogSlicingThreshold(
-                    mainWindow.dialogSlicingColor(),
-                    dataManagement.getCurrentConfiguration().getAllColors());
-            break;
-        case 7:
-            break;
-        default:
-            break;
-        }
-
-        switch (tilingAlgo) {
-        case 1:
-            break;
-        case 2:
-            // moldingOptimisation
-            // Optimisation dialog only in combination with the 3 methods below
-            if (quantisationAlgo == 2) {
-                tilingInfo = mainWindow.dialogMoldingOptimisation(2,
-                        textbundle.getString("algorithm_errorDiffusion"));
-            } else if (quantisationAlgo == 3) {
-                tilingInfo = mainWindow.dialogMoldingOptimisation(3,
-                        textbundle.getString("algorithm_vectorErrorDiffusion"));
-            } else if (quantisationAlgo == 4) {
-                tilingInfo = mainWindow.dialogMoldingOptimisation(4,
-                        textbundle.getString("algorithm_patternDithering"));
-            } else {
-                break;
-            }
-        case 3:
-            break;
-        case 4:
-            // Stability
-            tilingInfo = mainWindow.dialogStabilityOptimisation();
-            tilingInfo.insertElementAt(quantisationAlgo, 0);
-
-            if (quantisationAlgo == 2) {
-                tilingInfo.add(quantisationInfo.elementAt(0));
-                tilingInfo.add(quantisationInfo.elementAt(1));
-            } else if (quantisationAlgo == 6) {
-                final Enumeration<Object> quantisationInfoEnum = quantisationInfo
-                        .elements();
-
-                while (quantisationInfoEnum.hasMoreElements()) {
-                    tilingInfo.add(quantisationInfoEnum.nextElement());
-                }
-            }
-
-            break;
-        default:
-            break;
-        }
-
+        determineQuantizationAlgorithm();
+        determineTilingAlgorithm();
         // Algorithms
-        // ----------------------------------------------------------------------------
-        mainWindow.refreshProgressBarAlgorithm(0, 1);
-        mainWindow.refreshProgressBarAlgorithm(0, 2);
-        mainWindow.refreshProgressBarAlgorithm(0, 4);
-        mainWindow.refreshProgressBarAlgorithm(0, 3);
+        mainWindow.refreshProgressBarAlgorithm(0,
+                ProgressBarsAlgorithms.QUANTIZATION);
+        mainWindow.refreshProgressBarAlgorithm(0,
+                ProgressBarsAlgorithms.TILING);
+        mainWindow.refreshProgressBarAlgorithm(0,
+                ProgressBarsAlgorithms.STATISTICS);
+        mainWindow.refreshProgressBarAlgorithm(0, ProgressBarsAlgorithms.PAINT);
         mainWindow.setStatusProgressBarAlgorithm(statisticOutput);
         mainWindow.showProgressBarAlgorithm();
         // SwingWorker
@@ -218,7 +229,7 @@ public class DataProcessor {
         final SwingWorker worker = new SwingWorker() {
             public Object construct() {
                 switch (quantisationAlgo) {
-                case 1:
+                case NAIVE_RGB:
                     naiveQuantisation = new NaiveRgbQuantizer(dataProcessing,
                             calculation);
                     naiveQuantisation.quantisation(
@@ -229,7 +240,7 @@ public class DataProcessor {
                             dataManagement.getMosaicInstance());
                     naiveQuantisation = null;
                     break;
-                case 2:
+                case FLOYD_STEINBERG:
                     floydSteinberg = new FloydSteinbergQuantizer(dataProcessing,
                             calculation, quantisationInfo);
                     floydSteinberg.quantisation(dataManagement.getImage(false),
@@ -239,7 +250,7 @@ public class DataProcessor {
                             dataManagement.getMosaicInstance());
                     floydSteinberg = null;
                     break;
-                case 3:
+                case VECTOR_ERROR_DIFFUSION:
                     vectorErrorDiffusion = new VectorErrorDiffuser(
                             dataProcessing, calculation);
                     vectorErrorDiffusion.quantisation(
@@ -250,7 +261,7 @@ public class DataProcessor {
                             dataManagement.getMosaicInstance());
                     vectorErrorDiffusion = null;
                     break;
-                case 4:
+                case PATTERN_DITHERING:
                     patternDithering = new PatternDitheringQuantizer(
                             dataProcessing, calculation, quantisationInfo);
                     patternDithering.quantisation(
@@ -261,7 +272,7 @@ public class DataProcessor {
                             dataManagement.getMosaicInstance());
                     patternDithering = null;
                     break;
-                case 5:
+                case SOLID_REGIONS:
                     solidRegions = new SolidRegionsQuantizer(dataProcessing,
                             calculation);
                     solidRegions.quantisation(dataManagement.getImage(false),
@@ -271,7 +282,7 @@ public class DataProcessor {
                             dataManagement.getMosaicInstance());
                     solidRegions = null;
                     break;
-                case 6:
+                case SLICING:
                     slicing = new Slicer(dataProcessing, calculation,
                             quantisationInfo);
                     slicing.quantisation(dataManagement.getImage(false),
@@ -281,7 +292,7 @@ public class DataProcessor {
                             dataManagement.getMosaicInstance());
                     slicing = null;
                     break;
-                case 7:
+                case NAIVE_LAB:
                     naiveQuantisationLab = new NaiveLabQuantizer(dataProcessing,
                             calculation);
                     naiveQuantisationLab.quantisation(
@@ -305,11 +316,88 @@ public class DataProcessor {
         worker.start();
     }
 
+    private void determineTilingAlgorithm() {
+        switch (tilingAlgo) {
+        case ELEMENT_SIZE_OPTIMIZATION:
+            break;
+        case MOLDING_OPTIMIZATION:
+            // moldingOptimisation
+            // Optimisation dialog only in combination with the 3 methods below
+            if (quantisationAlgo == FLOYD_STEINBERG) {
+                tilingInfo = mainWindow.dialogMoldingOptimisation(
+                        FLOYD_STEINBERG,
+                        textbundle.getString("algorithm_errorDiffusion"));
+            } else if (quantisationAlgo == VECTOR_ERROR_DIFFUSION) {
+                tilingInfo = mainWindow.dialogMoldingOptimisation(
+                        VECTOR_ERROR_DIFFUSION,
+                        textbundle.getString("algorithm_vectorErrorDiffusion"));
+            } else if (quantisationAlgo == PATTERN_DITHERING) {
+                tilingInfo = mainWindow.dialogMoldingOptimisation(
+                        PATTERN_DITHERING,
+                        textbundle.getString("algorithm_patternDithering"));
+            } else {
+                break;
+            }
+        case COSTS_OPTIMIZATION:
+            break;
+        case STABILITY_OPTIMIZATION:
+            // Stability
+            tilingInfo = mainWindow.dialogStabilityOptimisation();
+            tilingInfo.insertElementAt(quantisationAlgo, 0);
+
+            if (quantisationAlgo == 2) {
+                tilingInfo.add(quantisationInfo.elementAt(0));
+                tilingInfo.add(quantisationInfo.elementAt(1));
+            } else if (quantisationAlgo == SLICING) {
+                final var quantisationInfoEnum = quantisationInfo.elements();
+
+                while (quantisationInfoEnum.hasMoreElements()) {
+                    tilingInfo.add(quantisationInfoEnum.nextElement());
+                }
+            }
+
+            break;
+        default:
+            break;
+        }
+    }
+
+    private void determineQuantizationAlgorithm() {
+        switch (quantisationAlgo) {
+        case NAIVE_RGB:
+            break;
+        case FLOYD_STEINBERG:
+            // FloydSteinberg
+            quantisationInfo = mainWindow.dialogFloydSteinberg(
+                    dataManagement.getCurrentConfiguration().getAllColors());
+            break;
+        case VECTOR_ERROR_DIFFUSION:
+            break;
+        case PATTERN_DITHERING:
+            // Pattern dithering
+            quantisationInfo = mainWindow.dialogPatternDithering();
+            break;
+        case SOLID_REGIONS:
+            break;
+        case SLICING:
+            // Slicing
+            quantisationInfo = mainWindow.dialogSlicingThreshold(
+                    mainWindow.dialogSlicingColor(),
+                    dataManagement.getCurrentConfiguration().getAllColors());
+            break;
+        case NAIVE_LAB:
+            break;
+        default:
+            break;
+        }
+    }
+
     /**
-     * Tiles the mosaic (own methode because of "threads")
+     * Tiles the mosaic (own methode because of "threads").
      *
      * @author Adrian Schuetz
      * @param tiling (algorithm)
+     * @param threeD <code>true</code> if using 3D effect.
      */
     public void tileMosaic(final int tiling, final boolean threeD) {
         this.threeDEffect = threeD;
@@ -320,220 +408,39 @@ public class DataProcessor {
         // after finshing aforesaid (construct-)thread
         final SwingWorker worker = new SwingWorker() {
             public Object construct() {
+                final String outputDataProcessing1 = textbundle
+                        .getString("output_dataProcessing_1");
+                final String outputDataProcessing2 = textbundle
+                        .getString("output_dataProcessing_2");
+                final String outputDataProcessing3 = textbundle
+                        .getString("output_dataProcessing_3");
+                final String outputDataProcessing4 = textbundle
+                        .getString("output_dataProcessing_4");
+                final String outputDataProcessing5 = textbundle
+                        .getString("output_dataProcessing_5");
+                final String outputDataProcessing6 = textbundle
+                        .getString("output_dataProcessing_6");
+                final var processor = new TilingAlgorithmProcessor(
+                        dataProcessing);
+
                 switch (tilingAlgo) {
                 case ELEMENT_SIZE_OPTIMIZATION:
-                    elementSizeOptimisation = new ElementSizeOptimizer(
-                            dataProcessing, calculation);
-                    elementSizeOptimisation.tiling(
-                            dataManagement.getMosaicWidth(),
-                            dataManagement.getMosaicHeight(),
-                            dataManagement.getCurrentConfiguration(),
-                            dataManagement.getMosaicInstance(), false);
-                    elementSizeOptimisation = null;
-                    // Compare the algorithm with method Basic elements only
-                    // for statistic evaluation
-                    if (statisticOutput) {
-                        try {
-                            SwingUtilities.invokeAndWait(new Runnable() {
-                                public void run() {
-                                    mainWindow.refreshProgressBarAlgorithm(50,
-                                            4);
-                                }
-                            });
-                        } catch (final Exception e) {
-                            System.out.println(e.toString());
-                        }
-
-                        dataProcessing.setInfo(
-                                textbundle.getString("output_dataProcessing_1")
-                                        + ":",
-                                3);
-                        dataProcessing.setInfo(
-                                textbundle.getString("output_dataProcessing_2"),
-                                3);
-                        dataProcessing.setInfo(textbundle
-                                .getString("output_dataProcessing_3")
-                                + ": "
-                                + (dataManagement.getMosaicWidth()
-                                        * dataManagement.getMosaicHeight())
-                                + " " + textbundle.getString(
-                                        "output_dataProcessing_4")
-                                + ".", 3);
-                        try {
-                            SwingUtilities.invokeAndWait(new Runnable() {
-                                public void run() {
-                                    mainWindow.refreshProgressBarAlgorithm(100,
-                                            4);
-                                }
-                            });
-                        } catch (final Exception e) {
-                            System.out.println(e.toString());
-                        }
-                    }
+                    processor.doElementSizeOptimization(outputDataProcessing1,
+                            outputDataProcessing2, outputDataProcessing3,
+                            outputDataProcessing4);
                     break;
                 case MOLDING_OPTIMIZATION:
-                    // Copy the mosaic for statistic evaluation
-                    if (statisticOutput) {
-                        statisticMosaic = new Mosaic(
-                                dataManagement.getMosaicWidth(),
-                                dataManagement.getMosaicHeight(),
-                                dataManagement);
-                        statisticMosaic.setMosaic(dataManagement.mosaicCopy());
-                    }
-
-                    // now the real algorithm
-                    moldingOptimisation = new MoldingOptimizer(dataProcessing,
-                            calculation, tilingInfo);
-                    moldingOptimisation.tiling(dataManagement.getMosaicWidth(),
-                            dataManagement.getMosaicHeight(),
-                            dataManagement.getCurrentConfiguration(),
-                            dataManagement.getMosaicInstance(), false);
-                    moldingOptimisation = null;
-
-                    // If the user chooses the improved molding optimisation:
-                    // Statistic evaluation with molding optimisation (without
-                    // improvements)
-                    // else statistic evaluation with element size optimisation
-                    if (statisticOutput) {
-                        dataProcessing.setInfo(
-                                textbundle.getString("output_dataProcessing_1")
-                                        + ":",
-                                3);
-
-                        if (tilingInfo.isEmpty()
-                                || ((String) tilingInfo.elementAt(0))
-                                        .equals("no")) {
-                            // Element size optimisation
-                            elementSizeOptimisation = new ElementSizeOptimizer(
-                                    dataProcessing, calculation);
-                            elementSizeOptimisation.tiling(
-                                    dataManagement.getMosaicWidth(),
-                                    dataManagement.getMosaicHeight(),
-                                    dataManagement.getCurrentConfiguration(),
-                                    statisticMosaic, true);
-                            elementSizeOptimisation = null;
-                        } else {
-                            // Molding optimisation (without improvements)
-                            final Vector<Object> no = new Vector<>();
-                            no.add("no");
-                            moldingOptimisation = new MoldingOptimizer(
-                                    dataProcessing, calculation, no);
-                            moldingOptimisation.tiling(
-                                    dataManagement.getMosaicWidth(),
-                                    dataManagement.getMosaicHeight(),
-                                    dataManagement.getCurrentConfiguration(),
-                                    statisticMosaic, true);
-                            moldingOptimisation = null;
-                        }
-                    }
-
+                    processor.doMoldingOptimization(outputDataProcessing1);
                     break;
                 case COSTS_OPTIMIZATION:
-                    if (statisticOutput) {
-                        statisticMosaic = new Mosaic(
-                                dataManagement.getMosaicWidth(),
-                                dataManagement.getMosaicHeight(),
-                                dataManagement);
-                        statisticMosaic.setMosaic(dataManagement.mosaicCopy());
-                    }
-
-                    costsOptimisation = new CostsOptimizer(dataProcessing,
-                            calculation);
-                    costsOptimisation.tiling(dataManagement.getMosaicWidth(),
-                            dataManagement.getMosaicHeight(),
-                            dataManagement.getCurrentConfiguration(),
-                            dataManagement.getMosaicInstance(), false);
-                    costsOptimisation = null;
-
-                    // Statistic evaluation with element size optimisation
-                    if (statisticOutput) {
-                        dataProcessing.setInfo(
-                                textbundle.getString("output_dataProcessing_1")
-                                        + ":",
-                                3);
-                        elementSizeOptimisation = new ElementSizeOptimizer(
-                                dataProcessing, calculation);
-                        elementSizeOptimisation.tiling(
-                                dataManagement.getMosaicWidth(),
-                                dataManagement.getMosaicHeight(),
-                                dataManagement.getCurrentConfiguration(),
-                                statisticMosaic, true);
-                        elementSizeOptimisation = null;
-                    }
+                    processor.doCostsOptimization(outputDataProcessing1);
                     break;
                 case STABILITY_OPTIMIZATION:
-                    // Only print statistic if improvements are selected
-                    if (statisticOutput) {
-                        // Copy the mosaic for statistic evaluation
-                        if ((Boolean) tilingInfo.elementAt(1)
-                                && !((Boolean) tilingInfo.elementAt(2))) {
-                            statisticMosaic = new Mosaic(
-                                    dataManagement.getMosaicWidth(),
-                                    dataManagement.getMosaicHeight(),
-                                    dataManagement);
-                            statisticMosaic
-                                    .setMosaic(dataManagement.mosaicCopy());
-                        } else {
-                            try {
-                                SwingUtilities.invokeAndWait(new Runnable() {
-                                    public void run() {
-                                        // deactivate statistic of normal
-                                        // algorithm (without improvements) is
-                                        // selected
-                                        mainWindow.errorDialog(textbundle
-                                                .getString(
-                                                        "output_dataProcessing_5")
-                                                + "\n\r"
-                                                + textbundle.getString(
-                                                        "output_dataProcessing_6")
-                                                + ".");
-                                        mainWindow.getGuiPanelOptions2()
-                                                .disableStatisticButton();
-                                    }
-                                });
-                            } catch (final Exception e) {
-                                System.out.println(e.toString());
-                            }
-                        }
-                    }
-
-                    stabilityOptimisation = new StabilityOptimizer(
-                            dataProcessing, calculation, tilingInfo);
-                    stabilityOptimisation.tiling(
-                            dataManagement.getMosaicWidth(),
-                            dataManagement.getMosaicHeight(),
-                            dataManagement.getCurrentConfiguration(),
-                            dataManagement.getMosaicInstance(), false);
-                    stabilityOptimisation = null;
-
-                    // statistic only for whole image improvements
-                    if (statisticOutput
-                            && !((Boolean) tilingInfo.elementAt(2))) {
-                        final Vector<Object> noOptimisation = new Vector<>();
-                        noOptimisation.add(0);
-                        noOptimisation.add(false);
-                        noOptimisation.add(false);
-                        noOptimisation.add((Integer) tilingInfo.elementAt(3));
-                        stabilityOptimisation = new StabilityOptimizer(
-                                dataProcessing, calculation, noOptimisation);
-                        stabilityOptimisation.tiling(
-                                dataManagement.getMosaicWidth(),
-                                dataManagement.getMosaicHeight(),
-                                dataManagement.getCurrentConfiguration(),
-                                statisticMosaic, true);
-                        stabilityOptimisation = null;
-                    }
-
+                    processor.doStabilityOptimization(outputDataProcessing5,
+                            outputDataProcessing6);
                     break;
                 case BASIC_ELEMENTS_ONLY:
-                    basicElementsOnly = new BasicElementsOnlyTiler(
-                            dataProcessing, calculation);
-                    basicElementsOnly.tiling(dataManagement.getMosaicWidth(),
-                            dataManagement.getMosaicHeight(),
-                            dataManagement.getCurrentConfiguration(),
-                            dataManagement.getMosaicInstance(), false);
-                    basicElementsOnly = null;
-                    // no statistic evaluation
+                    processor.doBasicElementsOnly();
                     break;
                 default:
                     break;
@@ -546,6 +453,7 @@ public class DataProcessor {
                 dataManagement.generateMosaicImage(threeDEffect);
             }
         };
+
         worker.start();
     }
 
@@ -669,9 +577,9 @@ public class DataProcessor {
      *               both (1 and 2)
      */
     public void setInfo(final String text, final int number) {
-        if (number == 1) {
+        if (number == SHOW_IN_DIALOG) {
             info1.addElement(text);
-        } else if (number == 2) {
+        } else if (number == SHOW_IN_OUTPUT) {
             info2.addElement(text);
         } else {
             info1.addElement(text);
