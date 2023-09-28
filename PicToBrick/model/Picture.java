@@ -20,10 +20,12 @@ import java.io.IOException;
  */
 
 public class Picture extends Canvas {
-    /** 8 bit shift. */
-    private static final int SHIFT8 = 8;
+    /** Hex value ff = 255 decimal. */
+    public static final int HEX_FF = 0xff;
     /** 16 bit shift. */
-    private static final int SHIFT16 = 16;
+    public static final int SHIFT16 = 16;
+    /** 8 bit shift. */
+    public static final int SHIFT8 = 8;
     /** Number of components (3) in RGB color value. */
     private static final int COLOR_VALUES = 3;
     /**
@@ -35,8 +37,6 @@ public class Picture extends Canvas {
      * Value to which rectangle's width or height is set if original value <= 0.
      */
     private static final int MIN_WIDTH_OR_HEIGHT = 10;
-    /** Hex value ff = 255 decimal. */
-    private static final int HEX_FF = 0xff;
     /** Image. */
     private BufferedImage image;
     /** Scaled image. */
