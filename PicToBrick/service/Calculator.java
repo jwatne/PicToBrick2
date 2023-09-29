@@ -18,6 +18,8 @@ import pictobrick.model.Picture;
  * @author Tobias Reichling / Adrian Schuetz
  */
 public class Calculator {
+    /** 100% (multiplied by 100.0). */
+    public static final double ONE_HUNDRED_PERCENT = 100.0;
     /** Number of RGB elements / cells per combination of row and column. */
     private static final int NUM_RGB_ELEMENTS = 3;
     /** Bicubic interpolation. */
@@ -68,8 +70,6 @@ public class Calculator {
     private static final double MAX_CUBED_VALUE = 0.008856;
     /** Divisor used in LAB to RGB calculation. */
     private static final double DIVISOR_7_787 = 7.787;
-    /** 100% (multiplied by 100.0). */
-    private static final double ONE_HUNDRED_PERCENT = 100.0;
     /** 108.883% (multiplied by 100.0). */
     private static final double PCT_108_883 = 108.883;
     /** Mulitplier value 3.2406. */
