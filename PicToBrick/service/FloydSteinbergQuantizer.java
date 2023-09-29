@@ -16,6 +16,8 @@ import pictobrick.model.Mosaic;
  * @author Adrian Schuetz
  */
 public class FloydSteinbergQuantizer implements Quantizer {
+    /** 100% as int value (multiplied by 100). */
+    private static final int ONE_HUNDRED_PERCENT = 100;
     /** Int value 5. */
     private static final int INT5 = 5;
     /** Int value 4. */
@@ -103,8 +105,110 @@ public class FloydSteinbergQuantizer implements Quantizer {
             doFloydSteinbergSerpentines(mosaicWidth, mosaicHeight, mosaic, dark,
                     light, workingMosaic);
         } else if (method == HILBERT) {
-            doHilbert(mosaicWidth, mosaicHeight, mosaic, dark, light,
-                    workingMosaic);
+            // *********************************** Hilbert curve
+            final Vector<Integer> coordinates = new Vector<>(
+                    calculation.hilbertCoordinates(mosaicWidth, mosaicHeight));
+            int x0;
+            int x1;
+            int x2;
+            int x3;
+            int x4;
+            int y0;
+            int y1;
+            int y2;
+            int y3;
+            int y4;
+            final int coordinatesNumber = (coordinates.size() / 2);
+            final Enumeration<Integer> coordinatesEnum = coordinates.elements();
+            // x0 and y0 are the current coordinates
+            // x1,y1 ... x4,y4 are the following coordinates
+            // ----------------------------------
+            // init:
+            x0 = (Integer) coordinatesEnum.nextElement();
+            y0 = (Integer) coordinatesEnum.nextElement();
+            x1 = (Integer) coordinatesEnum.nextElement();
+            y1 = (Integer) coordinatesEnum.nextElement();
+            x2 = (Integer) coordinatesEnum.nextElement();
+            y2 = (Integer) coordinatesEnum.nextElement();
+            x3 = (Integer) coordinatesEnum.nextElement();
+            y3 = (Integer) coordinatesEnum.nextElement();
+            x4 = (Integer) coordinatesEnum.nextElement();
+            y4 = (Integer) coordinatesEnum.nextElement();
+            int counter = 0;
+            percent = 0;
+            int referenceValue = (mosaicHeight * mosaicWidth)
+                    / ONE_HUNDRED_PERCENT;
+
+            if (referenceValue == 0) {
+                referenceValue = 1;
+            }
+
+            for (int i = 0; i < (coordinatesNumber); i++) {
+                // refresh progress bar
+                if (counter % referenceValue == 0) {
+                    // submit progress bar refresh-function to the gui-thread
+                    try {
+                        SwingUtilities.invokeAndWait(new Runnable() {
+                            public void run() {
+                                percent++;
+                                dataProcessing.refreshProgressBarAlgorithm(
+                                        percent, 1);
+                            }
+                        });
+                    } catch (final Exception e) {
+                        System.out.println(e.toString());
+                    }
+                }
+
+                counter++;
+                double error;
+
+                // compute color and error
+                if (workingMosaic[x0][y0] < DARK_LIGHT_CUTOFF) {
+                    mosaic.setElement(x0, y0, dark, false);
+                    error = 0 - workingMosaic[x0][y0];
+                } else {
+                    mosaic.setElement(x0, y0, light, false);
+                    error = MAX_BRIGHTNESS - workingMosaic[x0][y0];
+                }
+
+                x0 = x1;
+                y0 = y1;
+
+                // distribute error
+                // ... 7/16 ... 5/16 ... 3/16 ... 1/16
+                // (caution: at the last mosaic pixel, the error can only be
+                // distribute
+                // to the following last pixels!)
+                if (i < (coordinatesNumber - 2)) {
+                    workingMosaic[x1][y1] = errorDistribution(
+                            workingMosaic[x1][y1], FACTOR_7_16, error);
+                    x1 = x2;
+                    y1 = y2;
+                }
+
+                if (i < (coordinatesNumber - INT3)) {
+                    workingMosaic[x2][y2] = errorDistribution(
+                            workingMosaic[x2][y2], FACTOR_5_16, error);
+                    x2 = x3;
+                    y2 = y3;
+                }
+
+                if (i < (coordinatesNumber - INT4)) {
+                    workingMosaic[x3][y3] = errorDistribution(
+                            workingMosaic[x3][y3], FACTOR_3_16, error);
+                    x3 = x4;
+                    y3 = y4;
+                }
+
+                if (i < (coordinatesNumber - INT5)) {
+                    workingMosaic[x4][y4] = errorDistribution(
+                            workingMosaic[x4][y4], FACTOR_1_16, error);
+                    x4 = (Integer) coordinatesEnum.nextElement();
+                    y4 = (Integer) coordinatesEnum.nextElement();
+                }
+            }
+
         }
 
         // submit progress bar refresh-function to the gui-thread
@@ -120,113 +224,6 @@ public class FloydSteinbergQuantizer implements Quantizer {
         }
 
         return mosaic;
-    }
-
-    private void doHilbert(final int mosaicWidth, final int mosaicHeight,
-            final Mosaic mosaic, final String dark, final String light,
-            final double[][] workingMosaic) {
-        double error;
-        // *********************************** Hilbert curce
-        final Vector<Integer> coordinates = new Vector<>(
-                calculation.hilbertCoordinates(mosaicWidth, mosaicHeight));
-        int x0;
-        int x1;
-        int x2;
-        int x3;
-        int x4;
-        int y0;
-        int y1;
-        int y2;
-        int y3;
-        int y4;
-        final int coordinatesNumber = (coordinates.size() / 2);
-        final Enumeration<Integer> coordinatesEnum = coordinates.elements();
-        // x0 and y0 are the current coordinates
-        // x1,y1 ... x4,y4 are the following coordinates
-        // ----------------------------------
-        // init:
-        x0 = (Integer) coordinatesEnum.nextElement();
-        y0 = (Integer) coordinatesEnum.nextElement();
-        x1 = (Integer) coordinatesEnum.nextElement();
-        y1 = (Integer) coordinatesEnum.nextElement();
-        x2 = (Integer) coordinatesEnum.nextElement();
-        y2 = (Integer) coordinatesEnum.nextElement();
-        x3 = (Integer) coordinatesEnum.nextElement();
-        y3 = (Integer) coordinatesEnum.nextElement();
-        x4 = (Integer) coordinatesEnum.nextElement();
-        y4 = (Integer) coordinatesEnum.nextElement();
-        int counter = 0;
-        percent = 0;
-        int referenceValue = (mosaicHeight * mosaicWidth) / MAX_BRIGHTNESS;
-
-        if (referenceValue == 0) {
-            referenceValue = 1;
-        }
-
-        for (int i = 0; i < (coordinatesNumber); i++) {
-            // refresh progress bar
-            if (counter % referenceValue == 0) {
-                // submit progress bar refresh-function to the gui-thread
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        public void run() {
-                            percent++;
-                            dataProcessing.refreshProgressBarAlgorithm(percent,
-                                    1);
-                        }
-                    });
-                } catch (final Exception e) {
-                    System.out.println(e.toString());
-                }
-            }
-
-            counter++;
-
-            // compute color and error
-            if (workingMosaic[x0][y0] < i) {
-                mosaic.setElement(x0, y0, dark, false);
-                error = 0 - workingMosaic[x0][y0];
-            } else {
-                mosaic.setElement(x0, y0, light, false);
-                error = i - workingMosaic[x0][y0];
-            }
-
-            x0 = x1;
-            y0 = y1;
-
-            // distribute error
-            // ... 7/16 ... 5/16 ... 3/16 ... 1/16
-            // (caution: at the last mosaic pixel, the error can only be
-            // distribute
-            // to the following last pixels!)
-            if (i < (coordinatesNumber - 2)) {
-                workingMosaic[x1][y1] = errorDistribution(workingMosaic[x1][y1],
-                        FACTOR_7_16, error);
-                x1 = x2;
-                y1 = y2;
-            }
-
-            if (i < (coordinatesNumber - INT3)) {
-                workingMosaic[x2][y2] = errorDistribution(workingMosaic[x2][y2],
-                        FACTOR_5_16, error);
-                x2 = x3;
-                y2 = y3;
-            }
-
-            if (i < (coordinatesNumber - INT4)) {
-                workingMosaic[x3][y3] = errorDistribution(workingMosaic[x3][y3],
-                        FACTOR_3_16, error);
-                x3 = x4;
-                y3 = y4;
-            }
-
-            if (i < (coordinatesNumber - INT5)) {
-                workingMosaic[x4][y4] = errorDistribution(workingMosaic[x4][y4],
-                        FACTOR_1_16, error);
-                x4 = (Integer) coordinatesEnum.nextElement();
-                y4 = (Integer) coordinatesEnum.nextElement();
-            }
-        }
     }
 
     private void doFloydSteinbergSerpentines(final int mosaicWidth,
