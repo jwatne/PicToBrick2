@@ -98,22 +98,15 @@ public class FloydSteinbergQuantizer implements Quantizer {
         final double[][] workingMosaic = getSourceLuminanceValues(mosaicWidth,
                 mosaicHeight, pixelMatrix);
 
-        switch (method) {
-        case SCANLINE:
-            doFloydSteinbergScanline(mosaicWidth, mosaicHeight, mosaic, dark,
-                    light, workingMosaic);
-            break;
-        case SERPENTINES:
-            doFloydSteinbergSerpentines(mosaicWidth, mosaicHeight, mosaic, dark,
-                    light, workingMosaic);
-            break;
-        case HILBERT:
-            doHilbert(mosaicWidth, mosaicHeight, mosaic, dark, light,
-                    workingMosaic);
-            break;
-        default:
-            System.out.println("ERROR - invalid method: " + method);
-        }
+        final Mosaic updatedMosaic = switch (method) {
+        case SCANLINE -> doFloydSteinbergScanline(mosaicWidth, mosaicHeight,
+                mosaic, dark, light, workingMosaic);
+        case SERPENTINES -> doFloydSteinbergSerpentines(mosaicWidth,
+                mosaicHeight, mosaic, dark, light, workingMosaic);
+        case HILBERT -> doHilbert(mosaicWidth, mosaicHeight, mosaic, dark,
+                light, workingMosaic);
+        default -> null;
+        };
 
         // submit progress bar refresh-function to the gui-thread
         try {
@@ -127,10 +120,10 @@ public class FloydSteinbergQuantizer implements Quantizer {
             System.out.println(e.toString());
         }
 
-        return mosaic;
+        return updatedMosaic;
     }
 
-    private void doHilbert(final int mosaicWidth, final int mosaicHeight,
+    private Mosaic doHilbert(final int mosaicWidth, final int mosaicHeight,
             final Mosaic mosaic, final String dark, final String light,
             final double[][] workingMosaic) {
         // *********************************** Hilbert curve
@@ -235,9 +228,11 @@ public class FloydSteinbergQuantizer implements Quantizer {
                 y4 = (Integer) coordinatesEnum.nextElement();
             }
         }
+
+        return mosaic;
     }
 
-    private void doFloydSteinbergSerpentines(final int mosaicWidth,
+    private Mosaic doFloydSteinbergSerpentines(final int mosaicWidth,
             final int mosaicHeight, final Mosaic mosaic, final String dark,
             final String light, final double[][] workingMosaic) {
         double error;
@@ -353,9 +348,11 @@ public class FloydSteinbergQuantizer implements Quantizer {
                 }
             }
         }
+
+        return mosaic;
     }
 
-    private void doFloydSteinbergScanline(final int mosaicWidth,
+    private Mosaic doFloydSteinbergScanline(final int mosaicWidth,
             final int mosaicHeight, final Mosaic mosaic, final String dark,
             final String light, final double[][] workingMosaic) {
         double error;
@@ -418,6 +415,8 @@ public class FloydSteinbergQuantizer implements Quantizer {
                 }
             }
         }
+
+        return mosaic;
     }
 
     private double[][] getSourceLuminanceValues(final int mosaicWidth,
