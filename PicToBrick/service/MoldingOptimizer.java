@@ -210,64 +210,9 @@ public class MoldingOptimizer implements Tiler {
                         // the quantity of this element on a normal molding
                         // -----------------------------------------------
                         // (1x1 elements cause no problems)
-                        if (optimisationMethod == 1) {
-                            final var critElems = new Vector<ElementObject>();
-
-                            // 2x2 element
-                            if (covering2x2()) {
-                                final var criticalElements4 = computeElements(4,
-                                        2, 2);
-
-                                while (criticalElements4.hasMoreElements()) {
-                                    critElems.add(
-                                            criticalElements4.nextElement());
-                                }
-                            }
-
-                            // corner element
-                            if (cornerElement()) {
-                                final var criticalElements3 = computeElements(3,
-                                        2, 2);
-
-                                while (criticalElements3.hasMoreElements()) {
-                                    critElems.add(
-                                            criticalElements3.nextElement());
-                                }
-                            }
-
-                            // 1x3 element
-                            if (optElements[currColorNum][COVERING_1X3] == 1) {
-                                final var criticalElements2 = computeElements(3,
-                                        1, 3);
-
-                                while (criticalElements2.hasMoreElements()) {
-                                    critElems.add(
-                                            criticalElements2.nextElement());
-                                }
-                            }
-
-                            // 1x2 element
-                            if (optElements[currColorNum][COVERING_1X2] == 1) {
-                                final var criticalElements1 = computeElements(2,
-                                        1, 2);
-
-                                while (criticalElements1.hasMoreElements()) {
-                                    critElems.add(
-                                            criticalElements1.nextElement());
-                                }
-                            }
-
-                            // if critical elements are found, the critical
-                            // elment vector is scanned
-                            // for each element we check, if we can used it in
-                            // the
-                            // mosaic with a maximal re-coloring of 1 pixel
-                            if (critElems.size() > 0) {
-                                elementSet = processCriticalElements(
-                                        mosaicWidth, mosaicHeight, mosaic,
-                                        elementSet, colorCol, critElems);
-                            } // end if (criticalElements.size()>0)
-                        } // end optimisation
+                        elementSet = getAdditionalOptimizationModeElementSet(
+                                mosaicWidth, mosaicHeight, mosaic, elementSet,
+                                colorCol);
 
                         // if: normal optimisation mode
                         // ... or ...
@@ -332,6 +277,63 @@ public class MoldingOptimizer implements Tiler {
 
             return mosaic;
         }
+    }
+
+    private boolean getAdditionalOptimizationModeElementSet(
+            final int mosaicWidth, final int mosaicHeight, final Mosaic mosaic,
+            final boolean elementInitiallySet, final int colorCol) {
+        boolean elementSet = elementInitiallySet;
+
+        if (optimisationMethod == 1) {
+            final var critElems = new Vector<ElementObject>();
+
+            // 2x2 element
+            if (covering2x2()) {
+                final var criticalElements4 = computeElements(4, 2, 2);
+
+                while (criticalElements4.hasMoreElements()) {
+                    critElems.add(criticalElements4.nextElement());
+                }
+            }
+
+            // corner element
+            if (cornerElement()) {
+                final var criticalElements3 = computeElements(3, 2, 2);
+
+                while (criticalElements3.hasMoreElements()) {
+                    critElems.add(criticalElements3.nextElement());
+                }
+            }
+
+            // 1x3 element
+            if (optElements[currColorNum][COVERING_1X3] == 1) {
+                final var criticalElements2 = computeElements(3, 1, 3);
+
+                while (criticalElements2.hasMoreElements()) {
+                    critElems.add(criticalElements2.nextElement());
+                }
+            }
+
+            // 1x2 element
+            if (optElements[currColorNum][COVERING_1X2] == 1) {
+                final var criticalElements1 = computeElements(2, 1, 2);
+
+                while (criticalElements1.hasMoreElements()) {
+                    critElems.add(criticalElements1.nextElement());
+                }
+            }
+
+            // if critical elements are found, the critical
+            // elment vector is scanned
+            // for each element we check, if we can used it in
+            // the
+            // mosaic with a maximal re-coloring of 1 pixel
+            if (critElems.size() > 0) {
+                elementSet = processCriticalElements(mosaicWidth, mosaicHeight,
+                        mosaic, elementSet, colorCol, critElems);
+            } // end if (criticalElements.size()>0)
+        } // end optimisation
+        return elementSet;
     }
 
     private boolean checkBottomBorder(final Mosaic mosaic, final int left,
