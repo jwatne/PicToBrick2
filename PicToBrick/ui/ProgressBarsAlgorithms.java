@@ -19,6 +19,8 @@ import javax.swing.JProgressBar;
  * @author Adrian Schuetz
  */
 public class ProgressBarsAlgorithms extends JDialog {
+    /** 100% as int value (for progress bar percentage). */
+    public static final int ONE_HUNDRED_PERCENT = 100;
     /** Medium gray color. */
     private static final Color MEDIUM_GRAY = new Color(100, 100, 100);
     /** 25 pixels. */
@@ -27,8 +29,6 @@ public class ProgressBarsAlgorithms extends JDialog {
     private static final int PX300 = 300;
     /** Dark blue color. */
     private static final Color DARK_BLUE = new Color(0, 0, 150);
-    /** 100% as int value (for progress bar percentage). */
-    private static final int ONE_HUNDRED_PERCENT = 100;
     /** Count of 4. */
     private static final int COUNT4 = 4;
     /** 100 pixels (offset). */
