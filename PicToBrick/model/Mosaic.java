@@ -18,12 +18,12 @@ import pictobrick.service.SwingWorker;
  * @author Tobias Reichling
  */
 public class Mosaic {
+    /** Minimum width or height. */
+    public static final int MIN_WIDTH_OR_HEIGHT = 10;
     /** Painting portion of generating mosaic image. */
     private static final int PAINTING = 3;
     /** One hundred. */
     private static final int ONE_HUNDRED = 100;
-    /** Minimum width or height. */
-    private static final int MIN_WIDTH_OR_HEIGHT = 10;
     /** Mosaic width. */
     private int mosaicWidth = 0;
     /** Mosaic height. */

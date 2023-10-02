@@ -20,17 +20,17 @@ import javax.swing.JProgressBar;
  */
 public class ProgressBarsOutputFiles extends JDialog {
     /** Number for miscellaneous status bar. */
-    private static final int MISCELLANEOUS = 6;
+    public static final int MISCELLANEOUS = 6;
     /** Number for XML status bar. */
-    private static final int XML = 5;
+    public static final int XML = 5;
     /** Number for instruction status bar. */
     private static final int INSTRUCTION = 4;
     /** Number for material progress bar. */
-    private static final int MATERIAL = 3;
+    public static final int MATERIAL = 3;
     /** Number for configuration progress bar. */
-    private static final int CONFIGURATION = 2;
+    public static final int CONFIGURATION = 2;
     /** Number for graphic progress bar. */
-    private static final int GRAPHIC = 1;
+    public static final int GRAPHIC = 1;
     // Color names determined from https://chir.ag/projects/name-that-color/
     /** Dove gray color. */
     private static final Color DOVE_GRAY = new Color(100, 100, 100);
