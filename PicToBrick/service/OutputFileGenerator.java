@@ -486,547 +486,242 @@ public class OutputFileGenerator {
      * Generates documents and returns a message.
      *
      * @author Tobias Reichling
-     * @param grafic        true, if document will be generated
-     * @param configuration true, if document will be generated
-     * @param material      true, if document will be generated
-     * @param instruction   true, if document will be generated
-     * @param xml           true, if document will be generated
+     * @param generateGraphics true, if document will be generated
+     * @param configuration    true, if document will be generated
+     * @param material         true, if document will be generated
+     * @param instruction      true, if document will be generated
+     * @param xml              true, if document will be generated
      * @param infos
      * @return message error
      */
-    public String generateDocuments(final boolean grafic,
+    public String generateDocuments(final boolean generateGraphics,
             final boolean configuration, final boolean material,
             final boolean instruction, final boolean xml,
             final Enumeration<String> infos) {
         String error = "";
         // index.html
-        final StringBuffer index = new StringBuffer();
-        index.append(HEADER);
-        index.append(START_MENU_INDEX);
+        error = generateIndex(generateGraphics, configuration, material,
+                instruction, xml, error);
+        // grafic.html
+        error = generateGraphics(generateGraphics, configuration, material,
+                instruction, xml, error);
+        // configuration.html
+        error = generateConfiguration(generateGraphics, configuration, material,
+                instruction, xml, error);
+        // billofmaterial.html
+        error = generateBillOfMaterial(generateGraphics, configuration,
+                material, instruction, xml, error);
+        // instruction.html
+        error = generateInstructions(generateGraphics, configuration, material,
+                instruction, xml, error);
+        // xml.html
+        error = generateXml(generateGraphics, configuration, material,
+                instruction, xml, error);
+        // additional.html
+        error = generateAdditional(generateGraphics, configuration, material,
+                instruction, xml, infos, error);
 
-        if (grafic) {
-            index.append(GRAPHICS_MENU_INDEX);
+        return error;
+    }
+
+    private String generateAdditional(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final Enumeration<String> infos, final String initialError) {
+        String error = initialError;
+
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    dataProcessing.refreshProgressBarOutputFiles(
+                            ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT,
+                            ProgressBarsOutputFiles.MISCELLANEOUS);
+                }
+            });
+        } catch (final Exception e) {
         }
 
-        if (configuration) {
-            index.append(CONFIGURATION_MENU_INDEX);
+        final StringBuilder additionalString = getCommonDocumentStart(
+                generateGraphics, configuration, material, instruction, xml);
+        additionalString.append(ADDITIONAL_START);
+
+        if (!infos.hasMoreElements()) {
+            additionalString
+                    .append(textbundle.getString("output_outputFiles_43"));
+            additionalString.append(ADDITIONAL_CELL_END);
+        } else {
+            while (infos.hasMoreElements()) {
+                additionalString.append((String) infos.nextElement());
+                additionalString.append(ADDITIONAL_CELL_END);
+            }
         }
 
-        if (material) {
-            index.append(MATERIAL_MENU_INDEX);
-        }
+        additionalString.append(END);
 
-        if (instruction) {
-            index.append(INSTRUCTION_MENU_INDEX);
-        }
-
-        if (xml) {
-            index.append(XML_MENU_INDEX);
-        }
-
-        index.append(ADDITIONAL_MENU_INDEX);
-        index.append(PROJECT_NAME);
-        index.append(project);
-        index.append(PROJECT_CONTENT_INDEX_2);
-        index.append(dataProcessing.getMosaicWidth() + " x "
-                + dataProcessing.getMosaicHeight());
-        index.append(PROJECT_CONTENT_INDEX_3);
-        final int width2 = (int) (100
-                * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()
-                        * dataProcessing.getMosaicWidth()));
-        final int height2 = (int) (100
-                * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()
-                        / dataProcessing.getCurrentConfiguration()
-                                .getBasisWidth()
-                        * dataProcessing.getCurrentConfiguration()
-                                .getBasisHeight()
-                        * dataProcessing.getMosaicHeight()));
-        index.append((width2 / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                + textbundle.getString("output_decimalPoint")
-                + (width2 % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT) + " x "
-                + (height2 / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                + textbundle.getString("output_decimalPoint")
-                + (height2 % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
-        index.append(PROJECT_CONTENT_INDEX_4);
-
-        if (grafic) {
-            index.append(GRAPHICS_CONTENT_INDEX);
-        }
-
-        if (configuration) {
-            index.append(CONFIGURATION_CONTENT_INDEX);
-        }
-
-        if (material) {
-            index.append(MATERIAL_CONTENT_INDEX);
-        }
-
-        if (instruction) {
-            index.append(INSTRUCTION_CONTENT_INDEX);
-        }
-
-        if (xml) {
-            index.append(XML_CONTENT_INDEX);
-        }
-
-        index.append(END);
-
-        if (!(dataProcessing.generateUTFOutput(index.toString(), "index.html",
-                false))) {
-            error = error + "index.html "
+        if (!(dataProcessing.generateUTFOutput(additionalString.toString(),
+                "additional.html", true))) {
+            error = error + "additional.html "
                     + textbundle.getString("output_outputFiles_38") + ".\n\r";
         }
+        return error;
+    }
 
-        // grafic.html
-        if (grafic) {
-            try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                        dataProcessing
-                                .animateGraficProgressBarOutputFiles(true);
-                        dataProcessing.refreshProgressBarOutputFiles(0, 1);
-                    }
-                });
-            } catch (final Exception e) {
-                System.out.println(e);
-            }
-            final StringBuffer graficString = new StringBuffer();
-            graficString.append(HEADER);
-            graficString.append(START_MENU);
-            if (grafic) {
-                graficString.append(GRAPHIC_MENU);
-            }
-            if (configuration) {
-                graficString.append(CONFIGURATION_MENU);
-            }
-            if (material) {
-                graficString.append(MATERIAL_MENU);
-            }
-            if (instruction) {
-                graficString.append(INSTRUCTION_MENU);
-            }
-            if (xml) {
-                graficString.append(XML_MENU);
-            }
-            graficString.append(ADDITIONAL_MENU);
-            graficString.append(PROJECT_NAME);
-            graficString.append(project);
-            graficString.append(PROJECT_END);
-            graficString.append(GRAPHICS_START);
-            final BufferedImage mosaikImage = dataProcessing.getImage(true);
-            dataProcessing.generateImageOutput(mosaikImage, "mosaic");
-            final int height = (int) (mosaikImage.getHeight()
-                    * (600.0 / mosaikImage.getWidth()));
-            final int width = 600;
-            final int printWidth = (int) (100
-                    * (dataProcessing.getMosaicWidth() * dataProcessing
-                            .getCurrentConfiguration().getBasisWidthMM()));
-            graficString.append(width);
-            graficString.append(GRAPHICS_HEIGHT);
-            graficString.append(height);
-            graficString.append(GRAPHICS_PRINT_WIDTH);
-            graficString.append((printWidth
-                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                    + textbundle.getString("output_decimalPoint") + (printWidth
-                            % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
-            graficString.append(GRAPHICS_END);
-            graficString.append(END);
-            if (!(dataProcessing.generateUTFOutput(graficString.toString(),
-                    "grafic.html", true))) {
-                error = error + "grafic.html "
-                        + textbundle.getString("output_outputFiles_38")
-                        + ".\n\r";
-            }
-            try {
-                SwingUtilities.invokeAndWait(new Runnable() {
+    private String generateXml(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError) {
+        String error = initialError;
 
-                    public void run() {
-                        dataProcessing
-                                .animateGraficProgressBarOutputFiles(false);
-                        dataProcessing.refreshProgressBarOutputFiles(
-                                ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT, 1);
-                    }
-                });
-            } catch (
+        if (xml) {
+            List<List<Vector<String>>> mosaicMatrix = dataProcessing
+                    .getMosaic();
+            final StringBuilder xmlString = getCommonDocumentStart(
+                    generateGraphics, configuration, material, instruction,
+                    xml);
+            xmlString.append(XML_ALL);
+            xmlString.append(END);
 
-            final Exception e) {
-            }
-        }
-
-        // configuration.html
-        if (configuration) {
-            final StringBuffer configurationString = new StringBuffer();
-            configurationString.append(HEADER);
-            configurationString.append(START_MENU);
-            if (grafic) {
-                configurationString.append(GRAPHIC_MENU);
-            }
-            if (configuration) {
-                configurationString.append(CONFIGURATION_MENU);
-            }
-            if (material) {
-                configurationString.append(MATERIAL_MENU);
-            }
-            if (instruction) {
-                configurationString.append(INSTRUCTION_MENU);
-            }
-            if (xml) {
-                configurationString.append(XML_MENU);
-            }
-            configurationString.append(ADDITIONAL_MENU);
-            configurationString.append(PROJECT_NAME);
-            configurationString.append(project);
-            configurationString.append(PROJECT_END);
-            configurationString.append(CONFIGURATION_START);
-            configurationString.append(CONFIGURATION_NAME);
-            configurationString
-                    .append(dataProcessing.getCurrentConfiguration().getName());
-            configurationString.append(CONFIGURATION_BASIS_NAME);
-            configurationString.append(
-                    dataProcessing.getCurrentConfiguration().getBasisName());
-            configurationString.append(CONFIGURATION_BASIS_WIDTH);
-            configurationString.append(
-                    dataProcessing.getCurrentConfiguration().getBasisWidth());
-            configurationString.append(CONFIGURATION_BASIS_HEIGHT);
-            configurationString.append(
-                    dataProcessing.getCurrentConfiguration().getBasisHeight());
-            configurationString.append(CONFIGURATION_BASIS_WIDTH_MM);
-            final int widthMM = (int) (100 * (dataProcessing
-                    .getCurrentConfiguration().getBasisWidthMM()));
-            configurationString.append((widthMM
-                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                    + textbundle.getString("output_decimalPoint")
-                    + (widthMM % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
-            configurationString.append(CONFIGURATION_END);
-            configurationString.append(END);
-            if (!(dataProcessing.generateUTFOutput(
-                    configurationString.toString(), "configuration.html",
-                    true))) {
-                error = error + "configuration.html "
+            if (!(dataProcessing.generateUTFOutput(xmlString.toString(),
+                    "xml.html", true))) {
+                error = error + "xml.html "
                         + textbundle.getString("output_outputFiles_38")
                         + ".\n\r";
             }
 
-            // elements.html
-            int width = dataProcessing.getCurrentConfiguration()
-                    .getBasisWidth();
-            int height = dataProcessing.getCurrentConfiguration()
-                    .getBasisHeight();
-
-            while (width < Mosaic.MIN_WIDTH_OR_HEIGHT
-                    || height < Mosaic.MIN_WIDTH_OR_HEIGHT) {
-                width = width * 2;
-                height = height * 2;
-            }
-
-            final StringBuffer elementsString = new StringBuffer();
-            elementsString.append(HEADER);
-            elementsString.append(START_MENU);
-
-            if (grafic) {
-                elementsString.append(GRAPHIC_MENU);
-            }
-
-            if (configuration) {
-                elementsString.append(CONFIGURATION_MENU);
-            }
-
-            if (material) {
-                elementsString.append(MATERIAL_MENU);
-            }
-
-            if (instruction) {
-                elementsString.append(INSTRUCTION_MENU);
-            }
-
-            if (xml) {
-                elementsString.append(XML_MENU);
-            }
-
-            elementsString.append(ADDITIONAL_MENU);
-            elementsString.append(PROJECT_NAME);
-            elementsString.append(project);
-            elementsString.append(PROJECT_END);
-            elementsString.append(ELEMENT_START);
-            ElementObject element = new ElementObject();
-            boolean[][] matrix;
-            boolean[][] matrixNew;
-            BufferedImage elementImage;
+            // mosaic.xml
+            final StringBuilder xmldocumentString = new StringBuilder();
+            xmldocumentString.append(XML_DOCUMENT_START1);
+            xmldocumentString.append(project);
+            xmldocumentString.append(XML_DOCUMENT_START2);
+            mosaicMatrix = dataProcessing.getMosaic();
             percent = 0;
-            referenceValue = (dataProcessing.getCurrentConfiguration()
-                    .getQuantityColorsAndElements()) / REFERENCE_VALUE_DIVISOR;
+            referenceValue = (dataProcessing.getMosaicHeight()
+                    * dataProcessing.getMosaicWidth())
+                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT;
 
-            if (referenceValue == 0) {
-                referenceValue = 1;
-            }
+            for (int row = 0; row < dataProcessing.getMosaicHeight(); row++) {
+                xmldocumentString.append(XML_DOCUMENT_ROW_START);
 
-            int counter = 0;
-            int flag1 = 0;
-
-            for (final var elementsEnumeration = dataProcessing
-                    .getCurrentConfiguration()
-                    .getAllElements(); elementsEnumeration.hasMoreElements();) {
-                counter++;
-                element = (ElementObject) elementsEnumeration.nextElement();
-                elementsString.append(ELEMENT_CELL_START);
-                matrix = element.getMatrix();
-                matrixNew = new boolean[element.getHeight()
-                        + 2][element.getWidth() + 2];
-
-                // add a NULL-border to the element matrix
-                for (int row = 0; row < (element.getHeight() + 2); row++) {
-                    for (int column = 0; column < (element.getWidth()
-                            + 2); column++) {
-                        if (row == 0 || column == 0) {
-                            matrixNew[row][column] = false;
-                        } else if (row == element.getHeight() + 1
-                                || column == element.getWidth() + 1) {
-                            matrixNew[row][column] = false;
-                        } else {
-                            matrixNew[row][column] = matrix[row - 1][column
-                                    - 1];
-                        }
+                for (int column = 0; column < dataProcessing
+                        .getMosaicWidth(); column++) {
+                    if (mosaicMatrix.get(row).get(column).isEmpty()) {
+                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_EMPTY);
+                    } else {
+                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_START);
+                        xmldocumentString.append(
+                                mosaicMatrix.get(row).get(column).elementAt(0));
+                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_CENTER);
+                        xmldocumentString.append(
+                                mosaicMatrix.get(row).get(column).elementAt(1));
+                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_END);
                     }
-                }
 
-                elementImage = new BufferedImage(width * TILE_SIZE,
-                        height * element.getHeight(),
-                        BufferedImage.TYPE_INT_RGB);
-                final Graphics2D g = elementImage.createGraphics();
-                g.setColor(colorWhite);
-                g.fillRect(0, 0, width * TILE_SIZE,
-                        height * element.getHeight());
-
-                for (int row = 0; row < (element.getHeight() + 2); row++) {
-                    for (int column = 0; column < (element.getWidth()
-                            + 2); column++) {
-                        if (matrixNew[row][column]) {
-                            g.setColor(colorNormal);
-                            g.fillRect(width * (column - 1), height * (row - 1),
-                                    width, height);
-                            g.setColor(colorLight);
-
-                            // border left
-                            if (!matrixNew[row][column - 1]) {
-                                g.fillRect(width * (column - 1),
-                                        height * (row - 1) + 2, 2,
-                                        height - HALF_TILE);
-                            }
-
-                            // border top
-                            if (!matrixNew[row - 1][column]) {
-                                g.fillRect(width * (column - 1) + 2,
-                                        height * (row - 1), width - HALF_TILE,
-                                        2);
-                            }
-                            // corner top left
-                            if (!(matrixNew[row][column - 1]
-                                    && matrixNew[row - 1][column]
-                                    && matrixNew[row - 1][column - 1])) {
-                                g.fillRect(width * (column - 1),
-                                        height * (row - 1), 2, 2);
-                            }
-                            // corner bottom left
-                            if (!(matrixNew[row][column - 1]
-                                    && matrixNew[row + 1][column]
-                                    && matrixNew[row + 1][column - 1])) {
-                                if (matrixNew[row][column - 1]) {
-                                    g.setColor(colorDark);
-                                }
-                                g.fillRect(width * (column - 1),
-                                        height * (row - 1) + height - 2, 2, 2);
-                                g.setColor(colorLight);
-                            }
-                            g.setColor(colorDark);
-                            // border right
-                            if (!matrixNew[row][column + 1]) {
-                                g.fillRect(width * (column - 1) + width - 2,
-                                        height * (row - 1) + 2, 2,
-                                        height - HALF_TILE);
-                            }
-                            // border bottom
-                            if (!matrixNew[row + 1][column]) {
-                                g.fillRect(width * (column - 1) + 2,
-                                        height * (row - 1) + height - 2,
-                                        width - HALF_TILE, 2);
-                            }
-                            // corner top right
-                            if (!(matrixNew[row][column + 1]
-                                    && matrixNew[row - 1][column]
-                                    && matrixNew[row - 1][column + 1])) {
-                                if (matrixNew[row][column + 1]) {
-                                    g.setColor(colorLight);
-                                }
-
-                                g.fillRect(width * (column - 1) + width - 2,
-                                        height * (row - 1), 2, 2);
-                                g.setColor(colorDark);
-                            }
-
-                            // corner bottom right
-                            if (!(matrixNew[row][column + 1]
-                                    && matrixNew[row + 1][column]
-                                    && matrixNew[row + 1][column + 1])) {
-                                g.fillRect(width * (column - 1) + width - 2,
-                                        height * (row - 1) + height - 2, 2, 2);
-                            }
-                        }
-                    }
-                }
-
-                dataProcessing.generateImageOutput(elementImage,
-                        "element_" + counter);
-
-                if (flag1 % referenceValue == 0) {
-                    // refresh progress bars -> gui thread
                     try {
                         SwingUtilities.invokeAndWait(new Runnable() {
                             public void run() {
-                                percent = percent + REFERENCE_VALUE_DIVISOR;
+                                percent++;
                                 dataProcessing.refreshProgressBarOutputFiles(
-                                        percent, 2);
+                                        percent, ProgressBarsOutputFiles.XML);
                             }
                         });
                     } catch (final Exception e) {
                     }
                 }
 
-                flag1++;
-                elementsString.append("<img src=\"" + "element_" + counter
-                        + ".jpg\" width=\"" + width * TILE_SIZE + "\" height=\""
-                        + height * element.getHeight()
-                        + "\" alt=\"mosaic\" />");
-                elementsString.append(ELEMENT_NAME);
-                elementsString.append(element.getName());
-                elementsString.append(ELEMENT_WIDTH);
-                elementsString.append(element.getWidth());
-                elementsString.append(ELEMENT_HEIGHT);
-                elementsString.append(element.getHeight());
-                elementsString.append(ELEMENT_STABILITY);
-                elementsString.append(element.getStability());
-                elementsString.append(ELEMENT_COSTS);
-                elementsString.append(element.getCosts());
-                elementsString.append(ELEMENT_CELL_END);
+                xmldocumentString.append(XML_DOCUMENT_ROW_END);
             }
 
-            elementsString.append(ELEMENT_END);
-            elementsString.append(END);
+            xmldocumentString.append(XML_DOCUMENT_END);
 
-            if (!(dataProcessing.generateUTFOutput(elementsString.toString(),
-                    "elements.html", true))) {
-                error = error + "elements.html "
-                        + textbundle.getString("output_outputFiles_38")
-                        + ".\n\r";
-            }
-
-            // colors.html
-            final StringBuffer colorsString = new StringBuffer();
-            colorsString.append(HEADER);
-            colorsString.append(START_MENU);
-
-            if (grafic) {
-                colorsString.append(GRAPHIC_MENU);
-            }
-
-            if (configuration) {
-                colorsString.append(CONFIGURATION_MENU);
-            }
-
-            if (material) {
-                colorsString.append(MATERIAL_MENU);
-            }
-
-            if (instruction) {
-                colorsString.append(INSTRUCTION_MENU);
-            }
-
-            if (xml) {
-                colorsString.append(XML_MENU);
-            }
-
-            colorsString.append(ADDITIONAL_MENU);
-            colorsString.append(PROJECT_NAME);
-            colorsString.append(project);
-            colorsString.append(PROJECT_END);
-            colorsString.append(COLOR_START);
-            ColorObject color = new ColorObject();
-            int counter2 = 0;
-
-            for (final var colorsEnumeration = dataProcessing
-                    .getCurrentConfiguration().getAllColors(); colorsEnumeration
-                            .hasMoreElements();) {
-                counter2++;
-                color = (ColorObject) colorsEnumeration.nextElement();
-                dataProcessing.generateColorOutput(color.getRGB(),
-                        "color_" + counter2);
-
-                if (flag1 % referenceValue == 0) {
-                    // refresh progress bars -> gui thread
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            public void run() {
-                                percent = percent + REFERENCE_VALUE_DIVISOR;
-                                dataProcessing.refreshProgressBarOutputFiles(
-                                        percent, 2);
-                            }
-                        });
-                    } catch (final Exception e) {
-                    }
-                }
-
-                flag1++;
-                colorsString.append(COLOR_CELL_START);
-                colorsString.append("color_" + counter2);
-                colorsString.append(COLOR_IMAGE);
-                colorsString.append(color.getName());
-                colorsString.append(COLOR_INFO);
-                colorsString.append(color.getRGB().getRed() + ", "
-                        + color.getRGB().getGreen() + ", "
-                        + color.getRGB().getBlue());
-                colorsString.append(COLOR_CELL_END);
-            }
-
-            colorsString.append(COLOR_END);
-            colorsString.append(END);
-
-            if (!(dataProcessing.generateUTFOutput(colorsString.toString(),
-                    "colors.html", true))) {
-                error = error + "colors.html "
+            if (!(dataProcessing.generateUTFOutput(xmldocumentString.toString(),
+                    "mosaic.xml", true))) {
+                error = error + "mosaic.xml "
                         + textbundle.getString("output_outputFiles_38")
                         + ".\n\r";
             }
         }
+        return error;
+    }
 
-        // billofmaterial.html
+    private String generateInstructions(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError) {
+        String error = initialError;
+
+        if (instruction) {
+            List<List<Vector<String>>> mosaicMatrix = dataProcessing
+                    .getMosaic();
+            final StringBuilder instructionString = getCommonDocumentStart(
+                    generateGraphics, configuration, material, instruction,
+                    xml);
+            instructionString.append(INSTRUCTION_START);
+            mosaicMatrix = dataProcessing.getMosaic();
+            percent = 0;
+            referenceValue = (dataProcessing.getMosaicHeight()
+                    * dataProcessing.getMosaicWidth())
+                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT;
+
+            for (int row = 0; row < dataProcessing.getMosaicHeight(); row++) {
+                for (int column = 0; column < dataProcessing
+                        .getMosaicWidth(); column++) {
+                    instructionString.append(INSTRUCTION_CELL_START);
+                    instructionString.append(
+                            textbundle.getString("output_outputFiles_40") + " "
+                                    + (row + 1) + ", "
+                                    + textbundle
+                                            .getString("output_outputFiles_41")
+                                    + " " + (column + 1) + ": ");
+
+                    if (mosaicMatrix.get(row).get(column).isEmpty()) {
+                        instructionString.append("("
+                                + textbundle.getString("output_outputFiles_42")
+                                + ")");
+                    } else {
+                        instructionString.append((String) mosaicMatrix.get(row)
+                                .get(column).elementAt(0));
+                        instructionString.append(", ");
+                        instructionString.append((String) mosaicMatrix.get(row)
+                                .get(column).elementAt(1));
+                    }
+
+                    instructionString.append(INSTRUCTION_CELL_END);
+
+                    try {
+                        SwingUtilities.invokeAndWait(new Runnable() {
+                            public void run() {
+                                percent++;
+                                dataProcessing.refreshProgressBarOutputFiles(
+                                        percent, HALF_TILE);
+                            }
+                        });
+                    } catch (final Exception e) {
+                    }
+                }
+            }
+            instructionString.append(INSTRUCTION_END);
+            instructionString.append(END);
+            if (!(dataProcessing.generateUTFOutput(instructionString.toString(),
+                    "buildinginstruction.html", true))) {
+                error = error + "buildinginstruction.html "
+                        + textbundle.getString("output_outputFiles_38")
+                        + ".\n\r";
+            }
+        }
+        return error;
+    }
+
+    private String generateBillOfMaterial(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError) {
+        String error = initialError;
+
         if (material) {
-            final StringBuffer billofmaterialString = new StringBuffer();
-            billofmaterialString.append(HEADER);
-            billofmaterialString.append(START_MENU);
-
-            if (grafic) {
-                billofmaterialString.append(GRAPHIC_MENU);
-            }
-
-            if (configuration) {
-                billofmaterialString.append(CONFIGURATION_MENU);
-            }
-
-            if (material) {
-                billofmaterialString.append(MATERIAL_MENU);
-            }
-
-            if (instruction) {
-                billofmaterialString.append(INSTRUCTION_MENU);
-            }
-
-            if (xml) {
-                billofmaterialString.append(XML_MENU);
-            }
-
-            billofmaterialString.append(ADDITIONAL_MENU);
-            billofmaterialString.append(PROJECT_NAME);
-            billofmaterialString.append(project);
-            billofmaterialString.append(PROJECT_END);
+            final StringBuilder billofmaterialString = getCommonDocumentStart(
+                    generateGraphics, configuration, material, instruction,
+                    xml);
+            // END COMMON CODE
             billofmaterialString.append(MATERIAL_START);
             Enumeration<ColorObject> colorsEnumeration;
             Enumeration<ElementObject> elementsEnumeration;
@@ -1109,250 +804,495 @@ public class OutputFileGenerator {
                         + ".\n\r";
             }
         }
+        return error;
+    }
 
-        // instruction.html
-        if (instruction) {
-            List<List<Vector<String>>> mosaicMatrix = dataProcessing
-                    .getMosaic();
-            final StringBuffer instructionString = new StringBuffer();
-            instructionString.append(HEADER);
-            instructionString.append(START_MENU);
+    private String generateConfiguration(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError) {
+        String error = initialError;
 
-            if (grafic) {
-                instructionString.append(GRAPHIC_MENU);
+        if (configuration) {
+            error = getConfigurationHtml(generateGraphics, configuration,
+                    material, instruction, xml, error);
+
+            // elements.html
+            int width = dataProcessing.getCurrentConfiguration()
+                    .getBasisWidth();
+            int height = dataProcessing.getCurrentConfiguration()
+                    .getBasisHeight();
+
+            while (width < Mosaic.MIN_WIDTH_OR_HEIGHT
+                    || height < Mosaic.MIN_WIDTH_OR_HEIGHT) {
+                width = width * 2;
+                height = height * 2;
             }
 
-            if (configuration) {
-                instructionString.append(CONFIGURATION_MENU);
-            }
-
-            if (material) {
-                instructionString.append(MATERIAL_MENU);
-            }
-
-            if (instruction) {
-                instructionString.append(INSTRUCTION_MENU);
-            }
-
-            if (xml) {
-                instructionString.append(XML_MENU);
-            }
-
-            instructionString.append(ADDITIONAL_MENU);
-            instructionString.append(PROJECT_NAME);
-            instructionString.append(project);
-            instructionString.append(PROJECT_END);
-            instructionString.append(INSTRUCTION_START);
-            mosaicMatrix = dataProcessing.getMosaic();
+            final StringBuilder elementsString = getCommonDocumentStart(
+                    generateGraphics, configuration, material, instruction,
+                    xml);
+            elementsString.append(ELEMENT_START);
             percent = 0;
-            referenceValue = (dataProcessing.getMosaicHeight()
-                    * dataProcessing.getMosaicWidth())
-                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT;
+            referenceValue = (dataProcessing.getCurrentConfiguration()
+                    .getQuantityColorsAndElements()) / REFERENCE_VALUE_DIVISOR;
 
-            for (int row = 0; row < dataProcessing.getMosaicHeight(); row++) {
-                for (int column = 0; column < dataProcessing
-                        .getMosaicWidth(); column++) {
-                    instructionString.append(INSTRUCTION_CELL_START);
-                    instructionString.append(
-                            textbundle.getString("output_outputFiles_40") + " "
-                                    + (row + 1) + ", "
-                                    + textbundle
-                                            .getString("output_outputFiles_41")
-                                    + " " + (column + 1) + ": ");
+            if (referenceValue == 0) {
+                referenceValue = 1;
+            }
 
-                    if (mosaicMatrix.get(row).get(column).isEmpty()) {
-                        instructionString.append("("
-                                + textbundle.getString("output_outputFiles_42")
-                                + ")");
+            final int flag1 = processElementsEnumeration(width, height,
+                    elementsString);
+
+            elementsString.append(ELEMENT_END);
+            elementsString.append(END);
+
+            if (!(dataProcessing.generateUTFOutput(elementsString.toString(),
+                    "elements.html", true))) {
+                error = error + "elements.html "
+                        + textbundle.getString("output_outputFiles_38")
+                        + ".\n\r";
+            }
+
+            // colors.html
+            error = generateColorsHtml(generateGraphics, configuration,
+                    material, instruction, xml, error, flag1);
+        }
+
+        return error;
+    }
+
+    private int processElementsEnumeration(final int width, final int height,
+            final StringBuilder elementsString) {
+        int counter = 0;
+        int flag1 = 0;
+
+        ElementObject element;
+        boolean[][] matrix;
+        boolean[][] matrixNew;
+
+        for (final var elementsEnumeration = dataProcessing
+                .getCurrentConfiguration().getAllElements(); elementsEnumeration
+                        .hasMoreElements();) {
+            counter++;
+            element = (ElementObject) elementsEnumeration.nextElement();
+            elementsString.append(ELEMENT_CELL_START);
+            matrix = element.getMatrix();
+            matrixNew = new boolean[element.getHeight() + 2][element.getWidth()
+                    + 2];
+
+            // add a NULL-border to the element matrix
+            for (int row = 0; row < (element.getHeight() + 2); row++) {
+                for (int column = 0; column < (element.getWidth()
+                        + 2); column++) {
+                    if (row == 0 || column == 0) {
+                        matrixNew[row][column] = false;
+                    } else if (row == element.getHeight() + 1
+                            || column == element.getWidth() + 1) {
+                        matrixNew[row][column] = false;
                     } else {
-                        instructionString.append((String) mosaicMatrix.get(row)
-                                .get(column).elementAt(0));
-                        instructionString.append(", ");
-                        instructionString.append((String) mosaicMatrix.get(row)
-                                .get(column).elementAt(1));
-                    }
-
-                    instructionString.append(INSTRUCTION_CELL_END);
-
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            public void run() {
-                                percent++;
-                                dataProcessing.refreshProgressBarOutputFiles(
-                                        percent, HALF_TILE);
-                            }
-                        });
-                    } catch (final Exception e) {
+                        matrixNew[row][column] = matrix[row - 1][column - 1];
                     }
                 }
             }
-            instructionString.append(INSTRUCTION_END);
-            instructionString.append(END);
-            if (!(dataProcessing.generateUTFOutput(instructionString.toString(),
-                    "buildinginstruction.html", true))) {
-                error = error + "buildinginstruction.html "
-                        + textbundle.getString("output_outputFiles_38")
-                        + ".\n\r";
+
+            processElementImage(width, height, counter, element, matrixNew);
+
+            if (flag1 % referenceValue == 0) {
+                // refresh progress bars -> gui thread
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        public void run() {
+                            percent = percent + REFERENCE_VALUE_DIVISOR;
+                            dataProcessing
+                                    .refreshProgressBarOutputFiles(percent, 2);
+                        }
+                    });
+                } catch (final Exception e) {
+                }
             }
+
+            flag1++;
+            elementsString.append("<img src=\"" + "element_" + counter
+                    + ".jpg\" width=\"" + width * TILE_SIZE + "\" height=\""
+                    + height * element.getHeight() + "\" alt=\"mosaic\" />");
+            elementsString.append(ELEMENT_NAME);
+            elementsString.append(element.getName());
+            elementsString.append(ELEMENT_WIDTH);
+            elementsString.append(element.getWidth());
+            elementsString.append(ELEMENT_HEIGHT);
+            elementsString.append(element.getHeight());
+            elementsString.append(ELEMENT_STABILITY);
+            elementsString.append(element.getStability());
+            elementsString.append(ELEMENT_COSTS);
+            elementsString.append(element.getCosts());
+            elementsString.append(ELEMENT_CELL_END);
         }
 
-        // xml.html
-        if (xml) {
-            List<List<Vector<String>>> mosaicMatrix = dataProcessing
-                    .getMosaic();
-            final StringBuffer xmlAusgabe = new StringBuffer();
-            xmlAusgabe.append(HEADER);
-            xmlAusgabe.append(START_MENU);
+        return flag1;
+    }
 
-            if (grafic) {
-                xmlAusgabe.append(GRAPHIC_MENU);
-            }
+    private void processElementImage(final int width, final int height,
+            final int counter, final ElementObject element,
+            final boolean[][] matrixNew) {
+        BufferedImage elementImage;
+        elementImage = new BufferedImage(width * TILE_SIZE,
+                height * element.getHeight(), BufferedImage.TYPE_INT_RGB);
+        final Graphics2D g = elementImage.createGraphics();
+        g.setColor(colorWhite);
+        g.fillRect(0, 0, width * TILE_SIZE, height * element.getHeight());
 
-            if (configuration) {
-                xmlAusgabe.append(CONFIGURATION_MENU);
-            }
+        for (int row = 0; row < (element.getHeight() + 2); row++) {
+            for (int column = 0; column < (element.getWidth() + 2); column++) {
+                if (matrixNew[row][column]) {
+                    g.setColor(colorNormal);
+                    g.fillRect(width * (column - 1), height * (row - 1), width,
+                            height);
+                    g.setColor(colorLight);
 
-            if (material) {
-                xmlAusgabe.append(MATERIAL_MENU);
-            }
-
-            if (instruction) {
-                xmlAusgabe.append(INSTRUCTION_MENU);
-            }
-
-            if (xml) {
-                xmlAusgabe.append(XML_MENU);
-            }
-
-            xmlAusgabe.append(ADDITIONAL_MENU);
-            xmlAusgabe.append(PROJECT_NAME);
-            xmlAusgabe.append(project);
-            xmlAusgabe.append(PROJECT_END);
-            xmlAusgabe.append(XML_ALL);
-            xmlAusgabe.append(END);
-
-            if (!(dataProcessing.generateUTFOutput(xmlAusgabe.toString(),
-                    "xml.html", true))) {
-                error = error + "xml.html "
-                        + textbundle.getString("output_outputFiles_38")
-                        + ".\n\r";
-            }
-
-            // mosaic.xml
-            final StringBuffer xmldocumentString = new StringBuffer();
-            xmldocumentString.append(XML_DOCUMENT_START1);
-            xmldocumentString.append(project);
-            xmldocumentString.append(XML_DOCUMENT_START2);
-            mosaicMatrix = dataProcessing.getMosaic();
-            percent = 0;
-            referenceValue = (dataProcessing.getMosaicHeight()
-                    * dataProcessing.getMosaicWidth())
-                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT;
-
-            for (int row = 0; row < dataProcessing.getMosaicHeight(); row++) {
-                xmldocumentString.append(XML_DOCUMENT_ROW_START);
-
-                for (int column = 0; column < dataProcessing
-                        .getMosaicWidth(); column++) {
-                    if (mosaicMatrix.get(row).get(column).isEmpty()) {
-                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_EMPTY);
-                    } else {
-                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_START);
-                        xmldocumentString.append(
-                                mosaicMatrix.get(row).get(column).elementAt(0));
-                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_CENTER);
-                        xmldocumentString.append(
-                                mosaicMatrix.get(row).get(column).elementAt(1));
-                        xmldocumentString.append(XML_DOCUMENT_ELEMENT_END);
+                    // border left
+                    if (!matrixNew[row][column - 1]) {
+                        g.fillRect(width * (column - 1), height * (row - 1) + 2,
+                                2, height - HALF_TILE);
                     }
 
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            public void run() {
-                                percent++;
-                                dataProcessing.refreshProgressBarOutputFiles(
-                                        percent, ProgressBarsOutputFiles.XML);
-                            }
-                        });
-                    } catch (final Exception e) {
+                    // border top
+                    if (!matrixNew[row - 1][column]) {
+                        g.fillRect(width * (column - 1) + 2, height * (row - 1),
+                                width - HALF_TILE, 2);
+                    }
+                    // corner top left
+                    if (!(matrixNew[row][column - 1]
+                            && matrixNew[row - 1][column]
+                            && matrixNew[row - 1][column - 1])) {
+                        g.fillRect(width * (column - 1), height * (row - 1), 2,
+                                2);
+                    }
+                    // corner bottom left
+                    if (!(matrixNew[row][column - 1]
+                            && matrixNew[row + 1][column]
+                            && matrixNew[row + 1][column - 1])) {
+                        if (matrixNew[row][column - 1]) {
+                            g.setColor(colorDark);
+                        }
+                        g.fillRect(width * (column - 1),
+                                height * (row - 1) + height - 2, 2, 2);
+                        g.setColor(colorLight);
+                    }
+                    g.setColor(colorDark);
+                    // border right
+                    if (!matrixNew[row][column + 1]) {
+                        g.fillRect(width * (column - 1) + width - 2,
+                                height * (row - 1) + 2, 2, height - HALF_TILE);
+                    }
+                    // border bottom
+                    if (!matrixNew[row + 1][column]) {
+                        g.fillRect(width * (column - 1) + 2,
+                                height * (row - 1) + height - 2,
+                                width - HALF_TILE, 2);
+                    }
+                    // corner top right
+                    if (!(matrixNew[row][column + 1]
+                            && matrixNew[row - 1][column]
+                            && matrixNew[row - 1][column + 1])) {
+                        if (matrixNew[row][column + 1]) {
+                            g.setColor(colorLight);
+                        }
+
+                        g.fillRect(width * (column - 1) + width - 2,
+                                height * (row - 1), 2, 2);
+                        g.setColor(colorDark);
+                    }
+
+                    // corner bottom right
+                    if (!(matrixNew[row][column + 1]
+                            && matrixNew[row + 1][column]
+                            && matrixNew[row + 1][column + 1])) {
+                        g.fillRect(width * (column - 1) + width - 2,
+                                height * (row - 1) + height - 2, 2, 2);
                     }
                 }
-
-                xmldocumentString.append(XML_DOCUMENT_ROW_END);
-            }
-
-            xmldocumentString.append(XML_DOCUMENT_END);
-
-            if (!(dataProcessing.generateUTFOutput(xmldocumentString.toString(),
-                    "mosaic.xml", true))) {
-                error = error + "mosaic.xml "
-                        + textbundle.getString("output_outputFiles_38")
-                        + ".\n\r";
             }
         }
 
-        // additional.html
-        final StringBuffer additionalString = new StringBuffer();
+        dataProcessing.generateImageOutput(elementImage, "element_" + counter);
+    }
 
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                public void run() {
-                    dataProcessing.refreshProgressBarOutputFiles(
-                            ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT,
-                            ProgressBarsOutputFiles.MISCELLANEOUS);
+    private String generateColorsHtml(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError, final int initialFlag1) {
+        int flag1 = initialFlag1;
+        String error = initialError;
+        final StringBuilder colorsString = getCommonDocumentStart(
+                generateGraphics, configuration, material, instruction, xml);
+        colorsString.append(COLOR_START);
+        ColorObject color = new ColorObject();
+        int counter2 = 0;
+
+        for (final var colorsEnumeration = dataProcessing
+                .getCurrentConfiguration().getAllColors(); colorsEnumeration
+                        .hasMoreElements();) {
+            counter2++;
+            color = (ColorObject) colorsEnumeration.nextElement();
+            dataProcessing.generateColorOutput(color.getRGB(),
+                    "color_" + counter2);
+
+            if (flag1 % referenceValue == 0) {
+                // refresh progress bars -> gui thread
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        public void run() {
+                            percent = percent + REFERENCE_VALUE_DIVISOR;
+                            dataProcessing
+                                    .refreshProgressBarOutputFiles(percent, 2);
+                        }
+                    });
+                } catch (final Exception e) {
                 }
-            });
-        } catch (final Exception e) {
+            }
+
+            flag1++;
+            colorsString.append(COLOR_CELL_START);
+            colorsString.append("color_" + counter2);
+            colorsString.append(COLOR_IMAGE);
+            colorsString.append(color.getName());
+            colorsString.append(COLOR_INFO);
+            colorsString.append(
+                    color.getRGB().getRed() + ", " + color.getRGB().getGreen()
+                            + ", " + color.getRGB().getBlue());
+            colorsString.append(COLOR_CELL_END);
         }
 
-        additionalString.append(HEADER);
-        additionalString.append(START_MENU);
+        colorsString.append(COLOR_END);
+        colorsString.append(END);
 
-        if (grafic) {
-            additionalString.append(GRAPHIC_MENU);
+        if (!(dataProcessing.generateUTFOutput(colorsString.toString(),
+                "colors.html", true))) {
+            error = error + "colors.html "
+                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
+        }
+        return error;
+    }
+
+    private String getConfigurationHtml(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError) {
+        String error = initialError;
+        final StringBuilder configurationString = getCommonDocumentStart(
+                generateGraphics, configuration, material, instruction, xml);
+        configurationString.append(CONFIGURATION_START);
+        configurationString.append(CONFIGURATION_NAME);
+        configurationString
+                .append(dataProcessing.getCurrentConfiguration().getName());
+        configurationString.append(CONFIGURATION_BASIS_NAME);
+        configurationString.append(
+                dataProcessing.getCurrentConfiguration().getBasisName());
+        configurationString.append(CONFIGURATION_BASIS_WIDTH);
+        configurationString.append(
+                dataProcessing.getCurrentConfiguration().getBasisWidth());
+        configurationString.append(CONFIGURATION_BASIS_HEIGHT);
+        configurationString.append(
+                dataProcessing.getCurrentConfiguration().getBasisHeight());
+        configurationString.append(CONFIGURATION_BASIS_WIDTH_MM);
+        final int widthMM = (int) (100
+                * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()));
+        configurationString
+                .append((widthMM / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
+                        + textbundle.getString("output_decimalPoint") + (widthMM
+                                % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
+        configurationString.append(CONFIGURATION_END);
+        configurationString.append(END);
+
+        if (!(dataProcessing.generateUTFOutput(configurationString.toString(),
+                "configuration.html", true))) {
+            error = error + "configuration.html "
+                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
+        }
+        return error;
+    }
+
+    private StringBuilder getCommonDocumentStart(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(HEADER);
+        builder.append(START_MENU);
+
+        if (generateGraphics) {
+            builder.append(GRAPHIC_MENU);
         }
 
         if (configuration) {
-            additionalString.append(CONFIGURATION_MENU);
+            builder.append(CONFIGURATION_MENU);
         }
 
         if (material) {
-            additionalString.append(MATERIAL_MENU);
+            builder.append(MATERIAL_MENU);
         }
 
         if (instruction) {
-            additionalString.append(INSTRUCTION_MENU);
+            builder.append(INSTRUCTION_MENU);
         }
 
         if (xml) {
-            additionalString.append(XML_MENU);
+            builder.append(XML_MENU);
         }
 
-        additionalString.append(ADDITIONAL_MENU);
-        additionalString.append(PROJECT_NAME);
-        additionalString.append(project);
-        additionalString.append(PROJECT_END);
-        additionalString.append(ADDITIONAL_START);
+        builder.append(ADDITIONAL_MENU);
+        builder.append(PROJECT_NAME);
+        builder.append(project);
+        builder.append(PROJECT_END);
+        return builder;
+    }
 
-        if (!infos.hasMoreElements()) {
-            additionalString
-                    .append(textbundle.getString("output_outputFiles_43"));
-            additionalString.append(ADDITIONAL_CELL_END);
-        } else {
-            while (infos.hasMoreElements()) {
-                additionalString.append((String) infos.nextElement());
-                additionalString.append(ADDITIONAL_CELL_END);
+    private String generateGraphics(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError) {
+        String error = initialError;
+
+        if (generateGraphics) {
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        dataProcessing
+                                .animateGraficProgressBarOutputFiles(true);
+                        dataProcessing.refreshProgressBarOutputFiles(0, 1);
+                    }
+                });
+            } catch (final Exception e) {
+                System.out.println(e);
+            }
+
+            final StringBuilder graficString = getCommonDocumentStart(
+                    generateGraphics, configuration, material, instruction,
+                    xml);
+            graficString.append(GRAPHICS_START);
+            final BufferedImage mosaicImage = dataProcessing.getImage(true);
+            dataProcessing.generateImageOutput(mosaicImage, "mosaic");
+            final int height = (int) (mosaicImage.getHeight()
+                    * (600.0 / mosaicImage.getWidth()));
+            final int width = 600;
+            final int printWidth = (int) (100
+                    * (dataProcessing.getMosaicWidth() * dataProcessing
+                            .getCurrentConfiguration().getBasisWidthMM()));
+            graficString.append(width);
+            graficString.append(GRAPHICS_HEIGHT);
+            graficString.append(height);
+            graficString.append(GRAPHICS_PRINT_WIDTH);
+            graficString.append((printWidth
+                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
+                    + textbundle.getString("output_decimalPoint") + (printWidth
+                            % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
+            graficString.append(GRAPHICS_END);
+            graficString.append(END);
+            if (!(dataProcessing.generateUTFOutput(graficString.toString(),
+                    "grafic.html", true))) {
+                error = error + "grafic.html "
+                        + textbundle.getString("output_outputFiles_38")
+                        + ".\n\r";
+            }
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+
+                    public void run() {
+                        dataProcessing
+                                .animateGraficProgressBarOutputFiles(false);
+                        dataProcessing.refreshProgressBarOutputFiles(
+                                ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT, 1);
+                    }
+                });
+            } catch (
+
+            final Exception e) {
             }
         }
+        return error;
+    }
 
-        additionalString.append(END);
+    private String generateIndex(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml,
+            final String initialError) {
+        String error = initialError;
+        final StringBuilder index = new StringBuilder();
+        index.append(HEADER);
+        index.append(START_MENU_INDEX);
 
-        if (!(dataProcessing.generateUTFOutput(additionalString.toString(),
-                "additional.html", true))) {
-            error = error + "additional.html "
-                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
+        if (generateGraphics) {
+            index.append(GRAPHICS_MENU_INDEX);
         }
 
+        if (configuration) {
+            index.append(CONFIGURATION_MENU_INDEX);
+        }
+
+        if (material) {
+            index.append(MATERIAL_MENU_INDEX);
+        }
+
+        if (instruction) {
+            index.append(INSTRUCTION_MENU_INDEX);
+        }
+
+        if (xml) {
+            index.append(XML_MENU_INDEX);
+        }
+
+        index.append(ADDITIONAL_MENU_INDEX);
+        index.append(PROJECT_NAME);
+        index.append(project);
+        index.append(PROJECT_CONTENT_INDEX_2);
+        index.append(dataProcessing.getMosaicWidth() + " x "
+                + dataProcessing.getMosaicHeight());
+        index.append(PROJECT_CONTENT_INDEX_3);
+        final int width2 = (int) (100
+                * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()
+                        * dataProcessing.getMosaicWidth()));
+        final int height2 = (int) (100
+                * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()
+                        / dataProcessing.getCurrentConfiguration()
+                                .getBasisWidth()
+                        * dataProcessing.getCurrentConfiguration()
+                                .getBasisHeight()
+                        * dataProcessing.getMosaicHeight()));
+        index.append((width2 / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
+                + textbundle.getString("output_decimalPoint")
+                + (width2 % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT) + " x "
+                + (height2 / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
+                + textbundle.getString("output_decimalPoint")
+                + (height2 % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
+        index.append(PROJECT_CONTENT_INDEX_4);
+
+        if (generateGraphics) {
+            index.append(GRAPHICS_CONTENT_INDEX);
+        }
+
+        if (configuration) {
+            index.append(CONFIGURATION_CONTENT_INDEX);
+        }
+
+        if (material) {
+            index.append(MATERIAL_CONTENT_INDEX);
+        }
+
+        if (instruction) {
+            index.append(INSTRUCTION_CONTENT_INDEX);
+        }
+
+        if (xml) {
+            index.append(XML_CONTENT_INDEX);
+        }
+
+        index.append(END);
+
+        if (!(dataProcessing.generateUTFOutput(index.toString(), "index.html",
+                false))) {
+            error = error + "index.html "
+                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
+        }
         return error;
     }
 
