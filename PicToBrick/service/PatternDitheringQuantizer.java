@@ -179,17 +179,7 @@ public class PatternDitheringQuantizer implements Quantizer {
 
         for (mosaicRow = 0; mosaicRow < mosaicHeight; mosaicRow++) {
             // submit progress bar refresh-function to the gui-thread
-            try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                        percent = (int) ((Calculator.ONE_HUNDRED_PERCENT / rows)
-                                * mosaicRow);
-                        dataProcessing.refreshProgressBarAlgorithm(percent, 1);
-                    }
-                });
-            } catch (final Exception e) {
-                System.out.println(e.toString());
-            }
+            refreshProgressBar();
 
             for (int mColumn = 0; mColumn < mosaicWidth; mColumn++) {
                 double minimumDifference = STARTING_MIN_DIFFERENCE;
@@ -213,39 +203,31 @@ public class PatternDitheringQuantizer implements Quantizer {
                         colorName4 = colorNames4[x];
                     }
                 }
-                // set color
-                // choose the color from the color pattern using the position
-                // information
-                // if the mosaic row is even (odd) take the color from the
-                // pattern position
-                // where the row is even (odd)
-                // column: see above
-                if ((mosaicRow % 2) == 0) {
-                    // mosaicRow even
-                    if ((mColumn % 2) == 0) {
-                        // mosaicColumn even
-                        mosaic.setElement(mosaicRow, mColumn, colorName1,
-                                false);
-                    } else {
-                        // mosaicColumn odd
-                        mosaic.setElement(mosaicRow, mColumn, colorName2,
-                                false);
-                    }
-                } else {
-                    // mosaicRow odd
-                    if ((mColumn % 2) == 0) {
-                        // mosaicColumn even
-                        mosaic.setElement(mosaicRow, mColumn, colorName3,
-                                false);
-                    } else {
-                        // mosaicColumn odd
-                        mosaic.setElement(mosaicRow, mColumn, colorName4,
-                                false);
-                    }
-                }
+
+                setColorForPosition(mosaic, colorName1, colorName2, colorName3,
+                        colorName4, mColumn);
             }
         }
 
+        setProgressBarTofinished();
+        return mosaic;
+    }
+
+    private void refreshProgressBar() {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    percent = (int) ((Calculator.ONE_HUNDRED_PERCENT / rows)
+                            * mosaicRow);
+                    dataProcessing.refreshProgressBarAlgorithm(percent, 1);
+                }
+            });
+        } catch (final Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    private void setProgressBarTofinished() {
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
@@ -256,8 +238,47 @@ public class PatternDitheringQuantizer implements Quantizer {
         } catch (final Exception e) {
             System.out.println(e.toString());
         }
+    }
 
-        return mosaic;
+    /**
+     * Sets color. Choose the color from the color pattern using the position
+     * information.
+     * <ul>
+     * <li>If the mosaic row is even (odd) take the color from the pattern
+     * position where the row is even (odd).</li>
+     * <li>Column: see above.</li>
+     * </ul>
+     *
+     * @param mosaic     Mosaic being updated.
+     * @param colorName1 Dither color 1.
+     * @param colorName2 Dither color 2.
+     * @param colorName3 Dither color 3.
+     * @param colorName4 Dither color 4.
+     * @param mColumn    column being processed.
+     */
+    private void setColorForPosition(final Mosaic mosaic,
+            final String colorName1, final String colorName2,
+            final String colorName3, final String colorName4,
+            final int mColumn) {
+        if ((mosaicRow % 2) == 0) {
+            // mosaicRow even
+            if ((mColumn % 2) == 0) {
+                // mosaicColumn even
+                mosaic.setElement(mosaicRow, mColumn, colorName1, false);
+            } else {
+                // mosaicColumn odd
+                mosaic.setElement(mosaicRow, mColumn, colorName2, false);
+            }
+        } else {
+            // mosaicRow odd
+            if ((mColumn % 2) == 0) {
+                // mosaicColumn even
+                mosaic.setElement(mosaicRow, mColumn, colorName3, false);
+            } else {
+                // mosaicColumn odd
+                mosaic.setElement(mosaicRow, mColumn, colorName4, false);
+            }
+        }
     }
 
     /**
