@@ -192,9 +192,26 @@ public class SolidRegionsQuantizer implements Quantizer {
 
             }
         }
-        // filter for gerneration big monochromo regions:
-        // count how often the current color exists in the near 8 pixels
-        // 3x3 filter
+        //
+
+        generateBigMonochromeRegionsUsing3X3Filter(mosaicWidth, mosaicHeight,
+                workingMosaic);
+        transferColorInfo(mosaicWidth, mosaicHeight, mosaic, workingMosaic);
+        maxProgressBar();
+        return mosaic;
+    }
+
+    /**
+     * Filter for generating big monochrome regions: Count how often the current
+     * color exists in the near 8 pixels, using 3x3 filter.
+     *
+     * @param mosaicWidth
+     * @param mosaicHeight
+     * @param workingMosaic
+     */
+    private void generateBigMonochromeRegionsUsing3X3Filter(
+            final int mosaicWidth, final int mosaicHeight,
+            final String[][] workingMosaic) {
         int colorCounter;
         String currentColorName;
 
@@ -238,55 +255,74 @@ public class SolidRegionsQuantizer implements Quantizer {
                     colorCounter++;
                 }
 
-                // a color is changed if it exists less than 2 times
-                // the threshold is 2 because a lower or a higher
-                // threshold will affect the image quality
-                //
-                // computes the color which exits more often than other
-                // colors in this 3x3 window
-                // change the current color to this new color
-                if (colorCounter < 2) {
-                    int colorCounter2;
-                    String newColor = "";
-                    int flag = 0;
-                    String testColor;
+                computeColorChange(workingMosaic, colorCounter, row, column);
+            }
+        }
+    }
 
-                    for (int windowRow = (row - 1); windowRow < (row
-                            + 2); windowRow++) {
-                        for (int windowColumn = (column
-                                - 1); windowColumn < (column
-                                        + 2); windowColumn++) {
-                            testColor = workingMosaic[windowRow][windowColumn];
-                            colorCounter2 = 0;
+    /**
+     * A color is changed if it exists less than 2 times. The threshold is 2
+     * because a lower or a higher threshold will affect the image quality.
+     *
+     * Computes the color which exists more often than other colors in this 3x3
+     * window. Change the current color to this new color.
+     *
+     * @param workingMosaic
+     * @param colorCounter
+     * @param row
+     * @param column
+     */
+    private void computeColorChange(final String[][] workingMosaic,
+            final int colorCounter, final int row, final int column) {
+        if (colorCounter < 2) {
+            int colorCounter2;
+            String newColor = "";
+            int flag = 0;
+            String testColor;
 
-                            for (int winRow2 = (row - 1); winRow2 < (row
-                                    + 2); winRow2++) {
-                                for (int winCol2 = (column
-                                        - 1); winCol2 < (column
-                                                + 2); winCol2++) {
-                                    if (testColor.equals(
-                                            workingMosaic[winRow2][winCol2])) {
-                                        colorCounter2++;
-                                    }
-                                }
-                            }
+            for (int windowRow = (row - 1); windowRow < (row
+                    + 2); windowRow++) {
+                for (int windowColumn = (column - 1); windowColumn < (column
+                        + 2); windowColumn++) {
+                    testColor = workingMosaic[windowRow][windowColumn];
+                    colorCounter2 = 0;
 
-                            if (colorCounter2 > flag) {
-                                newColor = testColor;
-                                flag = colorCounter2;
+                    for (int winRow2 = (row - 1); winRow2 < (row
+                            + 2); winRow2++) {
+                        for (int winCol2 = (column - 1); winCol2 < (column
+                                + 2); winCol2++) {
+                            if (testColor
+                                    .equals(workingMosaic[winRow2][winCol2])) {
+                                colorCounter2++;
                             }
                         }
                     }
 
-                    // change color
-                    workingMosaic[row][column] = newColor;
+                    if (colorCounter2 > flag) {
+                        newColor = testColor;
+                        flag = colorCounter2;
+                    }
                 }
             }
-        }
 
-        // transfer color information from working mosaic to original mosaic
-        // (caution: dont transfer the color information from the one pixel wide
-        // border)
+            // change color
+            workingMosaic[row][column] = newColor;
+        }
+    }
+
+    /**
+     * Transfer color information from working mosaic to original mosaic.
+     * (Caution: don't transfer the color information from the one pixel wide
+     * border.)
+     *
+     * @param mosaicWidth   width of mosaic.
+     * @param mosaicHeight  height of mosaic.
+     * @param mosaic        mosaic being processed.
+     * @param workingMosaic source mosaic with data to be copied to mosaic.
+     */
+    private void transferColorInfo(final int mosaicWidth,
+            final int mosaicHeight, final Mosaic mosaic,
+            final String[][] workingMosaic) {
         for (int row = 1; row < mosaicHeight; row++) {
             for (int column = 1; column < mosaicWidth; column++) {
                 mosaic.initVector(row - 1, column - 1);
@@ -294,7 +330,9 @@ public class SolidRegionsQuantizer implements Quantizer {
                         workingMosaic[row][column], false);
             }
         }
+    }
 
+    private void maxProgressBar() {
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
@@ -305,7 +343,5 @@ public class SolidRegionsQuantizer implements Quantizer {
         } catch (final Exception e) {
             System.out.println(e.toString());
         }
-
-        return mosaic;
     }
 }
