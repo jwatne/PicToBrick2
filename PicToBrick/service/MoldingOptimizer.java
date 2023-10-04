@@ -31,8 +31,6 @@ public class MoldingOptimizer implements Tiler {
     private static final int TEN = 10;
     /** Number of cents per Euro. */
     private static final int CENT_TO_EURO_MULTIPLIER = 100;
-    /** Divisor (and mod) of recolored values. */
-    private static final int RECOLORED_DIVISOR = 10;
     /** Critical quantity for additional optimization, 2x2. */
     private static final int CRITICAL_2X2 = 8;
     /** Critical quantity for additional optimization, corner 2x2. */

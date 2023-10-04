@@ -20,8 +20,6 @@ import pictobrick.ui.ProgressBarsAlgorithms;
  * @author Tobias Reichling
  */
 public class SolidRegionsQuantizer implements Quantizer {
-    /** Starting minimum difference value for determining best fit region. */
-    private static final double STARTING_MIN_DIFFERENCE = 500.0;
     /** Data processor. */
     private final DataProcessor dataProcessing;
     /** Calculator. */

@@ -29,19 +29,19 @@ public class DataProcessor {
     /** Show information in both dialog and output files. */
     public static final int SHOW_IN_BOTH = 3;
     /** Naive RGB quatization. */
-    private static final int NAIVE_RGB = 1;
+    public static final int NAIVE_RGB = 1;
     /** Floyd/Steinberg quantization. */
-    private static final int FLOYD_STEINBERG = 2;
+    public static final int FLOYD_STEINBERG = 2;
     /** Vector error diffusion quantization. */
-    private static final int VECTOR_ERROR_DIFFUSION = 3;
+    public static final int VECTOR_ERROR_DIFFUSION = 3;
     /** Pattern dithering quantization. */
-    private static final int PATTERN_DITHERING = 4;
+    public static final int PATTERN_DITHERING = 4;
     /** Solid regions quantization. */
-    private static final int SOLID_REGIONS = 5;
+    public static final int SOLID_REGIONS = 5;
     /** Slicing quantization.. */
-    private static final int SLICING = 6;
+    public static final int SLICING = 6;
     /** Naive LAB quantization. */
-    private static final int NAIVE_LAB = 7;
+    public static final int NAIVE_LAB = 7;
     /** Element size optimization. */
     private static final int ELEMENT_SIZE_OPTIMIZATION = 1;
     /** Molding optimization. */

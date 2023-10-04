@@ -11,6 +11,8 @@ import pictobrick.model.Mosaic;
  * @author Adrian Schuetz
  */
 public interface Quantizer {
+    /** Starting minimum difference value for determining best fit region. */
+    double STARTING_MIN_DIFFERENCE = 500.0;
 
     /**
      * Color matching.
