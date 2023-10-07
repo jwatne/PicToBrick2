@@ -14,6 +14,7 @@ import pictobrick.model.Configuration;
 import pictobrick.model.ElementObject;
 import pictobrick.model.Lab;
 import pictobrick.model.Mosaic;
+import pictobrick.ui.ProgressBarsAlgorithms;
 
 /**
  * Tiling with stability optimisation.
@@ -104,20 +105,11 @@ public class StabilityOptimizer implements Tiler {
         this.rows = mosaicHeight;
         final Enumeration<Object> tilingInfoEnum = tilingInfo.elements();
         quantisationAlgo = (Integer) tilingInfoEnum.nextElement();
-
-        // compute colorCount for Floyd-Steinberg 2 colors
-        // for all other algorithms: colorVectorlength (colorValue+Name) / 2
-        if (quantisationAlgo == DataProcessor.FLOYD_STEINBERG) {
-            this.colorCount = 2;
-        } else {
-            this.colorCount = (tilingInfo.size() - INT4) / 2;
-        }
-
-        // Values from the stybility optimisation dialog
+        setColorCount();
+        // Values from the stability optimisation dialog
         this.optimisation = (Boolean) tilingInfoEnum.nextElement();
         this.onlyBorderHandling = (Boolean) tilingInfoEnum.nextElement();
         this.maximumGapHeight = (Integer) tilingInfoEnum.nextElement();
-
         final String[] colors = new String[colorCount]; // Array for the colors
         final int[] threshold = new int[colorCount + 1]; // Array for the
                                                          // threshold of the
@@ -128,48 +120,11 @@ public class StabilityOptimizer implements Tiler {
             threshold[i] = -1;
         }
 
-        // color vector with all colors
-        for (final Enumeration<ColorObject> colorsEnum = configuration
-                .getAllColors(); colorsEnum.hasMoreElements();) {
-            final ColorObject color = (ColorObject) (colorsEnum.nextElement());
-            this.labColors.add(calculation.rgbToLab(color.getRGB()));
-            this.labColors.add(color.getName());
-        }
-
-        // thresholdarray and colorarray
-        if (quantisationAlgo == DataProcessor.FLOYD_STEINBERG) {
-            // Floyd-Steinberg
-            colors[0] = (String) tilingInfoEnum.nextElement();
-            colors[1] = (String) tilingInfoEnum.nextElement();
-            threshold[0] = 0;
-            threshold[1] = THRESHOLD1;
-            threshold[2] = THRESHOLD2;
-        } else if (quantisationAlgo == DataProcessor.SLICING) {
-            // N-Level
-            for (int i = 0; i < colorCount; i++) {
-                colors[i] = (String) tilingInfoEnum.nextElement();
-                threshold[i] = (Integer) tilingInfoEnum.nextElement();
-            }
-
-            // the threshold array is adjusted by the luminance value 100
-            // the colors are placed between 2 thresholds
-            threshold[colorCount] = THRESHOLD2;
-        }
-
-        // the original image (to determine the original colors later)
-        final BufferedImage original = calculation.scale(
-                dataProcessing.getImage(false), mosaicWidth, mosaicHeight,
-                dataProcessing.getInterpolation());
-        final int[][][] originalMatrix = calculation.pixelMatrix(original);
-        // Array th remeber the gaps
-        borders = new boolean[mosaicHeight][mosaicWidth];
-
-        for (int x = 0; x < mosaicHeight; x++) {
-            for (int y = 0; y < mosaicWidth; y++) {
-                borders[x][y] = false;
-            }
-        }
-
+        initializeColorVector(configuration);
+        initializeThresholdAndColorArrays(tilingInfoEnum, colors, threshold);
+        final int[][][] originalMatrix = getOriginalMatrix(mosaicWidth,
+                mosaicHeight);
+        initializeBordersArray(mosaicWidth, mosaicHeight);
         // Create vector with elements (sorted by stability)
         final Vector<ElementObject> elementsSorted = sortElementsByStability(
                 configuration.getAllElements());
@@ -178,70 +133,8 @@ public class StabilityOptimizer implements Tiler {
         if (!consistencyCheck(configuration) || (optimisation
                 && !consistencyCheckOptimisation(configuration))) {
             // ------------ALTERNATIVE-ALGORITHM------------
-            if (optimisation) {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        public void run() {
-                            dataProcessing.errorDialog(textbundle
-                                    .getString("output_stabilityOptimisation_1")
-                                    + "\n\r"
-                                    + textbundle.getString(
-                                            "output_stabilityOptimisation_2")
-                                    + "\n\r"
-                                    + textbundle.getString(
-                                            "output_stabilityOptimisation_3")
-                                    + "\n\r" + textbundle.getString(
-                                            "output_stabilityOptimisation_4"));
-                        }
-                    });
-                } catch (final Exception e) {
-                    System.out.println(e.toString());
-                }
-            } else {
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        public void run() {
-                            dataProcessing.errorDialog(textbundle
-                                    .getString("output_stabilityOptimisation_1")
-                                    + "\n\r"
-                                    + textbundle.getString(
-                                            "output_stabilityOptimisation_2")
-                                    + "\n\r" + textbundle.getString(
-                                            "output_stabilityOptimisation_4"));
-                        }
-                    });
-                } catch (final Exception e) {
-                    System.out.println(e.toString());
-                }
-            }
-            for (colorRow = 0; colorRow < mosaicHeight; colorRow++) {
-                // assign progress bar controls to the GUI thread
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        public void run() {
-                            percent = (int) ((Calculator.ONE_HUNDRED_PERCENT
-                                    / rows) * colorRow);
-
-                            if (statisticOutput) {
-                                dataProcessing.refreshProgressBarAlgorithm(
-                                        percent, INT4);
-                            } else {
-                                dataProcessing.refreshProgressBarAlgorithm(
-                                        percent, 2);
-                            }
-                        }
-                    });
-                } catch (final Exception e) {
-                    System.out.println(e.toString());
-                }
-
-                for (int colorCol = 0; colorCol < mosaicWidth; colorCol++) {
-                    mosaic.setElement(colorRow, colorCol,
-                            configuration.getBasisName(), true);
-                }
-            }
-
-            return mosaic;
+            return getResultForFailedConsistencyChecks(mosaicWidth,
+                    mosaicHeight, configuration, mosaic);
         } else {
             // ------------MAIN-ALGORITHM------------
             // run linear through the image - determine the fitting element for
@@ -264,7 +157,7 @@ public class StabilityOptimizer implements Tiler {
             int right = 0;
 
             // run linear through the image
-            // decide which element is placed by 5 criterias
+            // decide which element is placed by 5 criteria
             // 1) element fits
             // 2) element ends at the end of the row or color
             // 3) elementend is not below a gap - points 2
@@ -273,24 +166,9 @@ public class StabilityOptimizer implements Tiler {
             // above
             for (colorRow = 0; colorRow < mosaicHeight; colorRow++) {
                 // assign progress bar controls to the GUI thread
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        public void run() {
-                            percent = (int) ((Calculator.ONE_HUNDRED_PERCENT
-                                    / rows) * colorRow);
-
-                            if (statisticOutput) {
-                                dataProcessing.refreshProgressBarAlgorithm(
-                                        percent, INT4);
-                            } else {
-                                dataProcessing.refreshProgressBarAlgorithm(
-                                        percent, 2);
-                            }
-                        }
-                    });
-                } catch (final Exception e) {
-                    System.out.println(e.toString());
-                }
+                percent = (int) ((Calculator.ONE_HUNDRED_PERCENT / rows)
+                        * colorRow);
+                updateProgressBarValues(percent);
 
                 for (int colorCol = 0; colorCol < mosaicWidth; colorCol++) {
                     // Color information of the current pixel
@@ -319,113 +197,9 @@ public class StabilityOptimizer implements Tiler {
                             points = 0;
 
                             // CHECK 1) element fits
-                            // test mosaic-borders (bottom and right)
-                            if (((colorRow + currentElement.getHeight()
-                                    - 1) < mosaicHeight)
-                                    && ((colorCol + currentElement
-                                            .getWidth()) <= mosaicWidth)) {
-                                // colormatching with true-values of the element
-                                // elementFits is set to true
-                                // if a pixel with another color is found it is
-                                // set to false
-                                elementFits = true;
-
-                                for (int elRow = 0; elRow < currentElement
-                                        .getHeight(); elRow++) {
-                                    for (int elCol = 0; elCol < currentElement
-                                            .getWidth(); elCol++) {
-                                        // Only check if the current
-                                        // elementcoordinate contains "true"
-                                        if (currentElement
-                                                .getMatrix()[elRow][elCol]) {
-                                            pixel2 = mosaic.getMosaic()
-                                                    .get(colorRow + elRow)
-                                                    .get(colorCol + elCol);
-
-                                            if (!pixel2.isEmpty()) {
-                                                if (!((String) (pixel2.get(0)))
-                                                        .equals(currentColor)) {
-                                                    elementFits = false;
-                                                }
-                                            } else {
-                                                elementFits = false;
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                elementFits = false;
-                            }
-
-                            // optimisation: only continue if the extended
-                            // requirements are fulfilled
-                            // check elements with height = 3
-                            // if element ends at the end of the row:
-                            // test high gaps at the left side of the element
-                            if ((colorCol
-                                    + currentElement.getWidth()) == mosaicWidth
-                                    && currentElement
-                                            .getHeight() == CUTOFF_HEIGHT
-                                    && colorCol > 0
-                                    && colorRow >= (maximumGapHeight - 1)
-                                            - (currentElement.getHeight() - 1)
-                                    && bigGap(colorRow, colorCol,
-                                            (maximumGapHeight - 1)
-                                                    - (currentElement
-                                                            .getHeight()
-                                                            - 1))) {
-                                elementFits = false;
-                            }
-
-                            // check elements in the mosaic
-                            if (elementFits && optimisation
-                                    && ((colorCol + currentElement
-                                            .getWidth()) < mosaicWidth)) {
-                                // only border handling
-                                // testing rows 2+3 and the last two rows
-                                // rows 1, 2, third and fourth last row: no
-                                // elements higher than 1 are allowed
-                                if (currentElement.getHeight() == CUTOFF_HEIGHT
-                                        && (colorRow < 2
-                                                || colorRow > mosaicHeight
-                                                        - BOTTOM_BORDER)) {
-                                    elementFits = false;
-                                }
-
-                                if (colorRow == 1 || colorRow == 2
-                                        || colorRow == mosaicHeight - 1
-                                        || colorRow == mosaicHeight - 2) {
-                                    // if the element creates a high gap (left
-                                    // or right side) the element is not
-                                    // fitting
-                                    if ((colorCol > 0
-                                            && bigGap(colorRow, colorCol, 1))
-                                            || bigGap(colorRow, colorCol
-                                                    + currentElement.getWidth(),
-                                                    1)) {
-                                        elementFits = false;
-                                    }
-                                } else if (!onlyBorderHandling) {
-                                    // Rest of the image. If the element creates
-                                    // a high gap (left or right side) the
-                                    // element is not fitting.
-                                    elementFits = doesNotCreateHightGap(
-                                            elementFits, currentElement,
-                                            colorCol);
-                                }
-
-                                // bais elements must be possible
-                                if (currentElement.getHeight() == 1
-                                        && currentElement.getWidth() == 1) {
-                                    elementFits = true;
-                                }
-                            }
-
-                            // remember element with height=1 and width=2
-                            if (currentElement.getWidth() == 2
-                                    && currentElement.getHeight() == 1) {
-                                this.doubleElement = currentElement;
-                            }
+                            elementFits = checkIfElementFits(mosaicWidth,
+                                    mosaicHeight, mosaic, currentColor,
+                                    currentElement, colorCol);
                             // END of optimisation
 
                             // Only continue if the element fits
@@ -531,25 +305,9 @@ public class StabilityOptimizer implements Tiler {
                                     // CHECK 4) element covers a Gap - points
                                     // 1
                                     if (!elementSet) {
-                                        boolean covered = false;
-
-                                        for (int x = 0; x < (currentElement
-                                                .getWidth() - 1); x++) {
-                                            if (colorCol + x
-                                                    + 1 < mosaicWidth) {
-                                                if (borders[colorRow
-                                                        - 1][colorCol + 1
-                                                                + x]) {
-                                                    covered = true;
-                                                }
-                                            }
-                                        }
-
-                                        if (covered) {
-                                            points = points + 1; // element
-                                                                 // covers
-                                                                 // gap(s)
-                                        }
+                                        points = addPointIfCoversGapCheck4(
+                                                mosaicWidth, points,
+                                                currentElement, colorCol);
 
                                         // All points for criterias 3) and 4)
                                         // are set
@@ -581,244 +339,610 @@ public class StabilityOptimizer implements Tiler {
                         // optimisation:
                         // if a basis element should be placed but creates a
                         // high gap:
-                        // a double element (width=2, height=1) ist placed
+                        // a double element (width=2, height=1) is placed
                         // in addition a mixed color is determined
-                        if (optimisation && elFlag.getWidth() == 1
-                                && colorCol + elFlag.getWidth() < mosaicWidth
-                                // whole image
-                                && (!onlyBorderHandling
-                                        && (colorRow >= (maximumGapHeight - 1)
-                                                && bigGap(colorRow,
-                                                        colorCol + elFlag
-                                                                .getWidth(),
-                                                        (maximumGapHeight - 1)))
-                                        // border handling
-                                        || ((colorRow == 1 || colorRow == 2
-                                                || colorRow == mosaicHeight - 1
-                                                || colorRow == mosaicHeight
-                                                        - 2))
-                                                && bigGap(colorRow,
-                                                        colorCol + elFlag
-                                                                .getWidth(),
-                                                        1))) {
+                        if (basisElementShouldBePlacedButCreatesHighGap(
+                                mosaicWidth, mosaicHeight, elFlag, colorCol)) {
                             elFlag = this.doubleElement;
-                            // colors
-                            final Lab color1 = new Lab();
-                            final Lab color2 = new Lab();
 
                             // Algorithm without error distribution.
-                            int red = 0;
-                            int green = 0;
-                            int blue = 0;
-                            // color 1: value from the original image
-                            red = originalMatrix[colorRow][colorCol][0];
-                            green = originalMatrix[colorRow][colorCol][1];
-                            blue = originalMatrix[colorRow][colorCol][2];
-                            color1.setL(calculation
-                                    .rgbToLab(new Color(red, green, blue))
-                                    .getL());
-                            color1.setA(calculation
-                                    .rgbToLab(new Color(red, green, blue))
-                                    .getA());
-                            color1.setB(calculation
-                                    .rgbToLab(new Color(red, green, blue))
-                                    .getB());
-                            // color 2: value from the original image
-                            red = originalMatrix[colorRow][colorCol + 1][0];
-                            green = originalMatrix[colorRow][colorCol + 1][1];
-                            blue = originalMatrix[colorRow][colorCol + 1][2];
-                            color2.setL(calculation
-                                    .rgbToLab(new Color(red, green, blue))
-                                    .getL());
-                            color2.setA(calculation
-                                    .rgbToLab(new Color(red, green, blue))
-                                    .getA());
-                            color2.setB(calculation
-                                    .rgbToLab(new Color(red, green, blue))
-                                    .getB());
-
-                            // set current color to mixed color
-                            currentColor = getMixedColor(colors, threshold,
-                                    color1, color2);
-
+                            currentColor = getCurrColorNoErrorDistribution(
+                                    colors, threshold, originalMatrix,
+                                    colorCol);
                             // Count recolored pixel for statistic output
                             this.recoloredElements++;
                         }
                         // END optimisation
 
                         // -----------------------------------------------------
-                        // Check if the same element ist allready in the 2 rows
+                        // Check if the same element is already in the 2 rows
                         // above
                         // -> replace the three height=1 elements by one
                         // height=3 element
-                        if (elFlag.getHeight() == 1) {
-                            if ((hash.get(elFlag.getName()) != null)
-                                    && (colorRow > 1)
-                                    && ((mosaic.getMosaic().get(colorRow - 1)
-                                            .get(colorCol).size() != 0)
-                                            && (((String) (mosaic.getMosaic()
-                                                    .get(colorRow - 1).get(
-                                                            colorCol)
-                                                    .get(1))).equals(
-                                                            currentColor))
-                                            && (((String) (mosaic.getMosaic()
-                                                    .get(colorRow - 1).get(
-                                                            colorCol)
-                                                    .get(0))).equals(
-                                                            elFlag.getName())))
-                                    && ((mosaic.getMosaic().get(colorRow - 2)
-                                            .get(colorCol).size() != 0)
-                                            && (((String) (mosaic.getMosaic()
-                                                    .get(colorRow - 2).get(
-                                                            colorCol)
-                                                    .get(1))).equals(
-                                                            currentColor))
-                                            && (((String) (mosaic.getMosaic()
-                                                    .get(colorRow - 2).get(
-                                                            colorCol)
-                                                    .get(0))).equals(elFlag
-                                                            .getName())))) {
-                                // set element and set all covered pixels to
-                                // "null"
-                                setElementandSetCoveredPixelsNull(mosaic, hash,
-                                        currentColor, elFlag, colorCol);
-                            } else {
-                                // set element and set all covered pixels to
-                                // "null"
-                                for (int elementRow = 0; elementRow < elFlag
-                                        .getHeight(); elementRow++) {
-                                    for (int elCol = 0; elCol < elFlag
-                                            .getWidth(); elCol++) {
-                                        mosaic.initVector(colorRow + elementRow,
-                                                colorCol + elCol);
-                                    }
-                                }
-
-                                mosaic.setElement(colorRow, colorCol,
-                                        currentColor, false);
-                                mosaic.setElement(colorRow, colorCol,
-                                        elFlag.getName(), true);
-                                borders[colorRow][colorCol] = true;
-                            }
-                        } else { // height =3
-                            processForHeight3(mosaic, currentColor, elFlag,
-                                    colorCol);
-                        }
+                        checkIfSameElementAlreadyIn2RowsAbove(mosaic, hash,
+                                currentColor, elFlag, colorCol);
                     } // END: if (!pixel.isEmpty())
                       // ---------------------------------------------
                 }
             } // END: Double For
 
             // assign progress bar controls to the GUI thread
-            try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                        if (statisticOutput) {
-                            dataProcessing.refreshProgressBarAlgorithm(
-                                    THRESHOLD2, INT4);
-                        } else {
-                            dataProcessing
-                                    .refreshProgressBarAlgorithm(THRESHOLD2, 2);
-                        }
-                    }
-                });
-            } catch (final Exception e) {
-                System.out.println(e.toString());
-            }
-
+            updateProgressBarValues(THRESHOLD2);
             // -----------------------------------------------------
             // optimisation: statistic output for gaps
-            int highGaps = 0; // quantity of high gaps
-            int gapCounter = 0; // temp gap counter
-            int highestGap = 0; // highest gap
-            final int[] gapFlag = new int[mosaicHeight + 1]; // Flag to count
-                                                             // the different
-                                                             // gap highs
+            doStatisticOutputForGaps(mosaicWidth, mosaicHeight, statistic);
+            return mosaic;
+        }
+    }
 
-            // Run through mosaic by column
-            // Ignore first column (gap in column 0 is the left border)
-            for (int i = 1; i < mosaicWidth; i++) {
-                for (int j = 0; j < mosaicHeight; j++) {
-                    if (borders[j][i]) {
-                        // Remember gap
-                        gapCounter++;
-                    } else if (gapCounter > 0) {
-                        if (gapCounter > maximumGapHeight) {
-                            highGaps++;
-                        }
+    private void checkIfSameElementAlreadyIn2RowsAbove(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final String currentColor,
+            final ElementObject elFlag, final int colorCol) {
+        if (elFlag.getHeight() == 1) {
+            processForHeight1(mosaic, hash, currentColor, elFlag, colorCol);
+        } else { // height =3
+            processForHeight3(mosaic, currentColor, elFlag, colorCol);
+        }
+    }
 
-                        // Remember highest gap
-                        if (gapCounter > highestGap) {
-                            highestGap = gapCounter;
-                        }
-                        // gapFlag
-                        gapFlag[gapCounter] = gapFlag[gapCounter] + 1;
-                        gapCounter = 0;
+    private int addPointIfCoversGapCheck4(final int mosaicWidth,
+            final int initialPoints, final ElementObject currentElement,
+            final int colorCol) {
+        boolean covered = false;
+        int points = initialPoints;
+
+        for (int x = 0; x < (currentElement.getWidth() - 1); x++) {
+            if (colorCol + x + 1 < mosaicWidth) {
+                if (borders[colorRow - 1][colorCol + 1 + x]) {
+                    covered = true;
+                }
+            }
+        }
+
+        if (covered) {
+            points = points + 1; // element
+                                 // covers
+                                 // gap(s)
+        }
+
+        return points;
+    }
+
+    private boolean checkIfElementFits(final int mosaicWidth,
+            final int mosaicHeight, final Mosaic mosaic,
+            final String currentColor, final ElementObject currentElement,
+            final int colorCol) {
+        boolean elementFits;
+        elementFits = testBottomAndRightBorders(mosaicWidth, mosaicHeight,
+                mosaic, currentColor, currentElement, colorCol);
+
+        // optimisation: only continue if the extended
+        // requirements are fulfilled
+        // check elements with height = 3
+        // if element ends at the end of the row:
+        // test high gaps at the left side of the element
+        elementFits = meetsExtendedRequirements(mosaicWidth, elementFits,
+                currentElement, colorCol);
+
+        // check elements in the mosaic
+        if (elementFits && optimisation
+                && ((colorCol + currentElement.getWidth()) < mosaicWidth)) {
+            elementFits = noElementsHigherThan1ByBorder(mosaicHeight,
+                    elementFits, currentElement);
+
+            if (colorRow == 1 || colorRow == 2 || colorRow == mosaicHeight - 1
+                    || colorRow == mosaicHeight - 2) {
+                // if the element creates a high gap (left
+                // or right side) the element is not
+                // fitting
+                if ((colorCol > 0 && bigGap(colorRow, colorCol, 1)) || bigGap(
+                        colorRow, colorCol + currentElement.getWidth(), 1)) {
+                    elementFits = false;
+                }
+            } else if (!onlyBorderHandling) {
+                // Rest of the image. If the element creates
+                // a high gap (left or right side) the
+                // element is not fitting.
+                elementFits = doesNotCreateHightGap(elementFits, currentElement,
+                        colorCol);
+            }
+
+            // bais elements must be possible
+            if (currentElement.getHeight() == 1
+                    && currentElement.getWidth() == 1) {
+                elementFits = true;
+            }
+        }
+
+        // remember element with height=1 and width=2
+        if (currentElement.getWidth() == 2 && currentElement.getHeight() == 1) {
+            this.doubleElement = currentElement;
+        }
+        return elementFits;
+    }
+
+    /**
+     * Only border handling. Testing rows 2+3 and the last two rows: rows 1, 2,
+     * third and fourth, last row: no elements higher than 1 are allowed.
+     *
+     * @param mosaicHeight
+     * @param initialElementFits
+     * @param currentElement
+     * @return <code>true</code> if there are no elements higher than 1 near the
+     *         borders.
+     */
+    private boolean noElementsHigherThan1ByBorder(final int mosaicHeight,
+            final boolean initialElementFits,
+            final ElementObject currentElement) {
+        boolean elementFits = initialElementFits;
+
+        if (currentElement.getHeight() == CUTOFF_HEIGHT
+                && (colorRow < 2 || colorRow > mosaicHeight - BOTTOM_BORDER)) {
+            elementFits = false;
+        }
+
+        return elementFits;
+    }
+
+    private boolean meetsExtendedRequirements(final int mosaicWidth,
+            final boolean initialElementFits,
+            final ElementObject currentElement, final int colorCol) {
+        boolean elementFits = initialElementFits;
+
+        if ((colorCol + currentElement.getWidth()) == mosaicWidth
+                && currentElement.getHeight() == CUTOFF_HEIGHT && colorCol > 0
+                && colorRow >= (maximumGapHeight - 1)
+                        - (currentElement.getHeight() - 1)
+                && bigGap(colorRow, colorCol, (maximumGapHeight - 1)
+                        - (currentElement.getHeight() - 1))) {
+            elementFits = false;
+        }
+
+        return elementFits;
+    }
+
+    /**
+     * Test mosaic-borders (bottom and right).
+     *
+     * @param mosaicWidth
+     * @param mosaicHeight
+     * @param mosaic
+     * @param currentColor
+     * @param currentElement
+     * @param colorCol
+     * @return <code>true</code> if elementFits.
+     */
+    private boolean testBottomAndRightBorders(final int mosaicWidth,
+            final int mosaicHeight, final Mosaic mosaic,
+            final String currentColor, final ElementObject currentElement,
+            final int colorCol) {
+        boolean elementFits;
+
+        if (((colorRow + currentElement.getHeight() - 1) < mosaicHeight)
+                && ((colorCol + currentElement.getWidth()) <= mosaicWidth)) {
+            // colormatching with true-values of the element
+            // elementFits is set to true
+            // if a pixel with another color is found it is
+            // set to false
+            elementFits = true;
+
+            for (int elRow = 0; elRow < currentElement.getHeight(); elRow++) {
+                for (int elCol = 0; elCol < currentElement
+                        .getWidth(); elCol++) {
+                    // Only check if the current
+                    // elementcoordinate contains "true"
+                    elementFits = elementFits(mosaic, currentColor, elementFits,
+                            currentElement, colorCol, elRow, elCol);
+                }
+            }
+        } else {
+            elementFits = false;
+        }
+        return elementFits;
+    }
+
+    private boolean elementFits(final Mosaic mosaic, final String currentColor,
+            final boolean initialValueElementFits,
+            final ElementObject currentElement, final int colorCol,
+            final int elRow, final int elCol) {
+        boolean elementFits = initialValueElementFits;
+        Vector<String> pixel2;
+
+        if (currentElement.getMatrix()[elRow][elCol]) {
+            pixel2 = mosaic.getMosaic().get(colorRow + elRow)
+                    .get(colorCol + elCol);
+
+            if (!pixel2.isEmpty()) {
+                if (!((String) (pixel2.get(0))).equals(currentColor)) {
+                    elementFits = false;
+                }
+            } else {
+                elementFits = false;
+            }
+        }
+
+        return elementFits;
+    }
+
+    private boolean basisElementShouldBePlacedButCreatesHighGap(
+            final int mosaicWidth, final int mosaicHeight,
+            final ElementObject elFlag, final int colorCol) {
+        return optimisation && elFlag.getWidth() == 1
+                && colorCol + elFlag.getWidth() < mosaicWidth
+                // whole image
+                && (!onlyBorderHandling
+                        && (colorRow >= (maximumGapHeight - 1) && bigGap(
+                                colorRow, colorCol + elFlag.getWidth(),
+                                (maximumGapHeight - 1)))
+                        // border handling
+                        || ((colorRow == 1 || colorRow == 2
+                                || colorRow == mosaicHeight - 1
+                                || colorRow == mosaicHeight - 2))
+                                && bigGap(colorRow,
+                                        colorCol + elFlag.getWidth(), 1));
+    }
+
+    private String getCurrColorNoErrorDistribution(final String[] colors,
+            final int[] threshold, final int[][][] originalMatrix,
+            final int colorCol) {
+        // colors
+        final Lab color1 = new Lab();
+        final Lab color2 = new Lab();
+        String currentColor;
+        // color 1: value from the original image
+        getColor1FromOriginalImage(originalMatrix, colorCol, color1);
+        // color 2: value from the original image
+        getColor2FromOriginalImage(originalMatrix, colorCol, color2);
+        // set current color to mixed color
+        currentColor = getMixedColor(colors, threshold, color1, color2);
+        return currentColor;
+    }
+
+    private void getColor1FromOriginalImage(final int[][][] originalMatrix,
+            final int colorCol, final Lab color1) {
+        int red;
+        int green;
+        int blue;
+        red = originalMatrix[colorRow][colorCol][0];
+        green = originalMatrix[colorRow][colorCol][1];
+        blue = originalMatrix[colorRow][colorCol][2];
+        color1.setL(calculation.rgbToLab(new Color(red, green, blue)).getL());
+        color1.setA(calculation.rgbToLab(new Color(red, green, blue)).getA());
+        color1.setB(calculation.rgbToLab(new Color(red, green, blue)).getB());
+    }
+
+    private void getColor2FromOriginalImage(final int[][][] originalMatrix,
+            final int colorCol, final Lab color2) {
+        int red;
+        int green;
+        int blue;
+        red = originalMatrix[colorRow][colorCol + 1][0];
+        green = originalMatrix[colorRow][colorCol + 1][1];
+        blue = originalMatrix[colorRow][colorCol + 1][2];
+        color2.setL(calculation.rgbToLab(new Color(red, green, blue)).getL());
+        color2.setA(calculation.rgbToLab(new Color(red, green, blue)).getA());
+        color2.setB(calculation.rgbToLab(new Color(red, green, blue)).getB());
+    }
+
+    private void processForHeight1(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final String currentColor,
+            final ElementObject elFlag, final int colorCol) {
+        if (mustSetElementAndSetCoveredPixelsNull(mosaic, hash, currentColor,
+                elFlag, colorCol)) {
+            // set element and set all covered pixels to
+            // "null"
+            setElementandSetCoveredPixelsNull(mosaic, hash, currentColor,
+                    elFlag, colorCol);
+        } else {
+            // set element and set all covered pixels to
+            // "null"
+            setElementAndNullAllCoveredPixels(mosaic, currentColor, elFlag,
+                    colorCol);
+        }
+    }
+
+    private Mosaic getResultForFailedConsistencyChecks(final int mosaicWidth,
+            final int mosaicHeight, final Configuration configuration,
+            final Mosaic mosaic) {
+        showErrorDialogForFailedConsistencyCheck();
+
+        for (colorRow = 0; colorRow < mosaicHeight; colorRow++) {
+            // assign progress bar controls to the GUI thread
+            percent = (int) ((Calculator.ONE_HUNDRED_PERCENT / rows)
+                    * colorRow);
+            updateProgressBarValues(percent);
+
+            for (int colorCol = 0; colorCol < mosaicWidth; colorCol++) {
+                mosaic.setElement(colorRow, colorCol,
+                        configuration.getBasisName(), true);
+            }
+        }
+
+        return mosaic;
+    }
+
+    private boolean mustSetElementAndSetCoveredPixelsNull(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final String currentColor,
+            final ElementObject elFlag, final int colorCol) {
+        return (hash.get(elFlag.getName()) != null) && (colorRow > 1)
+                && ((mosaic.getMosaic().get(colorRow - 1).get(colorCol)
+                        .size() != 0)
+                        && (((String) (mosaic.getMosaic().get(colorRow - 1)
+                                .get(colorCol).get(1))).equals(currentColor))
+                        && (((String) (mosaic.getMosaic().get(colorRow - 1)
+                                .get(colorCol).get(0)))
+                                        .equals(elFlag.getName())))
+                && ((mosaic.getMosaic().get(colorRow - 2).get(colorCol)
+                        .size() != 0)
+                        && (((String) (mosaic.getMosaic().get(colorRow - 2)
+                                .get(colorCol).get(1))).equals(currentColor))
+                        && (((String) (mosaic.getMosaic().get(colorRow - 2)
+                                .get(colorCol).get(0)))
+                                        .equals(elFlag.getName())));
+    }
+
+    private void updateProgressBarValues(final int barValue) {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+
+                    if (statisticOutput) {
+                        dataProcessing.refreshProgressBarAlgorithm(barValue,
+                                ProgressBarsAlgorithms.STATISTICS);
+                    } else {
+                        dataProcessing.refreshProgressBarAlgorithm(barValue,
+                                ProgressBarsAlgorithms.TILING);
                     }
                 }
-                // do not forget gap at the end!
-                if (gapCounter > 0) {
+            });
+        } catch (final Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    private void doStatisticOutputForGaps(final int mosaicWidth,
+            final int mosaicHeight, final boolean statistic) {
+        int highGaps = 0; // quantity of high gaps
+        int gapCounter = 0; // temp gap counter
+        int highestGap = 0; // highest gap
+        final int[] gapFlag = new int[mosaicHeight + 1]; // Flag to count
+                                                         // the different
+                                                         // gap highs
+
+        // Run through mosaic by column
+        // Ignore first column (gap in column 0 is the left border)
+        for (int i = 1; i < mosaicWidth; i++) {
+            for (int j = 0; j < mosaicHeight; j++) {
+                if (borders[j][i]) {
+                    // Remember gap
+                    gapCounter++;
+                } else if (gapCounter > 0) {
                     if (gapCounter > maximumGapHeight) {
                         highGaps++;
                     }
+
+                    // Remember highest gap
                     if (gapCounter > highestGap) {
                         highestGap = gapCounter;
                     }
+                    // gapFlag
                     gapFlag[gapCounter] = gapFlag[gapCounter] + 1;
                     gapCounter = 0;
                 }
             }
 
-            // Recolored pixels in percent
-            final int recolored = (int) ((((double) recoloredElements)
-                    / ((double) (mosaicWidth * mosaicHeight))) * 1000);
+            // do not forget gap at the end!
+            if (gapCounter > 0) {
+                if (gapCounter > maximumGapHeight) {
+                    highGaps++;
+                }
 
-            // Output for optimisation and statistic
-            if (optimisation) {
-                dataProcessing.setInfo(
-                        textbundle.getString("output_stabilityOptimisation_5"),
-                        DataProcessor.SHOW_IN_BOTH);
-                dataProcessing.setInfo("("
-                        + textbundle.getString("output_stabilityOptimisation_8")
-                        + ". " + recolored / RECOLORED_DIVISOR
-                        + textbundle.getString("output_decimalPoint")
-                        + recolored % RECOLORED_DIVISOR + " % "
-                        + textbundle.getString("output_stabilityOptimisation_9")
-                        + ".)", DataProcessor.SHOW_IN_BOTH);
-                dataProcessing.setInfo(
-                        textbundle.getString("output_stabilityOptimisation_10")
-                                + " " + maximumGapHeight + ": " + highGaps,
-                        DataProcessor.SHOW_IN_BOTH);
-                dataProcessing.setInfo(
-                        "(" + textbundle
-                                .getString("output_stabilityOptimisation_11")
-                                + " " + highestGap + " "
-                                + textbundle.getString(
-                                        "output_stabilityOptimisation_12")
-                                + ")",
-                        DataProcessor.SHOW_IN_BOTH);
-            } else if (statistic) {
-                dataProcessing.setInfo(
-                        textbundle.getString("output_stabilityOptimisation_7")
-                                + ":",
-                        DataProcessor.SHOW_IN_BOTH);
-                dataProcessing.setInfo(
-                        textbundle.getString("output_stabilityOptimisation_6"),
-                        DataProcessor.SHOW_IN_BOTH);
-                dataProcessing.setInfo(
-                        textbundle.getString("output_stabilityOptimisation_10")
-                                + " " + maximumGapHeight + ": " + highGaps,
-                        DataProcessor.SHOW_IN_BOTH);
-                dataProcessing.setInfo(
-                        "(" + textbundle
-                                .getString("output_stabilityOptimisation_11")
-                                + " " + highestGap + " "
-                                + textbundle.getString(
-                                        "output_stabilityOptimisation_12")
-                                + ")",
-                        DataProcessor.SHOW_IN_BOTH);
+                if (gapCounter > highestGap) {
+                    highestGap = gapCounter;
+                }
+
+                gapFlag[gapCounter] = gapFlag[gapCounter] + 1;
+                gapCounter = 0;
             }
-            return mosaic;
+        }
+
+        // Recolored pixels in percent
+        final int recolored = (int) ((((double) recoloredElements)
+                / ((double) (mosaicWidth * mosaicHeight))) * 1000);
+
+        // Output for optimisation and statistic
+        if (optimisation) {
+            setOptimizationInfo(highGaps, highestGap, recolored);
+        } else if (statistic) {
+            setStatisticInfo(highGaps, highestGap);
+        }
+    }
+
+    /**
+     * Returns the original image (to determine the original colors later).
+     *
+     * @param mosaicWidth
+     * @param mosaicHeight
+     * @return the original image (to determine the original colors later).
+     */
+    private int[][][] getOriginalMatrix(final int mosaicWidth,
+            final int mosaicHeight) {
+        final BufferedImage original = calculation.scale(
+                dataProcessing.getImage(false), mosaicWidth, mosaicHeight,
+                dataProcessing.getInterpolation());
+        final int[][][] originalMatrix = calculation.pixelMatrix(original);
+        return originalMatrix;
+    }
+
+    private void setElementAndNullAllCoveredPixels(final Mosaic mosaic,
+            final String currentColor, final ElementObject elFlag,
+            final int colorCol) {
+        for (int elementRow = 0; elementRow < elFlag
+                .getHeight(); elementRow++) {
+            for (int elCol = 0; elCol < elFlag.getWidth(); elCol++) {
+                mosaic.initVector(colorRow + elementRow, colorCol + elCol);
+            }
+        }
+
+        mosaic.setElement(colorRow, colorCol, currentColor, false);
+        mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
+        borders[colorRow][colorCol] = true;
+    }
+
+    private void setOptimizationInfo(final int highGaps, final int highestGap,
+            final int recolored) {
+        dataProcessing.setInfo(
+                textbundle.getString("output_stabilityOptimisation_5"),
+                DataProcessor.SHOW_IN_BOTH);
+        dataProcessing.setInfo("("
+                + textbundle.getString("output_stabilityOptimisation_8") + ". "
+                + recolored / RECOLORED_DIVISOR
+                + textbundle.getString("output_decimalPoint")
+                + recolored % RECOLORED_DIVISOR + " % "
+                + textbundle.getString("output_stabilityOptimisation_9") + ".)",
+                DataProcessor.SHOW_IN_BOTH);
+        dataProcessing.setInfo(
+                textbundle.getString("output_stabilityOptimisation_10") + " "
+                        + maximumGapHeight + ": " + highGaps,
+                DataProcessor.SHOW_IN_BOTH);
+        dataProcessing.setInfo(
+                "(" + textbundle.getString("output_stabilityOptimisation_11")
+                        + " " + highestGap + " "
+                        + textbundle.getString(
+                                "output_stabilityOptimisation_12")
+                        + ")",
+                DataProcessor.SHOW_IN_BOTH);
+    }
+
+    private void setStatisticInfo(final int highGaps, final int highestGap) {
+        dataProcessing.setInfo(
+                textbundle.getString("output_stabilityOptimisation_7") + ":",
+                DataProcessor.SHOW_IN_BOTH);
+        dataProcessing.setInfo(
+                textbundle.getString("output_stabilityOptimisation_6"),
+                DataProcessor.SHOW_IN_BOTH);
+        dataProcessing.setInfo(
+                textbundle.getString("output_stabilityOptimisation_10") + " "
+                        + maximumGapHeight + ": " + highGaps,
+                DataProcessor.SHOW_IN_BOTH);
+        dataProcessing.setInfo(
+                "(" + textbundle.getString("output_stabilityOptimisation_11")
+                        + " " + highestGap + " "
+                        + textbundle.getString(
+                                "output_stabilityOptimisation_12")
+                        + ")",
+                DataProcessor.SHOW_IN_BOTH);
+    }
+
+    private void showErrorDialogForFailedConsistencyCheck() {
+        if (optimisation) {
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        dataProcessing.errorDialog(textbundle
+                                .getString("output_stabilityOptimisation_1")
+                                + "\n\r"
+                                + textbundle.getString(
+                                        "output_stabilityOptimisation_2")
+                                + "\n\r"
+                                + textbundle.getString(
+                                        "output_stabilityOptimisation_3")
+                                + "\n\r" + textbundle.getString(
+                                        "output_stabilityOptimisation_4"));
+                    }
+                });
+            } catch (final Exception e) {
+                System.out.println(e.toString());
+            }
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        dataProcessing.errorDialog(textbundle
+                                .getString("output_stabilityOptimisation_1")
+                                + "\n\r"
+                                + textbundle.getString(
+                                        "output_stabilityOptimisation_2")
+                                + "\n\r" + textbundle.getString(
+                                        "output_stabilityOptimisation_4"));
+                    }
+                });
+            } catch (final Exception e) {
+                System.out.println(e.toString());
+            }
+        }
+    }
+
+    /**
+     * Initialize array to remember the gaps.
+     *
+     * @param mosaicWidth
+     * @param mosaicHeight
+     */
+    private void initializeBordersArray(final int mosaicWidth,
+            final int mosaicHeight) {
+        borders = new boolean[mosaicHeight][mosaicWidth];
+
+        for (int x = 0; x < mosaicHeight; x++) {
+            for (int y = 0; y < mosaicWidth; y++) {
+                borders[x][y] = false;
+            }
+        }
+    }
+
+    /**
+     * Thresholdarray and colorarray.
+     *
+     * @param tilingInfoEnum
+     * @param colors
+     * @param threshold
+     */
+    private void initializeThresholdAndColorArrays(
+            final Enumeration<Object> tilingInfoEnum, final String[] colors,
+            final int[] threshold) {
+        if (quantisationAlgo == DataProcessor.FLOYD_STEINBERG) {
+            // Floyd-Steinberg
+            colors[0] = (String) tilingInfoEnum.nextElement();
+            colors[1] = (String) tilingInfoEnum.nextElement();
+            threshold[0] = 0;
+            threshold[1] = THRESHOLD1;
+            threshold[2] = THRESHOLD2;
+        } else if (quantisationAlgo == DataProcessor.SLICING) {
+            // N-Level
+            for (int i = 0; i < colorCount; i++) {
+                colors[i] = (String) tilingInfoEnum.nextElement();
+                threshold[i] = (Integer) tilingInfoEnum.nextElement();
+            }
+
+            // the threshold array is adjusted by the luminance value 100
+            // the colors are placed between 2 thresholds
+            threshold[colorCount] = THRESHOLD2;
+        }
+    }
+
+    /**
+     * Color vector with all colors.
+     *
+     * @param configuration
+     */
+    private void initializeColorVector(final Configuration configuration) {
+        for (final Enumeration<ColorObject> colorsEnum = configuration
+                .getAllColors(); colorsEnum.hasMoreElements();) {
+            final ColorObject color = (ColorObject) (colorsEnum.nextElement());
+            this.labColors.add(calculation.rgbToLab(color.getRGB()));
+            this.labColors.add(color.getName());
+        }
+    }
+
+    /**
+     * Compute colorCount for Floyd-Steinberg 2 colors. For all other
+     * algorithms: colorVectorlength (colorValue+Name) / 2
+     */
+    private void setColorCount() {
+        if (quantisationAlgo == DataProcessor.FLOYD_STEINBERG) {
+            this.colorCount = 2;
+        } else {
+            this.colorCount = (tilingInfo.size() - INT4) / 2;
         }
     }
 
