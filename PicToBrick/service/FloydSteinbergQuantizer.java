@@ -30,14 +30,6 @@ public class FloydSteinbergQuantizer implements Quantizer {
     private static final int SERPENTINES = 2;
     /** Hilbert method code. */
     private static final int HILBERT = 3;
-    /** 3/16 factor value. */
-    private static final double FACTOR_3_16 = 3.0 / 16.0;
-    /** 1/16 factor value. */
-    private static final double FACTOR_1_16 = 1.0 / 16.0;
-    /** 5/16 factor value. */
-    private static final double FACTOR_5_16 = 5.0 / 16.0;
-    /** 7/16 factor value. */
-    private static final double FACTOR_7_16 = 7.0 / 16.0;
     /** Cutoff brightness value. */
     private static final int DARK_LIGHT_CUTOFF = 50;
     /** Maximum brightness value. */

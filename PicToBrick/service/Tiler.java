@@ -4,8 +4,7 @@ import pictobrick.model.Configuration;
 import pictobrick.model.Mosaic;
 
 /**
- * interface: Tiling layer: DataProcessing (three tier architecture)
- * description: interface for all tiling clases
+ * Interface for all tiling clases.
  *
  * @author Tobias Reichling
  */
@@ -15,11 +14,11 @@ public interface Tiler {
     int RECOLORED_DIVISOR = 10;
 
     /**
-     * method: tiling description: tiling the mosaic
+     * Tiling the mosaic.
      *
      * @author Tobias Reichling
-     * @param mosaic        width
-     * @param mosaic        height
+     * @param mosaicWidth
+     * @param mosaicHeight
      * @param configuration
      * @param mosaic        with color information
      * @param statistic     (boolean)
