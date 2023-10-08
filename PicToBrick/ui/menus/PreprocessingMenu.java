@@ -10,9 +10,15 @@ import pictobrick.ui.MainWindow;
  * {@link pictobrick.ui.MainWindow} by John Watne 09/2023.
  */
 public class PreprocessingMenu extends JMenu {
+    /** Mosaic dimensions item. */
     private JMenuItem menuMosaicDimension;
 
-    public JMenuItem getMenuMosaicDimension() {
+    /**
+     * Returns mosaic dimensions item.
+     *
+     * @return mosaic dimensions item.
+     */
+    public final JMenuItem getMenuMosaicDimension() {
         return menuMosaicDimension;
     }
 
@@ -20,12 +26,13 @@ public class PreprocessingMenu extends JMenu {
      * Constructs a Preprocessing menu for the specified main window.
      *
      * @param s          the label for the menu.
-     * @param mainWindow the main window, which implements the action listener for
-     *                   the menu items.
+     * @param mainWindow the main window, which implements the action listener
+     *                   for the menu items.
      */
     public PreprocessingMenu(final String s, final MainWindow mainWindow) {
         super(s);
-        menuMosaicDimension = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_21"));
+        menuMosaicDimension = new JMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_21"));
         menuMosaicDimension.addActionListener(mainWindow);
         menuMosaicDimension.setActionCommand("mosaicdimension");
         this.add(menuMosaicDimension);
