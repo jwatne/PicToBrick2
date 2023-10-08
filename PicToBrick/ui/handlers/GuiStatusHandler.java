@@ -60,14 +60,20 @@ public class GuiStatusHandler {
      * Enable GUI after generating output files state.
      */
     public static final int ENABLE_GUI_AFTER_GEN_OUTPUT = 32;
+    /** Main application window. */
     private final MainWindow mainWindow;
 
-    public GuiStatusHandler(final MainWindow mainWindow) {
-        this.mainWindow = mainWindow;
+    /**
+     * Constructor.
+     *
+     * @param window the main window owning the instance.
+     */
+    public GuiStatusHandler(final MainWindow window) {
+        this.mainWindow = window;
     }
 
     /**
-     * method: guiStatus description: changes gui status
+     * Changes gui status.
      *
      * @author Tobias Reichling
      * @param status
