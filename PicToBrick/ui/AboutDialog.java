@@ -1,7 +1,6 @@
 package pictobrick.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -21,7 +20,8 @@ import javax.swing.border.TitledBorder;
  *
  * @author Adrian Schuetz
  */
-public class AboutDialog extends JDialog implements ActionListener {
+public class AboutDialog extends JDialog
+        implements ActionListener, PicToBrickDialog {
     /**
      * Number of pixels between top/left of screen and initial left position of
      * window.
@@ -33,8 +33,6 @@ public class AboutDialog extends JDialog implements ActionListener {
     private static final int INFORMATION_GAP_PIXELS = 10;
     /** Number of pixels horizontal and vertical gap in information2 panel. */
     private static final int INFORMATION2_GAP_PIXELS = 3;
-    /** Granite gray color. */
-    private static final Color GRANITE_GRAY = new Color(100, 100, 100);
 
     /** Text resource bundle. */
     private static ResourceBundle textbundle = ResourceBundle

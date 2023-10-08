@@ -1,11 +1,10 @@
 package pictobrick.ui.panels;
 
-import java.awt.Color;
-
 import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
 
 import pictobrick.ui.MainWindow;
+import pictobrick.ui.PicToBrickDialog;
 
 /**
  * Interface for common components of Options Panels. Code moved from MainWindow
@@ -13,14 +12,15 @@ import pictobrick.ui.MainWindow;
  */
 public interface OptionsPanel {
     /**
-     * Returns the border used for all Options Panels
+     * Returns the border used for all Options Panels.
      *
-     * @return
+     * @return the border used for all Options Panels.
      */
     default TitledBorder getOptionAreaBorder() {
         final TitledBorder optionAreaBorder = BorderFactory
-                .createTitledBorder(MainWindow.getTextBundle().getString("dialog_mainWindow_border_2"));
-        optionAreaBorder.setTitleColor(new Color(100, 100, 100));
+                .createTitledBorder(MainWindow.getTextBundle()
+                        .getString("dialog_mainWindow_border_2"));
+        optionAreaBorder.setTitleColor(PicToBrickDialog.GRANITE_GRAY);
         return optionAreaBorder;
     }
 }

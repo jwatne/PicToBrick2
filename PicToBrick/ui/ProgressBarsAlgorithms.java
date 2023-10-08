@@ -22,7 +22,7 @@ public class ProgressBarsAlgorithms extends JDialog {
     /** 100% as int value (for progress bar percentage). */
     public static final int ONE_HUNDRED_PERCENT = 100;
     /** Medium gray color. */
-    private static final Color MEDIUM_GRAY = new Color(100, 100, 100);
+    public static final Color MEDIUM_GRAY = new Color(100, 100, 100);
     /** 25 pixels. */
     private static final int PX25 = 25;
     /** 300 pixels. */
