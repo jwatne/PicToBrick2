@@ -11,34 +11,70 @@ import pictobrick.ui.MainWindow;
  * by John Watne 09/2023.
  */
 public class OutputMenu extends JMenu {
-    private JCheckBoxMenuItem menuGraphic;
-    private JCheckBoxMenuItem menuXml;
-    private JCheckBoxMenuItem menuBuildingInstruction;
-    private JCheckBoxMenuItem menuMaterial;
-    private JCheckBoxMenuItem menuConfiguration;
-    private JMenuItem menuDocumentGenerate;
+    /** Graphic item. */
+    private final JCheckBoxMenuItem menuGraphic;
+    /** XML item. */
+    private final JCheckBoxMenuItem menuXml;
+    /** Builiding instructions item. */
+    private final JCheckBoxMenuItem menuBuildingInstruction;
+    /** Materials item. */
+    private final JCheckBoxMenuItem menuMaterial;
+    /** Configuration item. */
+    private final JCheckBoxMenuItem menuConfiguration;
+    /** Generate document item. */
+    private final JMenuItem menuDocumentGenerate;
 
-    public JMenuItem getMenuDocumentGenerate() {
+    /**
+     * Returns generate document item.
+     *
+     * @return generate document item.
+     */
+    public final JMenuItem getMenuDocumentGenerate() {
         return menuDocumentGenerate;
     }
 
-    public JCheckBoxMenuItem getMenuGraphic() {
+    /**
+     * Returns graphic item.
+     *
+     * @return graphic item.
+     */
+    public final JCheckBoxMenuItem getMenuGraphic() {
         return menuGraphic;
     }
 
-    public JCheckBoxMenuItem getMenuXml() {
+    /**
+     * Returns XML item.
+     *
+     * @return XML item.
+     */
+    public final JCheckBoxMenuItem getMenuXml() {
         return menuXml;
     }
 
-    public JCheckBoxMenuItem getMenuConfiguration() {
+    /**
+     * Returns configuration item.
+     *
+     * @return configuration item.
+     */
+    public final JCheckBoxMenuItem getMenuConfiguration() {
         return menuConfiguration;
     }
 
-    public JCheckBoxMenuItem getMenuBuildingInstruction() {
+    /**
+     * Returns building instructions item.
+     *
+     * @return building instructions item.
+     */
+    public final JCheckBoxMenuItem getMenuBuildingInstruction() {
         return menuBuildingInstruction;
     }
 
-    public JCheckBoxMenuItem getMenuMaterial() {
+    /**
+     * Returns materials item.
+     *
+     * @return materials item.
+     */
+    public final JCheckBoxMenuItem getMenuMaterial() {
         return menuMaterial;
     }
 
@@ -46,24 +82,29 @@ public class OutputMenu extends JMenu {
      * Constructs an output menu for the specified main window.
      *
      * @param s          the label for the menu.
-     * @param mainWindow the main window, which implements the action listener for
-     *                   the menu items.
+     * @param mainWindow the main window, which implements the action listener
+     *                   for the menu items.
      */
     public OutputMenu(final String s, final MainWindow mainWindow) {
         super(s);
-        menuGraphic = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_41"));
+        menuGraphic = new JCheckBoxMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_41"));
         menuGraphic.addActionListener(mainWindow);
         menuGraphic.setActionCommand("menugrafic");
-        menuXml = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_42"));
+        menuXml = new JCheckBoxMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_42"));
         menuXml.addActionListener(mainWindow);
         menuXml.setActionCommand("menuxml");
-        menuBuildingInstruction = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_43"));
+        menuBuildingInstruction = new JCheckBoxMenuItem(MainWindow
+                .getTextBundle().getString("dialog_mainWindow_menu_43"));
         menuBuildingInstruction.addActionListener(mainWindow);
         menuBuildingInstruction.setActionCommand("menubuildinginstruction");
-        menuMaterial = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_44"));
+        menuMaterial = new JCheckBoxMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_44"));
         menuMaterial.addActionListener(mainWindow);
         menuMaterial.setActionCommand("menumaterial");
-        menuConfiguration = new JCheckBoxMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_45"));
+        menuConfiguration = new JCheckBoxMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_45"));
         menuConfiguration.addActionListener(mainWindow);
         menuConfiguration.setActionCommand("menuconfiguration");
         add(menuGraphic);
@@ -72,7 +113,8 @@ public class OutputMenu extends JMenu {
         add(menuBuildingInstruction);
         add(menuXml);
         addSeparator();
-        menuDocumentGenerate = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_46"));
+        menuDocumentGenerate = new JMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_46"));
         menuDocumentGenerate.addActionListener(mainWindow);
         menuDocumentGenerate.setActionCommand("documentgenerate");
         add(menuDocumentGenerate);
