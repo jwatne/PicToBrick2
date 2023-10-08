@@ -10,26 +10,51 @@ import pictobrick.ui.MainWindow;
  * by John Watne 09/2023.
  */
 public class FileMenu extends JMenu {
-    private JMenuItem menuNewMosaic;
-    private JMenuItem menuImageLoad;
+    /** New mosaic menu item. */
+    private final JMenuItem menuNewMosaic;
+    /** Load image menu item. */
+    private final JMenuItem menuImageLoad;
 
-    public JMenuItem getMenuImageLoad() {
+    /**
+     * Returns load image menu item.
+     *
+     * @return load image menu item.
+     */
+    public final JMenuItem getMenuImageLoad() {
         return menuImageLoad;
     }
 
-    private JMenuItem menuConfigurationLoad;
-    private JMenuItem menuSettings;
-    private JMenuItem menuEnd;
+    /** Load configuration menu item. */
+    private final JMenuItem menuConfigurationLoad;
+    /** Settings menu item. */
+    private final JMenuItem menuSettings;
+    /** End menu item. */
+    private final JMenuItem menuEnd;
 
-    public JMenuItem getMenuConfigurationLoad() {
+    /**
+     * Returns configuration menu item.
+     *
+     * @return configuration menu item.
+     */
+    public final JMenuItem getMenuConfigurationLoad() {
         return menuConfigurationLoad;
     }
 
-    public JMenuItem getMenuSettings() {
+    /**
+     * Returns settings menu item.
+     *
+     * @return settings menu item.
+     */
+    public final JMenuItem getMenuSettings() {
         return menuSettings;
     }
 
-    public JMenuItem getMenuEnd() {
+    /**
+     * Returns end menu item.
+     *
+     * @return end menu item.
+     */
+    public final JMenuItem getMenuEnd() {
         return menuEnd;
     }
 
@@ -37,28 +62,33 @@ public class FileMenu extends JMenu {
      * Constructs the File menu for the main window.
      *
      * @param s          the label for the menu.
-     * @param mainWindow the main window, which implements the ActionListener for
-     *                   the menu items.
+     * @param mainWindow the main window, which implements the ActionListener
+     *                   for the menu items.
      */
     public FileMenu(final String s, final MainWindow mainWindow) {
         super(s);
-        menuNewMosaic = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_11"));
+        menuNewMosaic = new JMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_11"));
         menuNewMosaic.addActionListener(mainWindow);
         menuNewMosaic.setActionCommand("mosaicnew");
         this.add(menuNewMosaic);
-        menuImageLoad = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_12"));
+        menuImageLoad = new JMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_12"));
         menuImageLoad.addActionListener(mainWindow);
         menuImageLoad.setActionCommand("imageload");
         this.add(menuImageLoad);
-        menuConfigurationLoad = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_13"));
+        menuConfigurationLoad = new JMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_13"));
         menuConfigurationLoad.addActionListener(mainWindow);
         menuConfigurationLoad.setActionCommand("configurationload");
         this.add(menuConfigurationLoad);
-        menuSettings = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_14"));
+        menuSettings = new JMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_14"));
         menuSettings.addActionListener(mainWindow);
         menuSettings.setActionCommand("settings");
         this.add(menuSettings);
-        menuEnd = new JMenuItem(MainWindow.getTextBundle().getString("dialog_mainWindow_menu_15"));
+        menuEnd = new JMenuItem(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_menu_15"));
         menuEnd.addActionListener(mainWindow);
         menuEnd.setActionCommand("exit");
         this.add(menuEnd);

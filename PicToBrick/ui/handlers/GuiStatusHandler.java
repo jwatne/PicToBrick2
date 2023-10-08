@@ -16,6 +16,8 @@ import pictobrick.ui.panels.ZoomPanel;
  * MainWindow by John Watne 09/2023.
  */
 public class GuiStatusHandler {
+    /** Button number 5. */
+    private static final int BUTTON_5 = 5;
     /**
      * GUI start status.
      */
@@ -176,7 +178,7 @@ public class GuiStatusHandler {
         mainWindow.getGuiPanelZoom().getGuiZoomSlider1().setEnabled(true);
         mainWindow.getGuiPanelZoom().getGuiZoomSlider2().setEnabled(true);
         mainWindow.radioButtonStatus(1, 1);
-        mainWindow.radioButtonStatus(2, 5);
+        mainWindow.radioButtonStatus(2, BUTTON_5);
         guiPanelOptions3.updateUI();
         mainWindow.getMenuFile().processOutput();
         mainWindow.getMenuPreprocessing().getMenuMosaicDimension()
@@ -350,6 +352,6 @@ public class GuiStatusHandler {
         mainWindow.getGuiPanelOptions2().processGuiStart();
         mainWindow.getMenuOutput().processGuiStart();
         mainWindow.radioButtonStatus(1, 1);
-        mainWindow.radioButtonStatus(2, 5);
+        mainWindow.radioButtonStatus(2, BUTTON_5);
     }
 }
