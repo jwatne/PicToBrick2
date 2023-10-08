@@ -1,7 +1,6 @@
 package pictobrick.ui.panels;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.LayoutManager;
 
 import javax.swing.JButton;
@@ -27,8 +26,6 @@ public class OptionsPanel1 extends JPanel implements OptionsPanel {
     private static final int FILENAME_STARTING_CHARS = 15;
     /** Maximum filename length. */
     private static final int MAX_FILENAME_LENGTH = 18;
-    /** 8x1 GridLayout. */
-    private static final GridLayout GRIDLAYOUT_8_1 = new GridLayout(8, 1);
     /** Empty options panel 1. */
     private final JPanel guiPanelOptions1Empty;
     /** Top panel options 1. */

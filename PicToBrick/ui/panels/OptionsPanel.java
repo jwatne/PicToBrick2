@@ -1,5 +1,7 @@
 package pictobrick.ui.panels;
 
+import java.awt.GridLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
 
@@ -15,6 +17,8 @@ public interface OptionsPanel {
     int QUANTIZATION_GROUP = 1;
     /** Optimization group. */
     int OPTIMIZATION_GROUP = 2;
+    /** 8x1 GridLayout. */
+    GridLayout GRIDLAYOUT_8_1 = new GridLayout(8, 1);
 
     /**
      * Returns the border used for all Options Panels.
