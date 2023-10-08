@@ -15,15 +15,39 @@ import pictobrick.ui.MainWindow;
  * {@link pictobrick.ui.MainWindow} by John Watne 09/2023.
  */
 public class OptionsPanel1 extends JPanel implements OptionsPanel {
+    /**
+     * Number of last characters in filename displayed if filename length
+     * exceeds max number displayed.
+     */
+    private static final int FILENAME_ENDING_CHARS = 3;
+    /**
+     * Number of starting characters in filename displayed if filename length
+     * exceeds max number displayed.
+     */
+    private static final int FILENAME_STARTING_CHARS = 15;
+    /** Maximum filename length. */
+    private static final int MAX_FILENAME_LENGTH = 18;
+    /** 8x1 GridLayout. */
+    private static final GridLayout GRIDLAYOUT_8_1 = new GridLayout(8, 1);
+    /** Empty options panel 1. */
     private final JPanel guiPanelOptions1Empty;
+    /** Top panel options 1. */
     private final JPanel guiPanelOptions1Top;
+    /** Load image button. */
     private final JButton buttonImageLoad;
+    /** Load configuration button. */
     private final JButton buttonConfigurationLoad;
+    /** Mosaic dimensions button. */
     private final JButton buttonMosaicDimension;
+    /** Cutout button. */
     private final JButton buttonCutout;
+    /** Image label. */
     private final JLabel guiLabelImage;
+    /** Configuration label. */
     private final JLabel guiLabelConfiguration;
+    /** Width label. */
     private final JLabel guiLabelWidth;
+    /** Height label. */
     private final JLabel guiLabelHeight;
 
     /**
@@ -33,27 +57,36 @@ public class OptionsPanel1 extends JPanel implements OptionsPanel {
      * @param mainWindow the main window of the application that is the action
      *                   listener for items on this panel.
      */
-    public OptionsPanel1(final LayoutManager layout, final MainWindow mainWindow) {
+    public OptionsPanel1(final LayoutManager layout,
+            final MainWindow mainWindow) {
         super(layout);
         setBorder(getOptionAreaBorder());
         guiPanelOptions1Empty = new JPanel();
-        guiPanelOptions1Top = new JPanel(new GridLayout(8, 1));
-        buttonImageLoad = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_2"));
+        guiPanelOptions1Top = new JPanel(GRIDLAYOUT_8_1);
+        buttonImageLoad = new JButton(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_button_2"));
         buttonImageLoad.addActionListener(mainWindow);
         buttonImageLoad.setActionCommand("imageload");
-        buttonConfigurationLoad = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_3"));
+        buttonConfigurationLoad = new JButton(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_button_3"));
         buttonConfigurationLoad.addActionListener(mainWindow);
         buttonConfigurationLoad.setActionCommand("configurationload");
-        buttonMosaicDimension = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_4"));
+        buttonMosaicDimension = new JButton(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_button_4"));
         buttonMosaicDimension.addActionListener(mainWindow);
         buttonMosaicDimension.setActionCommand("mosaicdimension");
-        buttonCutout = new JButton(MainWindow.getTextBundle().getString("dialog_mainWindow_button_5"));
+        buttonCutout = new JButton(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_button_5"));
         buttonCutout.addActionListener(mainWindow);
         buttonCutout.setActionCommand("cutout");
-        guiLabelImage = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_1") + ": ");
-        guiLabelConfiguration = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_9") + ": ");
-        guiLabelWidth = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_2") + ": ");
-        guiLabelHeight = new JLabel(MainWindow.getTextBundle().getString("dialog_mainWindow_label_3") + ": ");
+        guiLabelImage = new JLabel(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_label_1") + ": ");
+        guiLabelConfiguration = new JLabel(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_label_9") + ": ");
+        guiLabelWidth = new JLabel(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_label_2") + ": ");
+        guiLabelHeight = new JLabel(MainWindow.getTextBundle()
+                .getString("dialog_mainWindow_label_3") + ": ");
         add(guiPanelOptions1Top, BorderLayout.NORTH);
         add(guiPanelOptions1Empty, BorderLayout.CENTER);
         add(buttonCutout, BorderLayout.SOUTH);
@@ -66,74 +99,110 @@ public class OptionsPanel1 extends JPanel implements OptionsPanel {
         guiPanelOptions1Top.add(guiLabelHeight);
     }
 
-    public JButton getButtonImageLoad() {
+    /**
+     * Returns load image button.
+     *
+     * @return load image button.
+     */
+    public final JButton getButtonImageLoad() {
         return buttonImageLoad;
     }
 
-    public JButton getButtonConfigurationLoad() {
+    /**
+     * Returns load configuration button.
+     *
+     * @return load configuration button.
+     */
+    public final JButton getButtonConfigurationLoad() {
         return buttonConfigurationLoad;
     }
 
-    public JButton getButtonMosaicDimension() {
+    /**
+     * Returns mosaic dimensions button.
+     *
+     * @return mosaic dimensions button.
+     */
+    public final JButton getButtonMosaicDimension() {
         return buttonMosaicDimension;
     }
 
-    public JButton getButtonCutout() {
+    /**
+     * Returns cutout button.
+     *
+     * @return cutout button.
+     */
+    public final JButton getButtonCutout() {
         return buttonCutout;
     }
 
     /**
-     * method: showImageInfo
-     * description: shows the name of the current image
+     * Shows the name of the current image.
      *
      * @author Tobias Reichling
-     * @param fileName
+     * @param imageFileName
      */
     public void showImageInfo(final String imageFileName) {
         String fileName = imageFileName;
 
-        if (fileName.length() > 18) {
-            fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
+        if (fileName.length() > MAX_FILENAME_LENGTH) {
+            fileName = fileName.substring(0, FILENAME_STARTING_CHARS) + "..."
+                    + fileName.substring(
+                            fileName.length() - FILENAME_ENDING_CHARS,
+                            fileName.length());
         }
 
-        guiLabelImage.setText(MainWindow.getTextBundle().getString("output_mainWindow_20") + ": " + fileName);
+        guiLabelImage.setText(
+                MainWindow.getTextBundle().getString("output_mainWindow_20")
+                        + ": " + fileName);
     }
 
     /**
-     * method: showConfigurationInfo
-     * description: shows the name of the current configuration
+     * Shows the name of the current configuration.
      *
      * @author Tobias Reichling
-     * @param fileName
+     * @param configFilename
      */
     public void showConfigurationInfo(final String configFilename) {
         String fileName = configFilename;
 
-        if (fileName.length() > 18) {
-            fileName = fileName.substring(0, 15) + "..." + fileName.substring(fileName.length() - 3, fileName.length());
+        if (fileName.length() > MAX_FILENAME_LENGTH) {
+            fileName = fileName.substring(0, FILENAME_STARTING_CHARS) + "..."
+                    + fileName.substring(
+                            fileName.length() - FILENAME_ENDING_CHARS,
+                            fileName.length());
         }
 
         guiLabelConfiguration.setText("CFG: " + fileName);
     }
 
     /**
-     * method: showDimensionInfo
-     * description: shows the current dimensions
+     * Shows the current dimensions.
      *
      * @author Tobias Reichling
      * @param widthValue
      * @param heightValue
      * @param reset       (true/false)
      */
-    public void showDimensionInfo(final int widthValue, final int heightValue, final boolean reset) {
+    public void showDimensionInfo(final int widthValue, final int heightValue,
+            final boolean reset) {
         if (reset) {
-            guiLabelWidth.setText(MainWindow.getTextBundle().getString("output_mainWindow_29") + ": ");
-            guiLabelHeight.setText(MainWindow.getTextBundle().getString("output_mainWindow_30") + ": ");
+            guiLabelWidth.setText(
+                    MainWindow.getTextBundle().getString("output_mainWindow_29")
+                            + ": ");
+            guiLabelHeight.setText(
+                    MainWindow.getTextBundle().getString("output_mainWindow_30")
+                            + ": ");
         } else {
-            guiLabelWidth.setText(MainWindow.getTextBundle().getString("output_mainWindow_29") + ": " + widthValue + " "
-                    + MainWindow.getTextBundle().getString("output_mainWindow_31"));
-            guiLabelHeight.setText(MainWindow.getTextBundle().getString("output_mainWindow_30") + ": " + heightValue + " "
-                    + MainWindow.getTextBundle().getString("output_mainWindow_31"));
+            guiLabelWidth.setText(
+                    MainWindow.getTextBundle().getString("output_mainWindow_29")
+                            + ": " + widthValue + " "
+                            + MainWindow.getTextBundle()
+                                    .getString("output_mainWindow_31"));
+            guiLabelHeight.setText(
+                    MainWindow.getTextBundle().getString("output_mainWindow_30")
+                            + ": " + heightValue + " "
+                            + MainWindow.getTextBundle()
+                                    .getString("output_mainWindow_31"));
         }
     }
 
