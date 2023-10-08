@@ -43,15 +43,15 @@ public class DataProcessor {
     /** Naive LAB quantization. */
     public static final int NAIVE_LAB = 7;
     /** Element size optimization. */
-    private static final int ELEMENT_SIZE_OPTIMIZATION = 1;
+    public static final int ELEMENT_SIZE_OPTIMIZATION = 1;
     /** Molding optimization. */
-    private static final int MOLDING_OPTIMIZATION = 2;
+    public static final int MOLDING_OPTIMIZATION = 2;
     /** Costs optimization. */
-    private static final int COSTS_OPTIMIZATION = 3;
+    public static final int COSTS_OPTIMIZATION = 3;
     /** Stability optimization. */
-    private static final int STABILITY_OPTIMIZATION = 4;
+    public static final int STABILITY_OPTIMIZATION = 4;
     /** Basic elements only. */
-    private static final int BASIC_ELEMENTS_ONLY = 5;
+    public static final int BASIC_ELEMENTS_ONLY = 5;
     /** Text resource bundle. */
     private static ResourceBundle textbundle = ResourceBundle
             .getBundle("Resources.TextResource");
