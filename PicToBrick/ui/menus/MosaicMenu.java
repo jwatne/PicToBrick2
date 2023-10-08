@@ -6,16 +6,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import pictobrick.service.DataProcessor;
 import pictobrick.ui.MainWindow;
+import pictobrick.ui.panels.OptionsPanel;
 
 /**
  * Mosaic menu for main window. Code moved from {@link pictobrick.ui.MainWindow}
  * by John Watne 09/2023.
  */
-public class MosaicMenu extends JMenu {
-    /** Quantization menu item group. */
-    private static final int QUANTIZATION_GROUP = 1;
-    /** Optimization menu item group. */
-    private static final int OPTIMIZATION_GROUP = 2;
+public class MosaicMenu extends JMenu implements OptionsPanel {
     /** Quantization menu group. */
     private ButtonGroup menuGroupQuantisation;
     /** Tiling button group. */

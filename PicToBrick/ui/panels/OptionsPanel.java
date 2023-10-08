@@ -11,6 +11,11 @@ import pictobrick.ui.PicToBrickDialog;
  * by John Watne 09/2023.
  */
 public interface OptionsPanel {
+    /** Quantization group. */
+    int QUANTIZATION_GROUP = 1;
+    /** Optimization group. */
+    int OPTIMIZATION_GROUP = 2;
+
     /**
      * Returns the border used for all Options Panels.
      *
