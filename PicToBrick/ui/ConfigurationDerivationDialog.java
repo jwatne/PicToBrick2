@@ -82,10 +82,6 @@ public class ConfigurationDerivationDialog extends JDialog
         this.setLocation(DEFAULT_PIXELS, DEFAULT_PIXELS);
         this.setResizable(false);
         final JPanel content = new JPanel(new BorderLayout());
-        final JPanel input = new JPanel(new BorderLayout());
-        final JPanel data = new JPanel(new BorderLayout());
-        final JPanel data1 = new JPanel(new GridLayout(1, 2));
-        final JPanel data2 = new JPanel(new GridLayout(5, 2));
         final JPanel colors = new JPanel(new BorderLayout(5, 0));
         final JPanel scroll = new JPanel(new GridLayout(2, 1));
         final JPanel colorButtons1 = new JPanel(new BorderLayout());
@@ -98,21 +94,6 @@ public class ConfigurationDerivationDialog extends JDialog
                 textbundle.getString("dialog_configurationDerivation_label_1")
                         + ":");
         configurationNameInput = new JTextField();
-        final JLabel basisName1 = new JLabel(
-                textbundle.getString("dialog_configurationDerivation_label_2")
-                        + ":");
-        final JLabel basisRatio1 = new JLabel(
-                textbundle.getString("dialog_configurationDerivation_label_3")
-                        + ":");
-        final JLabel basisWidthMM1 = new JLabel(
-                textbundle.getString("dialog_configurationDerivation_label_4")
-                        + ":");
-        final JLabel basisStability1 = new JLabel(
-                textbundle.getString("dialog_configurationDerivation_label_5")
-                        + ":");
-        final JLabel basisCosts1 = new JLabel(
-                textbundle.getString("dialog_configurationDerivation_label_6")
-                        + ":");
         final JLabel basisName2 = new JLabel();
         final JLabel basisRatio2 = new JLabel();
         final JLabel basisWidthMM2 = new JLabel();
@@ -142,30 +123,14 @@ public class ConfigurationDerivationDialog extends JDialog
                 .getString("dialog_configurationDerivation_button_6"));
         cancelButton.setActionCommand("cancel");
         cancelButton.addActionListener(this);
-        data1.add(configurationName);
-        data1.add(configurationNameInput);
-        data2.add(basisName1);
-        data2.add(basisName2);
-        data2.add(basisRatio1);
-        data2.add(basisRatio2);
-        data2.add(basisWidthMM1);
-        data2.add(basisWidthMM2);
-        data2.add(basisStability1);
-        data2.add(basisStability2);
-        data2.add(basisCosts1);
-        data2.add(basisCosts2);
         final TitledBorder data1Border = BorderFactory
                 .createTitledBorder(textbundle
                         .getString("dialog_configurationDerivation_border_1"));
-        data1.setBorder(data1Border);
+        final JPanel data1 = getData1Panel(configurationName, data1Border);
         data1Border.setTitleColor(GRANITE_GRAY);
-        final TitledBorder data2Border = BorderFactory
-                .createTitledBorder(textbundle
-                        .getString("dialog_configurationDerivation_border_2"));
-        data2.setBorder(data2Border);
-        data2Border.setTitleColor(GRANITE_GRAY);
-        data.add(data1, BorderLayout.NORTH);
-        data.add(data2, BorderLayout.SOUTH);
+        final JPanel data2 = getData2Panel(basisName2, basisRatio2,
+                basisWidthMM2, basisStability2, basisCosts2);
+        final JPanel data = getDataPanel(data1, data2);
         colorButtons1.add(colorNew, BorderLayout.NORTH);
         colorButtons1.add(colorButtons2, BorderLayout.CENTER);
         colorButtons2.add(colorDelete, BorderLayout.NORTH);
@@ -204,8 +169,7 @@ public class ConfigurationDerivationDialog extends JDialog
                 elements.getPreferredSize().width, PREFERRED_HEIGHT));
         scroll.add(colors);
         scroll.add(elements);
-        input.add(data, BorderLayout.NORTH);
-        input.add(scroll, BorderLayout.CENTER);
+        final JPanel input = getInputPanel(data, scroll);
         content.add(input, BorderLayout.CENTER);
         buttons.add(ok);
         buttons.add(cancelButton);
@@ -226,14 +190,82 @@ public class ConfigurationDerivationDialog extends JDialog
         basisWidthMM2.setText(configuration.getBasisWidthMM() + " mm");
         basisStability2.setText(configuration.getBasisStability() + "");
         basisCosts2.setText(configuration.getBasisCosts() + "");
+        populateElementListModel(configurationOld);
+        this.getContentPane().add(content);
+        this.pack();
+        this.setSize(DIALOG_WIDTH, content.getPreferredSize().height);
+        this.setVisible(true);
+    }
 
+    private JPanel getData2Panel(final JLabel basisName2,
+            final JLabel basisRatio2, final JLabel basisWidthMM2,
+            final JLabel basisStability2, final JLabel basisCosts2) {
+        final TitledBorder data2Border = BorderFactory
+                .createTitledBorder(textbundle
+                        .getString("dialog_configurationDerivation_border_2"));
+        data2Border.setTitleColor(GRANITE_GRAY);
+        final JLabel basisCosts1 = new JLabel(
+                textbundle.getString("dialog_configurationDerivation_label_6")
+                        + ":");
+        final JLabel basisWidthMM1 = new JLabel(
+                textbundle.getString("dialog_configurationDerivation_label_4")
+                        + ":");
+        final JLabel basisStability1 = new JLabel(
+                textbundle.getString("dialog_configurationDerivation_label_5")
+                        + ":");
+        final JLabel basisRatio1 = new JLabel(
+                textbundle.getString("dialog_configurationDerivation_label_3")
+                        + ":");
+        final JLabel basisName1 = new JLabel(
+                textbundle.getString("dialog_configurationDerivation_label_2")
+                        + ":");
+        final JPanel data2 = new JPanel(new GridLayout(5, 2));
+        data2.add(basisName1);
+        data2.add(basisName2);
+        data2.add(basisRatio1);
+        data2.add(basisRatio2);
+        data2.add(basisWidthMM1);
+        data2.add(basisWidthMM2);
+        data2.add(basisStability1);
+        data2.add(basisStability2);
+        data2.add(basisCosts1);
+        data2.add(basisCosts2);
+        data2.setBorder(data2Border);
+        return data2;
+    }
+
+    private JPanel getData1Panel(final JLabel configurationName,
+            final TitledBorder data1Border) {
+        final JPanel data1 = new JPanel(new GridLayout(1, 2));
+        data1.add(configurationName);
+        data1.add(configurationNameInput);
+        data1.setBorder(data1Border);
+        return data1;
+    }
+
+    private JPanel getDataPanel(final JPanel data1, final JPanel data2) {
+        final JPanel data = new JPanel(new BorderLayout());
+        data.add(data1, BorderLayout.NORTH);
+        data.add(data2, BorderLayout.SOUTH);
+        return data;
+    }
+
+    private JPanel getInputPanel(final JPanel data, final JPanel scroll) {
+        final JPanel input = new JPanel(new BorderLayout());
+        input.add(data, BorderLayout.NORTH);
+        input.add(scroll, BorderLayout.CENTER);
+        return input;
+    }
+
+    private void populateElementListModel(
+            final Configuration configurationOld) {
         if (derivate) {
             for (final Enumeration<ColorObject> colorEnum = configurationOld
                     .getAllColors(); colorEnum.hasMoreElements();) {
                 colorListModel.addElement((colorEnum.nextElement()).getName());
             }
 
-            for (var elementsEnum = configurationOld
+            for (final var elementsEnum = configurationOld
                     .getAllElements(); elementsEnum.hasMoreElements();) {
                 elementListModel
                         .addElement((elementsEnum.nextElement()).getName());
@@ -241,11 +273,6 @@ public class ConfigurationDerivationDialog extends JDialog
         } else {
             elementListModel.addElement(configuration.getBasisName());
         }
-
-        this.getContentPane().add(content);
-        this.pack();
-        this.setSize(DIALOG_WIDTH, content.getPreferredSize().height);
-        this.setVisible(true);
     }
 
     /**
