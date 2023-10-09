@@ -22,11 +22,6 @@ import javax.swing.border.TitledBorder;
  */
 public class AboutDialog extends JDialog
         implements ActionListener, PicToBrickDialog {
-    /**
-     * Number of pixels between top/left of screen and initial left position of
-     * window.
-     */
-    private static final int DEFAULT_PIXELS = 100;
     /** Number of rows in information panels. */
     private static final int INFORMATION_PANEL_ROWS = 4;
     /** Number of pixels horizontal and vertical gap in information panel. */
