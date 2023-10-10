@@ -23,7 +23,7 @@ public class ConfigurationLoader {
     /** Load existing configuration selection. */
     public static final int LOAD_EXISTING_CONFIGURATION = 3;
     /** Offset substracted from substring value for string matching. */
-    private static final int SUBSTRING_OFFSET = 4;
+    public static final int SUBSTRING_OFFSET = 4;
     /** Minimum configuration file value. */
     private static final int MIN_FILE_VALUE = 3;
     /** The main window of the application. */
