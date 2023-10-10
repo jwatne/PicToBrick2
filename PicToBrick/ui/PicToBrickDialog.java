@@ -10,6 +10,9 @@ import java.awt.Color;
 public interface PicToBrickDialog extends RootPaneContainer {
     /** Granite gray color. */
     Color GRANITE_GRAY = new Color(100, 100, 100);
+    /** "Duke blue" color. */
+    Color DUKE_BLUE = new Color(0, 0, 150);
+
     /** Maximum R, G, or B value in RGB color. */
     int MAX_COLOR_VALUE = 255;
     /**
