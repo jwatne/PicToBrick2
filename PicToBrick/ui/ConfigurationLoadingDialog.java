@@ -1,148 +1,169 @@
 package pictobrick.ui;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
 import javax.swing.BorderFactory;
-import javax.swing.border.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.border.TitledBorder;
+
+import pictobrick.service.ConfigurationLoader;
 
 /**
- * class: ConfigurationLoadingDialog
- * layer: Gui (three tier architecture)
- * description: loading a configuration
+ * Loading a configuration.
  *
  * @author Tobias Reichling
  */
-public class ConfigurationLoadingDialog
-		extends JDialog
-		implements ActionListener {
-	private static ResourceBundle textbundle = ResourceBundle.getBundle("Resources.TextResource");
-	JComboBox<String> list;
-	ButtonGroup group;
-	boolean cancel = true;
+public class ConfigurationLoadingDialog extends JDialog
+        implements ActionListener, PicToBrickDialog {
+    /** Text resource bundle. */
+    private static ResourceBundle textbundle = ResourceBundle
+            .getBundle("Resources.TextResource");
+    /** List of available configurations. */
+    private final JComboBox<String> list;
+    /** ButtonGroup containing type of configuration chosen. */
+    private final ButtonGroup group;
+    /** <code>true</code> if the dialog is canceled by the user. */
+    private boolean cancel = true;
 
-	/**
-	 * method: ConfigurationLoadingDialog
-	 * description: constructor
-	 *
-	 * @author Tobias Reichling
-	 * @param owner
-	 * @param selection
-	 */
-	public ConfigurationLoadingDialog(final Frame owner, final Vector<String> selection) {
-		super(owner, textbundle.getString("dialog_configurationLoading_frame"), true);
-		this.setLocation(100, 100);
-		this.setResizable(false);
-		final JPanel content = new JPanel(new BorderLayout());
-		final JPanel radios = new JPanel(new GridLayout(4, 1));
-		final JPanel buttons = new JPanel();
-		group = new ButtonGroup();
-		final JRadioButton newConfiguration = new JRadioButton(
-				textbundle.getString("dialog_configurationLoading_radio_1"));
-		newConfiguration.setActionCommand("new");
-		newConfiguration.addActionListener(this);
-		final JRadioButton derivateConfiguration = new JRadioButton(
-				textbundle.getString("dialog_configurationLoading_radio_2"));
-		derivateConfiguration.setActionCommand("derivate");
-		derivateConfiguration.addActionListener(this);
-		final JRadioButton loadConfiguration = new JRadioButton(
-				textbundle.getString("dialog_configurationLoading_radio_3"));
-		loadConfiguration.setActionCommand("load");
-		loadConfiguration.addActionListener(this);
-		newConfiguration.setSelected(true);
-		group.add(newConfiguration);
-		group.add(derivateConfiguration);
-		group.add(loadConfiguration);
-		radios.add(newConfiguration);
-		radios.add(derivateConfiguration);
-		radios.add(loadConfiguration);
-		final JButton ok = new JButton(textbundle.getString("button_ok"));
-		ok.addActionListener(this);
-		ok.setActionCommand("ok");
-		final JButton cancelButton = new JButton(textbundle.getString("button_cancel"));
-		cancelButton.setActionCommand("cancel");
-		cancelButton.addActionListener(this);
-		list = new JComboBox<>(selection);
-		list.setEditable(false);
-		list.setEnabled(false);
-		radios.add(list);
-		buttons.add(ok);
-		buttons.add(cancelButton);
-		content.add(radios, BorderLayout.CENTER);
-		content.add(buttons, BorderLayout.SOUTH);
-		final TitledBorder radioBorder = BorderFactory
-				.createTitledBorder(textbundle.getString("dialog_configurationLoading_border"));
-		radios.setBorder(radioBorder);
-		radioBorder.setTitleColor(new Color(100, 100, 100));
-		this.getContentPane().add(content);
-		this.pack();
-		this.setVisible(true);
-	}
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling
+     * @param owner
+     * @param selection
+     */
+    public ConfigurationLoadingDialog(final Frame owner,
+            final Vector<String> selection) {
+        super(owner, textbundle.getString("dialog_configurationLoading_frame"),
+                true);
+        this.setLocation(DEFAULT_PIXELS, DEFAULT_PIXELS);
+        this.setResizable(false);
+        final JPanel content = new JPanel(new BorderLayout());
+        final JPanel radios = new JPanel(new GridLayout(4, 1));
+        final JPanel buttons = new JPanel();
+        group = new ButtonGroup();
+        final JRadioButton newConfiguration = new JRadioButton(
+                textbundle.getString("dialog_configurationLoading_radio_1"));
+        newConfiguration.setActionCommand("new");
+        newConfiguration.addActionListener(this);
+        final JRadioButton derivateConfiguration = new JRadioButton(
+                textbundle.getString("dialog_configurationLoading_radio_2"));
+        derivateConfiguration.setActionCommand("derivate");
+        derivateConfiguration.addActionListener(this);
+        final JRadioButton loadConfiguration = new JRadioButton(
+                textbundle.getString("dialog_configurationLoading_radio_3"));
+        loadConfiguration.setActionCommand("load");
+        loadConfiguration.addActionListener(this);
+        newConfiguration.setSelected(true);
+        group.add(newConfiguration);
+        group.add(derivateConfiguration);
+        group.add(loadConfiguration);
+        radios.add(newConfiguration);
+        radios.add(derivateConfiguration);
+        radios.add(loadConfiguration);
+        final JButton ok = new JButton(textbundle.getString("button_ok"));
+        ok.addActionListener(this);
+        ok.setActionCommand("ok");
+        final JButton cancelButton = new JButton(
+                textbundle.getString("button_cancel"));
+        cancelButton.setActionCommand("cancel");
+        cancelButton.addActionListener(this);
+        list = new JComboBox<>(selection);
+        list.setEditable(false);
+        list.setEnabled(false);
+        radios.add(list);
+        buttons.add(ok);
+        buttons.add(cancelButton);
+        content.add(radios, BorderLayout.CENTER);
+        content.add(buttons, BorderLayout.SOUTH);
+        final TitledBorder radioBorder = BorderFactory.createTitledBorder(
+                textbundle.getString("dialog_configurationLoading_border"));
+        radios.setBorder(radioBorder);
+        radioBorder.setTitleColor(PicToBrickDialog.GRANITE_GRAY);
+        this.getContentPane().add(content);
+        this.pack();
+        this.setVisible(true);
+    }
 
-	/**
-	 * method: getSelection
-	 * description: returns the selected item (radio button) as integer
-	 *
-	 * @author Tobias Reichling
-	 * @return number of the selected radio button
-	 */
-	public int getSelection() {
-		if (group.getSelection().getActionCommand().contains("new")) {
-			return 1;
-		} else if (group.getSelection().getActionCommand().contains("derivate")) {
-			return 2;
-		} else if (group.getSelection().getActionCommand().contains("load")) {
-			return 3;
-		}
-		return 0;
-	}
+    /**
+     * Returns the selected item (radio button) as integer.
+     *
+     * @author Tobias Reichling
+     * @return number of the selected radio button
+     */
+    public int getSelection() {
+        final String actionCommand = group.getSelection().getActionCommand();
 
-	/**
-	 * method: getFile
-	 * description: returns the selected item (combo box) as integer
-	 *
-	 * @author Tobias Reichling
-	 * @return number of the selected combo box item
-	 */
-	public int getFile() {
-		return list.getSelectedIndex();
-	}
+        if (actionCommand.contains("new")) {
+            return ConfigurationLoader.NEW_CONFIGURATION;
+        } else if (actionCommand.contains("derivate")) {
+            return ConfigurationLoader.DERIVITIVE_CONFIGURATION;
+        } else if (actionCommand.contains("load")) {
+            return ConfigurationLoader.LOAD_EXISTING_CONFIGURATION;
+        }
 
-	/**
-	 * method: isCanceled
-	 * description: returns if the dialog is canceled by user or not
-	 *
-	 * @author Tobias Reichling
-	 * @return true or false
-	 */
-	public boolean isCanceled() {
-		return cancel;
-	}
+        return 0;
+    }
 
-	/**
-	 * method: actionPerformed
-	 * description: ActionListener
-	 *
-	 * @author Tobias Reichling
-	 * @param event
-	 */
-	public void actionPerformed(final ActionEvent event) {
-		if (event.getActionCommand().contains("new")) {
-			list.setEnabled(false);
-		}
-		if (event.getActionCommand().contains("derivate")) {
-			list.setEnabled(true);
-		}
-		if (event.getActionCommand().contains("load")) {
-			list.setEnabled(true);
-		}
-		if (event.getActionCommand().contains("cancel")) {
-			this.setVisible(false);
-		}
-		if (event.getActionCommand().contains("ok")) {
-			cancel = false;
-			this.setVisible(false);
-		}
-	}
+    /**
+     * Returns the selected item (combo box) as integer.
+     *
+     * @author Tobias Reichling
+     * @return number of the selected combo box item
+     */
+    public int getFile() {
+        return list.getSelectedIndex();
+    }
+
+    /**
+     * Returns if the dialog is canceled by user or not.
+     *
+     * @author Tobias Reichling
+     * @return true or false
+     */
+    public boolean isCanceled() {
+        return cancel;
+    }
+
+    /**
+     * ActionListener.
+     *
+     * @author Tobias Reichling
+     * @param event
+     */
+    public void actionPerformed(final ActionEvent event) {
+        final String actionCommand = event.getActionCommand();
+
+        if (actionCommand.contains("new")) {
+            list.setEnabled(false);
+        }
+
+        if (actionCommand.contains("derivate")) {
+            list.setEnabled(true);
+        }
+
+        if (actionCommand.contains("load")) {
+            list.setEnabled(true);
+        }
+
+        if (actionCommand.contains("cancel")) {
+            this.setVisible(false);
+        }
+
+        if (actionCommand.contains("ok")) {
+            cancel = false;
+            this.setVisible(false);
+        }
+    }
 }

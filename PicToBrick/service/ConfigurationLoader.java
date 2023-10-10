@@ -16,16 +16,16 @@ import pictobrick.ui.MainWindow;
  * by John Watne 09/2023.
  */
 public class ConfigurationLoader {
+    /** New configuration selection. */
+    public static final int NEW_CONFIGURATION = 1;
+    /** Derivitve configuration selection. */
+    public static final int DERIVITIVE_CONFIGURATION = 2;
     /** Load existing configuration selection. */
-    private static final int LOAD_EXISTING_CONFIGURATION = 3;
+    public static final int LOAD_EXISTING_CONFIGURATION = 3;
     /** Offset substracted from substring value for string matching. */
     private static final int SUBSTRING_OFFSET = 4;
     /** Minimum configuration file value. */
     private static final int MIN_FILE_VALUE = 3;
-    /** Derivitve configuration selection. */
-    private static final int DERIVITIVE_CONFIGURATION = 2;
-    /** New configuration selection. */
-    private static final int NEW_CONFIGURATION = 1;
     /** The main window of the application. */
     private final MainWindow mainWindow;
     /** The data processor. */
