@@ -610,7 +610,7 @@ public class ElementObjectNewDialog extends JDialog
     }
 
     /**
-     * Xhecks the surrounding checkboxes and deactivates them.
+     * Checks the surrounding checkboxes and deactivates them.
      *
      * @author Adrian Schuetz
      * @param cbMatrixRow
@@ -620,236 +620,215 @@ public class ElementObjectNewDialog extends JDialog
             final int cbMatrixCol) {
         // left
         if (cbMatrixCol == 0) {
-            // top
-            if (cbMatrixRow == 0) {
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol + 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        + 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                + 1][cbMatrixCol] - 1;
-
-                if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow + 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-            } else if (cbMatrixRow > 0 && cbMatrixRow < DEFAULT_LEFT) {
-                // midle
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol + 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        - 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                - 1][cbMatrixCol] - 1;
-
-                if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow - 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        + 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                + 1][cbMatrixCol] - 1;
-
-                if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow + 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-            } else if (cbMatrixRow == DEFAULT_LEFT) {
-                // bottom
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol + 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        - 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                - 1][cbMatrixCol] - 1;
-
-                if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow - 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-            }
+            deactivateLeftCheckboxes(cbMatrixRow, cbMatrixCol);
         } else if (cbMatrixCol > 0 && cbMatrixCol < DEFAULT_LEFT) {
-            // midle
-            if (cbMatrixRow == 0) {
-                // top
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol + 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        + 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                + 1][cbMatrixCol] - 1;
-
-                if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow + 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol - 1]
-                            .setEnabled(false);
-                }
-            } else if (cbMatrixRow > 0 && cbMatrixRow < DEFAULT_TOP) {
-                // midle
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol + 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol - 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        + 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                + 1][cbMatrixCol] - 1;
-
-                if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow + 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        - 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                - 1][cbMatrixCol] - 1;
-
-                if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow - 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-            } else if (cbMatrixRow == DEFAULT_TOP) {
-                // bottom
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol - 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1]
-                                - 1;
-
-                if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol + 1]
-                            .setEnabled(false);
-                }
-
-                activationCounter[cbMatrixRow
-                        - 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                - 1][cbMatrixCol] - 1;
-                if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow - 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-            }
+            deactivateMiddleCheckboxes(cbMatrixRow, cbMatrixCol);
         } else if (cbMatrixCol == DEFAULT_LEFT) {
-            // right
-            if (cbMatrixRow == 0) {
-                // top
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1]
-                                - 1;
+            deactivateRightCheckboxes(cbMatrixRow, cbMatrixCol);
+        }
+    }
 
-                if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol - 1]
-                            .setEnabled(false);
-                }
+    private void deactivateRightCheckboxes(final int cbMatrixRow,
+            final int cbMatrixCol) {
+        // right
+        if (cbMatrixRow == 0) {
+            // top
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1] - 1;
 
-                activationCounter[cbMatrixRow
-                        + 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                + 1][cbMatrixCol] - 1;
+            if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol - 1].setEnabled(false);
+            }
 
-                if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow + 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-            } else if (cbMatrixRow > 0 && cbMatrixRow < DEFAULT_TOP) {
-                // midle
-                activationCounter[cbMatrixRow
-                        + 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                + 1][cbMatrixCol] - 1;
+            activationCounter[cbMatrixRow
+                    + 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            + 1][cbMatrixCol] - 1;
 
-                if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow + 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
+            if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow + 1][cbMatrixCol].setEnabled(false);
+            }
+        } else if (cbMatrixRow > 0 && cbMatrixRow < DEFAULT_TOP) {
+            // middle
+            activationCounter[cbMatrixRow
+                    + 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            + 1][cbMatrixCol] - 1;
 
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1]
-                                - 1;
+            if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow + 1][cbMatrixCol].setEnabled(false);
+            }
 
-                if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol - 1]
-                            .setEnabled(false);
-                }
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1] - 1;
 
-                activationCounter[cbMatrixRow
-                        - 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                - 1][cbMatrixCol] - 1;
+            if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol - 1].setEnabled(false);
+            }
 
-                if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow - 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
-            } else if (cbMatrixRow == DEFAULT_TOP) {
-                // bottom
-                activationCounter[cbMatrixRow][cbMatrixCol
-                        - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1]
-                                - 1;
+            activationCounter[cbMatrixRow
+                    - 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            - 1][cbMatrixCol] - 1;
 
-                if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
-                    checkboxMatrix[cbMatrixRow][cbMatrixCol - 1]
-                            .setEnabled(false);
-                }
+            if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow - 1][cbMatrixCol].setEnabled(false);
+            }
+        } else if (cbMatrixRow == DEFAULT_TOP) {
+            // bottom
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1] - 1;
 
-                activationCounter[cbMatrixRow
-                        - 1][cbMatrixCol] = activationCounter[cbMatrixRow
-                                - 1][cbMatrixCol] - 1;
+            if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol - 1].setEnabled(false);
+            }
 
-                if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
-                    checkboxMatrix[cbMatrixRow - 1][cbMatrixCol]
-                            .setEnabled(false);
-                }
+            activationCounter[cbMatrixRow
+                    - 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            - 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow - 1][cbMatrixCol].setEnabled(false);
+            }
+        }
+    }
+
+    private void deactivateMiddleCheckboxes(final int cbMatrixRow,
+            final int cbMatrixCol) {
+        // middle
+        if (cbMatrixRow == 0) {
+            // top
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol + 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    + 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            + 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow + 1][cbMatrixCol].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol - 1].setEnabled(false);
+            }
+        } else if (cbMatrixRow > 0 && cbMatrixRow < DEFAULT_TOP) {
+            // midle
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol + 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol - 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    + 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            + 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow + 1][cbMatrixCol].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    - 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            - 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow - 1][cbMatrixCol].setEnabled(false);
+            }
+        } else if (cbMatrixRow == DEFAULT_TOP) {
+            // bottom
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    - 1] = activationCounter[cbMatrixRow][cbMatrixCol - 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol - 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol - 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol + 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    - 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            - 1][cbMatrixCol] - 1;
+            if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow - 1][cbMatrixCol].setEnabled(false);
+            }
+        }
+    }
+
+    private void deactivateLeftCheckboxes(final int cbMatrixRow,
+            final int cbMatrixCol) {
+        // top
+        if (cbMatrixRow == 0) {
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol + 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    + 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            + 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow + 1][cbMatrixCol].setEnabled(false);
+            }
+        } else if (cbMatrixRow > 0 && cbMatrixRow < DEFAULT_LEFT) {
+            // middle
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol + 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    - 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            - 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow - 1][cbMatrixCol].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    + 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            + 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow + 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow + 1][cbMatrixCol].setEnabled(false);
+            }
+        } else if (cbMatrixRow == DEFAULT_LEFT) {
+            // bottom
+            activationCounter[cbMatrixRow][cbMatrixCol
+                    + 1] = activationCounter[cbMatrixRow][cbMatrixCol + 1] - 1;
+
+            if (activationCounter[cbMatrixRow][cbMatrixCol + 1] == 0) {
+                checkboxMatrix[cbMatrixRow][cbMatrixCol + 1].setEnabled(false);
+            }
+
+            activationCounter[cbMatrixRow
+                    - 1][cbMatrixCol] = activationCounter[cbMatrixRow
+                            - 1][cbMatrixCol] - 1;
+
+            if (activationCounter[cbMatrixRow - 1][cbMatrixCol] == 0) {
+                checkboxMatrix[cbMatrixRow - 1][cbMatrixCol].setEnabled(false);
             }
         }
     }
