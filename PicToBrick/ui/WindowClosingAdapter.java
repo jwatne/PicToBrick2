@@ -1,53 +1,49 @@
 package pictobrick.ui;
 
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
- * class:           WindowClosingAdapter
- * layer:           Gui (three tier architecture)
- * description:     creates a window closing adapter
- * @author          Tobias Reichling / Adrian Schuetz
+ * Creates a window closing adapter.
+ *
+ * @author Tobias Reichling / Adrian Schuetz
  */
 
-public class WindowClosingAdapter
-extends WindowAdapter
-{
-	private boolean exitSystem;
+public class WindowClosingAdapter extends WindowAdapter {
+    /** Indicates whether to do a system exit. */
+    private boolean exitSystem;
 
-	/**
-	 * method:           WindowClosingAdapter
-	 * description:      constructor
-	 * @author           Tobias Reichling / Adrian Schuetz
-	 * @param            exitSystem
-	 */
-	public WindowClosingAdapter(boolean exitSystem)
-	{
-		this.exitSystem = exitSystem;
-	}
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling / Adrian Schuetz
+     * @param exit
+     */
+    public WindowClosingAdapter(final boolean exit) {
+        this.exitSystem = exit;
+    }
 
-	/**
-	 * method:           WindowClosingAdapter
-	 * description:      constructor
-	 * @author           Tobias Reichling / Adrian Schuetz
-	 */
-	public WindowClosingAdapter()
-	{
-		this(false);
-	}
+    /**
+     * Constructor.
+     *
+     * @author Tobias Reichling / Adrian Schuetz
+     */
+    public WindowClosingAdapter() {
+        this(false);
+    }
 
-	/**
-	 * method:           windowClosing
-	 * description:      this method closes the window, disposes
-	 *                   the window and exits the software
-	 * @author           Tobias Reichling / Adrian Schuetz
-	 * @param            event
-	 */
-	public void windowClosing(WindowEvent event)
-	{
-		event.getWindow().setVisible(false);
-		event.getWindow().dispose();
-		if (exitSystem) {
-			System.exit(0);
-		}
-	}
+    /**
+     * This method closes the window, disposes the window and exits the
+     * software.
+     *
+     * @author Tobias Reichling / Adrian Schuetz
+     * @param event
+     */
+    public void windowClosing(final WindowEvent event) {
+        event.getWindow().setVisible(false);
+        event.getWindow().dispose();
+        if (exitSystem) {
+            System.exit(0);
+        }
+    }
 }
