@@ -50,7 +50,7 @@ public class AboutDialog extends JDialog
         final JPanel information2 = new JPanel(
                 new GridLayout(INFORMATION_PANEL_ROWS, 1,
                         INFORMATION2_GAP_PIXELS, INFORMATION2_GAP_PIXELS));
-        final JLabel name = new JLabel("pictobrick 2.0 - 2023-09-01");
+        final JLabel name = new JLabel("pictobrick 2.0 - 2023-10-12");
         name.setFont(new Font(name.getFont().getFontName(), Font.BOLD,
                 name.getFont().getSize()));
         final JLabel homepage = new JLabel("http://www.pictobrick.de ("
