@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import pictobrick.model.Configuration;
 import pictobrick.model.DataManagement;
+import pictobrick.service.generators.OutputFileGenerator;
 import pictobrick.ui.MainWindow;
 import pictobrick.ui.ProgressBarsAlgorithms;
 
@@ -664,7 +665,8 @@ public class DataProcessor {
             final boolean configuration, final boolean material,
             final boolean instruction, final boolean xml,
             final Enumeration<String> infos) {
-        outputFiles.setProject(dataManagement.generateFolderOutput());
+        outputFiles.getCommon()
+                .setProject(dataManagement.generateFolderOutput());
         return outputFiles.generateDocuments(image, configuration, material,
                 instruction, xml, infos);
     }

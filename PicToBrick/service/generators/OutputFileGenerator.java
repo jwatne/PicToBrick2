@@ -1,4 +1,4 @@
-package pictobrick.service;
+package pictobrick.service.generators;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
@@ -14,6 +13,7 @@ import javax.swing.SwingUtilities;
 import pictobrick.model.ColorObject;
 import pictobrick.model.ElementObject;
 import pictobrick.model.Mosaic;
+import pictobrick.service.DataProcessor;
 import pictobrick.ui.ProgressBarsAlgorithms;
 import pictobrick.ui.ProgressBarsOutputFiles;
 
@@ -30,214 +30,64 @@ public class OutputFileGenerator {
     /** 1/2 length and width of 1x1 tile in pixels; used to get midpoint. */
     private static final int HALF_TILE = 4;
 
-    /** Text resource bundle. */
-    private static ResourceBundle textbundle = ResourceBundle
-            .getBundle("Resources.TextResource");
-
-    // ############################## all
-    /** Header. */
-    private static final String HEADER = """
-            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-            "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-            <html xmlns="http://www.w3.org/1999/xhtml">
-            <head>
-            <title>pictobrick</title>
-            <meta http-equiv="content-type"
-             content="text/html; charset=utf-8" />
-            <style type="text/css">
-            #menu {
-                left:0;
-                top:10;
-                width:200px;
-                position:absolute;
-                padding-left:10px;
-                padding-right:10px;
-                padding-top:0px;
-                margin-left:0;
-                margin-top:0;
-                margin-right:0;
-                font-family:Verdana, Arial;
-                font-size:small;
-                }
-                #content {
-                margin-top:0px;
-                margin-left:200px;
-                margin-right:0px;
-                padding-left:10px;
-                padding-right:10px;
-                padding-top:0px;
-                font-family:Verdana, Arial;
-                font-size:small;
-                }
-                #headline {
-                font-size:x-large;
-                }
-                a:link {
-                text-decoration:none;
-                color:blue;
-                }
-                a:visited {
-                text-decoration:none;
-                color:blue;
-                }
-                a:hover {
-                text-decoration:underline;
-                color:blue;
-                }
-                a:active {
-                text-decoration:underline;
-                color:blue;
-                }
-                td {
-                padding-right:10px;
-                padding-left:10px;
-                }
-                </style>
-                </head>
-                <body>
-                            """;
-    /** End of page. */
-    private static final String END = "<br />\r\n</div>\r\n</body>\r\n</html>";
-    /** Project name. */
-    private static final String PROJECT_NAME = "</ul>\r\n</div>\r\n"
-            + "<div id=\"content\">\r\n<p>\r\n<strong>pictobrick - "
-            + textbundle.getString("output_outputFiles_1")
-            + "</strong>\r\n</p>\r\n<p id=\"headline\">\r\n<strong>"
-            + textbundle.getString("output_outputFiles_2") + ": ";
-
     // ############################## all without index.html
     /** Start menu. */
     private static final String START_MENU = "<div id=\"menu\">\r\n"
             + "<ul>\r\n<li>\r\n<a href=\"../index.html\">\r\n"
-            + textbundle.getString("output_outputFiles_3")
+            + FileGenerationCommon.getTextbundle().getString(
+                    "output_outputFiles_3")
             + "\r\n</a>\r\n</li>\r\n";
     /** Graphic menu. */
     private static final String GRAPHIC_MENU = "<li>\r\n"
-            + "<a href=\"grafic.html\">\r\n"
-            + textbundle.getString("output_outputFiles_4")
+            + "<a href=\"grafic.html\">\r\n" + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_4")
             + "\r\n</a>\r\n</li>\r\n";
     /** Configuration menu. */
     private static final String CONFIGURATION_MENU = "<li>\r\n"
             + "<a href=\"configuration.html\">\r\n"
-            + textbundle.getString("output_outputFiles_5")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_5")
             + "\r\n</a>\r\n<ul>\r\n<li>\r\n<a href=\"colors.html\">\r\n"
-            + textbundle.getString("output_outputFiles_6")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_6")
             + "\r\n</a>\r\n</li>\r\n<li>\r\n<a href=\"elements.html\">\r\n"
-            + textbundle.getString("output_outputFiles_7")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_7")
             + "\r\n</a>\r\n</li>\r\n</ul>\r\n</li>\r\n";
     /** Material menu. */
     private static final String MATERIAL_MENU = "<li>\r\n"
-            + "<a href=\"billofmaterial.html\">\r\n"
-            + textbundle.getString("output_outputFiles_8")
+            + "<a href=\"billofmaterial.html\">\r\n" + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_8")
             + "\r\n</a>\r\n</li>\r\n";
     /** Instruction menu. */
     private static final String INSTRUCTION_MENU = "<li>\r\n"
-            + "<a href=\"buildinginstruction.html\">\r\n"
-            + textbundle.getString("output_outputFiles_9")
+            + "<a href=\"buildinginstruction.html\">\r\n" + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_9")
             + "\r\n</a>\r\n</li>\r\n";
     /** XML menu. */
     private static final String XML_MENU = "<li>\r\n<a href=\"xml.html\">\r\n"
-            + textbundle.getString("output_outputFiles_10")
+            + FileGenerationCommon.getTextbundle().getString(
+                    "output_outputFiles_10")
             + "\r\n</a>\r\n</li>\r\n";
     /** Additional menu. */
     private static final String ADDITIONAL_MENU = "<li>\r\n"
-            + "<a href=\"additional.html\">\r\n"
-            + textbundle.getString("output_outputFiles_11")
+            + "<a href=\"additional.html\">\r\n" + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_11")
             + "\r\n</a>\r\n</li>\r\n";
     // ---------->all:projectname
     /** Project end. */
     private static final String PROJECT_END = "</strong>\r\n</p>\r\n";
-
-    // ############################## index.html
-    // ---------->all:head
-    /** Start menu index. */
-    private static final String START_MENU_INDEX = "<div id=\"menu\">\r\n"
-            + "<ul>\r\n<li>\r\n<a href=\"index.html\">\r\n"
-            + textbundle.getString("output_outputFiles_3")
-            + "\r\n</a>\r\n</li>\r\n";
-    /** Graphics menu index. */
-    private static final String GRAPHICS_MENU_INDEX = "<li>\r\n"
-            + "<a href=\"data/grafic.html\">\r\n"
-            + textbundle.getString("output_outputFiles_4")
-            + "\r\n</a>\r\n</li>\r\n";
-    /** Configuration menu index. */
-    private static final String CONFIGURATION_MENU_INDEX = "<li>\r\n"
-            + "<a href=\"data/configuration.html\">\r\n"
-            + textbundle.getString("output_outputFiles_5")
-            + "\r\n</a>\r\n<ul>\r\n<li>\r\n<a href=\"data/colors.html\">\r\n"
-            + textbundle.getString("output_outputFiles_6")
-            + "\r\n</a>\r\n</li>\r\n<li>\r\n<a href=\"data/elements.html\">\r\n"
-            + textbundle.getString("output_outputFiles_7")
-            + "\r\n</a>\r\n</li>\r\n</ul>\r\n</li>\r\n";
-    /** Material menu index. */
-    private static final String MATERIAL_MENU_INDEX = "<li>\r\n"
-            + "<a href=\"data/billofmaterial.html\">\r\n"
-            + textbundle.getString("output_outputFiles_8")
-            + "\r\n</a>\r\n</li>\r\n";
-    /** Instruction menu index. */
-    private static final String INSTRUCTION_MENU_INDEX = "<li>\r\n"
-            + "<a href=\"data/buildinginstruction.html\">\r\n"
-            + textbundle.getString("output_outputFiles_9")
-            + "\r\n</a>\r\n</li>\r\n";
-    /** XML menu index. */
-    private static final String XML_MENU_INDEX = "<li>\r\n"
-            + "<a href=\"data/xml.html\">\r\n"
-            + textbundle.getString("output_outputFiles_10")
-            + "\r\n</a>\r\n</li>\r\n";
-    /** Additional menu index. */
-    private static final String ADDITIONAL_MENU_INDEX = "<li>\r\n"
-            + "<a href=\"data/additional.html\">\r\n"
-            + textbundle.getString("output_outputFiles_11")
-            + "\r\n</a>\r\n</li>\r\n";
-    // ---------->projectname
-    /** Project content index 2. */
-    private static final String PROJECT_CONTENT_INDEX_2 = "</strong>\r\n"
-            + "</p>\r\n<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_12")
-            + ":</strong>\r\n<br />\r\n";
-    // ---------->width x height
-    /** Project content index 3. */
-    private static final String PROJECT_CONTENT_INDEX_3 = " "
-            + textbundle.getString("output_outputFiles_13") + "\r\n<br />\r\n";
-    // ---------->width x height
-    /** Project content index 4. */
-    private static final String PROJECT_CONTENT_INDEX_4 = " mm\r\n"
-            + "<br />\r\n</p>\r\n";
-    /** Graphics content index. */
-    private static final String GRAPHICS_CONTENT_INDEX = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_4")
-            + "</strong><br />\r\n"
-            + textbundle.getString("output_outputFiles_14") + "\r\n</p>\r\n";
-    /** Configuration content index. */
-    private static final String CONFIGURATION_CONTENT_INDEX = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_5")
-            + "</strong><br />\r\n"
-            + textbundle.getString("output_outputFiles_15") + "\r\n</p>\r\n";
-    /** Material content index. */
-    private static final String MATERIAL_CONTENT_INDEX = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_8")
-            + "</strong><br />\r\n"
-            + textbundle.getString("output_outputFiles_16") + "\r\n</p>\r\n";
-    /** Instruction content index. */
-    private static final String INSTRUCTION_CONTENT_INDEX = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_9")
-            + "</strong><br />\r\n"
-            + textbundle.getString("output_outputFiles_17") + "\r\n</p>\r\n";
-    /** XML content index. */
-    private static final String XML_CONTENT_INDEX = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_10")
-            + "</strong><br />\r\n"
-            + textbundle.getString("output_outputFiles_18") + "\r\n</p>\r\n";
-    // ---------->all:end
 
     // ############################## grafic.html
     // ---------->all:head
     // ---------->all without index: from menu_start till project_end
     /** Graphics start. */
     private static final String GRAPHICS_START = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_4")
+            + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_4")
             + "</strong><br />\r\n"
-            + textbundle.getString("output_outputFiles_19")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_19")
             + "\r\n</p>\r\n<p>\r\n<img src=\"mosaic.jpg\" width=\"";
     // ---------->image width
     /** Graphics height. */
@@ -247,13 +97,16 @@ public class OutputFileGenerator {
     private static final String GRAPHICS_PRINT_WIDTH = "\" "
             + "alt=\"mosaic\" />\r\n"
             + "</p>\r\n<p>\r\n<a href=\"mosaic.jpg\">\r\n"
-            + textbundle.getString("output_outputFiles_20")
-            + "\r\n</a>\r\n</p>\r\n<p>\r\n"
-            + textbundle.getString("output_outputFiles_21") + " ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_20")
+            + "\r\n</a>\r\n</p>\r\n<p>\r\n" + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_21")
+            + " ";
     // ---------->image print_width
     /** Graphics end. */
-    private static final String GRAPHICS_END = " "
-            + textbundle.getString("output_outputFiles_22") + "\r\n</p>\r\n";
+    private static final String GRAPHICS_END = " " + FileGenerationCommon
+            .getTextbundle().getString("output_outputFiles_22")
+            + "\r\n</p>\r\n";
     // ---------->all:end
 
     // ############################## configuration.html
@@ -261,37 +114,55 @@ public class OutputFileGenerator {
     // ---------->all without index: from menu_start till project_end
     /** Configuration start. */
     private static final String CONFIGURATION_START = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_5")
+            + FileGenerationCommon.getTextbundle().getString(
+                    "output_outputFiles_5")
             + "</strong><br />\r\n</p>\r\n";
     /** Configuration name. */
     private static final String CONFIGURATION_NAME = "<p>\r\n"
-            + textbundle.getString("output_outputFiles_23") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_23")
+            + ": ";
     // ---------->configuration name
     /** Configuration basis name. */
     private static final String CONFIGURATION_BASIS_NAME = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_24") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_24")
+            + ": ";
     // ---------->basis name
     /** Configuration basis width. */
     private static final String CONFIGURATION_BASIS_WIDTH = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_25") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_25")
+            + ": ";
     // ---------->basis width
     /** Configuration basis height. */
     private static final String CONFIGURATION_BASIS_HEIGHT = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_26") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_26")
+            + ": ";
     // ---------->basis height
     /** Configuration basis width in mm. */
     private static final String CONFIGURATION_BASIS_WIDTH_MM = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_27") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_27")
+            + ": ";
     // ---------->basis width mm
     /** Configuration end. */
     private static final String CONFIGURATION_END = "\r\n</p>\r\n<p>\r\n"
-            + textbundle.getString("output_outputFiles_28")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_28")
             + " <a href=\"colors.html\">"
-            + textbundle.getString("output_outputFiles_6") + "</a> "
-            + textbundle.getString("output_outputFiles_29")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_6")
+            + "</a> "
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_29")
             + " <a href=\"elements.html\">"
-            + textbundle.getString("output_outputFiles_7") + "</a> "
-            + textbundle.getString("output_outputFiles_30") + ".\r\n</p>\r\n";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_7")
+            + "</a> " + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_30")
+            + ".\r\n</p>\r\n";
     // ---------->all:end
 
     // ############################## elements.html
@@ -299,29 +170,40 @@ public class OutputFileGenerator {
     // ---------->all without index: from menu_start till project_end
     /** Element start. */
     private static final String ELEMENT_START = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_7")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_7")
             + "</strong>\r\n<br />\r\n</p>\r\n<table>\r\n";
     /** Element cell start. */
     private static final String ELEMENT_CELL_START = "<tr>\r\n<td>\r\n";
     /** Element name. */
     private static final String ELEMENT_NAME = "\r\n</td>\r\n<td>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_31") + ":</strong> ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_31")
+            + ":</strong> ";
     // ---------->name
     /** Element width. */
     private static final String ELEMENT_WIDTH = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_32") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_32")
+            + ": ";
     // ---------->width
     /** Element height. */
     private static final String ELEMENT_HEIGHT = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_33") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_33")
+            + ": ";
     // ---------->height
     /** Element stability. */
     private static final String ELEMENT_STABILITY = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_34") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_34")
+            + ": ";
     // ---------->stability
     /** Element costs. */
     private static final String ELEMENT_COSTS = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_35") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_35")
+            + ": ";
     // ---------->costs
     /** Element cell end. */
     private static final String ELEMENT_CELL_END = "\r\n</td>\r\n</tr>\r\n";
@@ -334,7 +216,8 @@ public class OutputFileGenerator {
     // ---------->all without index: from menu_start till project_end
     /** Color start. */
     private static final String COLOR_START = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_6")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_6")
             + "</strong><br />\r\n</p>\r\n<table>\r\n";
     /** Color cell start. */
     private static final String COLOR_CELL_START = "<tr>\r\n<td>\r\n"
@@ -346,7 +229,9 @@ public class OutputFileGenerator {
     // ---------->color name
     /** Color info. */
     private static final String COLOR_INFO = "\r\n<br />\r\n"
-            + textbundle.getString("output_outputFiles_36") + ": ";
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_36")
+            + ": ";
     // ---------->rgb
     /** Color cell end. */
     private static final String COLOR_CELL_END = "\r\n</td>\r\n</tr>\r\n";
@@ -359,7 +244,8 @@ public class OutputFileGenerator {
     // ---------->all without index: from menu_start till project_end
     /** Material start. */
     private static final String MATERIAL_START = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_8")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_8")
             + "</strong><br />\r\n</p>\r\n<table>\r\n";
     /** Material row start. */
     private static final String MATERIAL_ROW_START = "<tr>\r\n<td>\r\n";
@@ -380,7 +266,8 @@ public class OutputFileGenerator {
     // ---------->all without index: from menu_start till project_end
     /** Instruction start. */
     private static final String INSTRUCTION_START = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_9")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_9")
             + "</strong><br />\r\n</p>\r\n<ul>\r\n";
     /** Instruction cell start. */
     private static final String INSTRUCTION_CELL_START = "<li>\r\n";
@@ -396,11 +283,14 @@ public class OutputFileGenerator {
     // ---------->all without index: from menu_start till project_end
     /** All XML. */
     private static final String XML_ALL = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_10")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_10")
             + "</strong><br />\r\n</p>\r\n<p>\r\n"
-            + textbundle.getString("output_outputFiles_18")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_18")
             + "\r\n</p>\r\n<p>\r\n<a href=\"mosaic.xml\">\r\n"
-            + textbundle.getString("output_outputFiles_37")
+            + FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_37")
             + "\r\n</a>\r\n</p>";
     // ---------->all:end
 
@@ -437,17 +327,14 @@ public class OutputFileGenerator {
     // ---------->all without index: from menu_start till project_end
     /** Additional start. */
     private static final String ADDITIONAL_START = "<p>\r\n<strong>"
-            + textbundle.getString("output_outputFiles_11")
+            + FileGenerationCommon.getTextbundle().getString(
+                    "output_outputFiles_11")
             + "</strong><br />\r\n</p>\r\n";
     // ---------->inelementation
     /** Additional cell end. */
     private static final String ADDITIONAL_CELL_END = "\r\n<br />\r\n";
     // ---------->all:end
 
-    /** Project. */
-    private String project;
-    /** Data processor. */
-    private final DataProcessor dataProcessing;
     /** Normal color. */
     private final Color colorNormal = new Color(59, 45, 167);
     /** Light color. */
@@ -460,6 +347,8 @@ public class OutputFileGenerator {
     private int percent = 0;
     /** Reference value. */
     private int referenceValue = 0;
+    /** Common file generation code. */
+    private FileGenerationCommon common;
 
     /**
      * Constructor.
@@ -469,17 +358,16 @@ public class OutputFileGenerator {
      * @author Tobias Reichling
      */
     public OutputFileGenerator(final DataProcessor processor) {
-        this.dataProcessing = processor;
+        this.common = new FileGenerationCommon(processor);
     }
 
     /**
-     * Sets the projects name.
+     * Returns common file generation code.
      *
-     * @author Tobias Reichling
-     * @param name
+     * @return common file generation code.
      */
-    public void setProject(final String name) {
-        this.project = name;
+    public FileGenerationCommon getCommon() {
+        return common;
     }
 
     /**
@@ -500,8 +388,8 @@ public class OutputFileGenerator {
             final Enumeration<String> infos) {
         String error = "";
         // index.html
-        error = generateIndex(generateGraphics, configuration, material,
-                instruction, xml, error);
+        error = (new IndexGenerator(common)).generateIndex(generateGraphics,
+                configuration, material, instruction, xml, error);
         // grafic.html
         error = generateGraphics(generateGraphics, configuration, material,
                 instruction, xml, error);
@@ -529,6 +417,7 @@ public class OutputFileGenerator {
             final boolean instruction, final boolean xml,
             final Enumeration<String> infos, final String initialError) {
         String error = initialError;
+        final DataProcessor dataProcessing = common.getDataProcessing();
 
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
@@ -546,8 +435,8 @@ public class OutputFileGenerator {
         additionalString.append(ADDITIONAL_START);
 
         if (!infos.hasMoreElements()) {
-            additionalString
-                    .append(textbundle.getString("output_outputFiles_43"));
+            additionalString.append(FileGenerationCommon.getTextbundle()
+                    .getString("output_outputFiles_43"));
             additionalString.append(ADDITIONAL_CELL_END);
         } else {
             while (infos.hasMoreElements()) {
@@ -556,12 +445,13 @@ public class OutputFileGenerator {
             }
         }
 
-        additionalString.append(END);
+        additionalString.append(FileGenerationCommon.END);
 
         if (!(dataProcessing.generateUTFOutput(additionalString.toString(),
                 "additional.html", true))) {
-            error = error + "additional.html "
-                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
+            error = error + "additional.html " + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_38")
+                    + ".\n\r";
         }
         return error;
     }
@@ -571,6 +461,7 @@ public class OutputFileGenerator {
             final boolean instruction, final boolean xml,
             final String initialError) {
         String error = initialError;
+        final DataProcessor dataProcessing = common.getDataProcessing();
 
         if (xml) {
             List<List<Vector<String>>> mosaicMatrix = dataProcessing
@@ -579,19 +470,19 @@ public class OutputFileGenerator {
                     generateGraphics, configuration, material, instruction,
                     xml);
             xmlString.append(XML_ALL);
-            xmlString.append(END);
+            xmlString.append(FileGenerationCommon.END);
 
             if (!(dataProcessing.generateUTFOutput(xmlString.toString(),
                     "xml.html", true))) {
-                error = error + "xml.html "
-                        + textbundle.getString("output_outputFiles_38")
+                error = error + "xml.html " + FileGenerationCommon
+                        .getTextbundle().getString("output_outputFiles_38")
                         + ".\n\r";
             }
 
             // mosaic.xml
             final StringBuilder xmldocumentString = new StringBuilder();
             xmldocumentString.append(XML_DOCUMENT_START1);
-            xmldocumentString.append(project);
+            xmldocumentString.append(common.getProject());
             xmldocumentString.append(XML_DOCUMENT_START2);
             mosaicMatrix = dataProcessing.getMosaic();
             percent = 0;
@@ -635,8 +526,8 @@ public class OutputFileGenerator {
 
             if (!(dataProcessing.generateUTFOutput(xmldocumentString.toString(),
                     "mosaic.xml", true))) {
-                error = error + "mosaic.xml "
-                        + textbundle.getString("output_outputFiles_38")
+                error = error + "mosaic.xml " + FileGenerationCommon
+                        .getTextbundle().getString("output_outputFiles_38")
                         + ".\n\r";
             }
         }
@@ -648,6 +539,7 @@ public class OutputFileGenerator {
             final boolean instruction, final boolean xml,
             final String initialError) {
         String error = initialError;
+        final DataProcessor dataProcessing = common.getDataProcessing();
 
         if (instruction) {
             List<List<Vector<String>>> mosaicMatrix = dataProcessing
@@ -666,16 +558,17 @@ public class OutputFileGenerator {
                 for (int column = 0; column < dataProcessing
                         .getMosaicWidth(); column++) {
                     instructionString.append(INSTRUCTION_CELL_START);
-                    instructionString.append(
-                            textbundle.getString("output_outputFiles_40") + " "
-                                    + (row + 1) + ", "
-                                    + textbundle
-                                            .getString("output_outputFiles_41")
-                                    + " " + (column + 1) + ": ");
+                    instructionString.append(FileGenerationCommon
+                            .getTextbundle().getString("output_outputFiles_40")
+                            + " " + (row + 1) + ", "
+                            + FileGenerationCommon.getTextbundle()
+                                    .getString("output_outputFiles_41")
+                            + " " + (column + 1) + ": ");
 
                     if (mosaicMatrix.get(row).get(column).isEmpty()) {
                         instructionString.append("("
-                                + textbundle.getString("output_outputFiles_42")
+                                + FileGenerationCommon.getTextbundle()
+                                        .getString("output_outputFiles_42")
                                 + ")");
                     } else {
                         instructionString.append((String) mosaicMatrix.get(row)
@@ -700,11 +593,12 @@ public class OutputFileGenerator {
                 }
             }
             instructionString.append(INSTRUCTION_END);
-            instructionString.append(END);
+            instructionString.append(FileGenerationCommon.END);
             if (!(dataProcessing.generateUTFOutput(instructionString.toString(),
                     "buildinginstruction.html", true))) {
                 error = error + "buildinginstruction.html "
-                        + textbundle.getString("output_outputFiles_38")
+                        + FileGenerationCommon.getTextbundle()
+                                .getString("output_outputFiles_38")
                         + ".\n\r";
             }
         }
@@ -716,6 +610,7 @@ public class OutputFileGenerator {
             final boolean instruction, final boolean xml,
             final String initialError) {
         String error = initialError;
+        final DataProcessor dataProcessing = common.getDataProcessing();
 
         if (material) {
             final StringBuilder billofmaterialString = getCommonDocumentStart(
@@ -786,7 +681,8 @@ public class OutputFileGenerator {
                         billofmaterialString.append(elementName);
                         billofmaterialString.append(MATERIAL_BETWEEN);
                         billofmaterialString.append(quantity + " "
-                                + textbundle.getString("output_outputFiles_39")
+                                + FileGenerationCommon.getTextbundle()
+                                        .getString("output_outputFiles_39")
                                 + "");
                         billofmaterialString.append(MATERIAL_ROW_END);
                     }
@@ -794,13 +690,13 @@ public class OutputFileGenerator {
             }
 
             billofmaterialString.append(MATERIAL_END);
-            billofmaterialString.append(END);
+            billofmaterialString.append(FileGenerationCommon.END);
 
             if (!(dataProcessing.generateUTFOutput(
                     billofmaterialString.toString(), "billofmaterial.html",
                     true))) {
-                error = error + "billofmaterial.html "
-                        + textbundle.getString("output_outputFiles_38")
+                error = error + "billofmaterial.html " + FileGenerationCommon
+                        .getTextbundle().getString("output_outputFiles_38")
                         + ".\n\r";
             }
         }
@@ -812,6 +708,7 @@ public class OutputFileGenerator {
             final boolean instruction, final boolean xml,
             final String initialError) {
         String error = initialError;
+        final DataProcessor dataProcessing = common.getDataProcessing();
 
         if (configuration) {
             error = getConfigurationHtml(generateGraphics, configuration,
@@ -845,12 +742,12 @@ public class OutputFileGenerator {
                     elementsString);
 
             elementsString.append(ELEMENT_END);
-            elementsString.append(END);
+            elementsString.append(FileGenerationCommon.END);
 
             if (!(dataProcessing.generateUTFOutput(elementsString.toString(),
                     "elements.html", true))) {
-                error = error + "elements.html "
-                        + textbundle.getString("output_outputFiles_38")
+                error = error + "elements.html " + FileGenerationCommon
+                        .getTextbundle().getString("output_outputFiles_38")
                         + ".\n\r";
             }
 
@@ -870,6 +767,7 @@ public class OutputFileGenerator {
         ElementObject element;
         boolean[][] matrix;
         boolean[][] matrixNew;
+        final DataProcessor dataProcessing = common.getDataProcessing();
 
         for (final var elementsEnumeration = dataProcessing
                 .getCurrentConfiguration().getAllElements(); elementsEnumeration
@@ -936,6 +834,7 @@ public class OutputFileGenerator {
             final int counter, final ElementObject element,
             final boolean[][] matrixNew) {
         BufferedImage elementImage;
+        final DataProcessor dataProcessing = common.getDataProcessing();
         elementImage = new BufferedImage(width * TILE_SIZE,
                 height * element.getHeight(), BufferedImage.TYPE_INT_RGB);
         final Graphics2D g = elementImage.createGraphics();
@@ -1022,6 +921,7 @@ public class OutputFileGenerator {
             final boolean configuration, final boolean material,
             final boolean instruction, final boolean xml,
             final String initialError, final int initialFlag1) {
+        final DataProcessor dataProcessing = common.getDataProcessing();
         int flag1 = initialFlag1;
         String error = initialError;
         final StringBuilder colorsString = getCommonDocumentStart(
@@ -1065,12 +965,13 @@ public class OutputFileGenerator {
         }
 
         colorsString.append(COLOR_END);
-        colorsString.append(END);
+        colorsString.append(FileGenerationCommon.END);
 
         if (!(dataProcessing.generateUTFOutput(colorsString.toString(),
                 "colors.html", true))) {
-            error = error + "colors.html "
-                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
+            error = error + "colors.html " + FileGenerationCommon
+                    .getTextbundle().getString("output_outputFiles_38")
+                    + ".\n\r";
         }
         return error;
     }
@@ -1080,6 +981,7 @@ public class OutputFileGenerator {
             final boolean instruction, final boolean xml,
             final String initialError) {
         String error = initialError;
+        final DataProcessor dataProcessing = common.getDataProcessing();
         final StringBuilder configurationString = getCommonDocumentStart(
                 generateGraphics, configuration, material, instruction, xml);
         configurationString.append(CONFIGURATION_START);
@@ -1100,15 +1002,19 @@ public class OutputFileGenerator {
                 * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()));
         configurationString
                 .append((widthMM / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                        + textbundle.getString("output_decimalPoint") + (widthMM
+                        + FileGenerationCommon.getTextbundle()
+                                .getString("output_decimalPoint")
+                        + (widthMM
                                 % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
         configurationString.append(CONFIGURATION_END);
-        configurationString.append(END);
+        configurationString.append(FileGenerationCommon.END);
 
         if (!(dataProcessing.generateUTFOutput(configurationString.toString(),
                 "configuration.html", true))) {
-            error = error + "configuration.html "
-                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
+            error = error
+                    + "configuration.html " + FileGenerationCommon
+                            .getTextbundle().getString("output_outputFiles_38")
+                    + ".\n\r";
         }
         return error;
     }
@@ -1117,7 +1023,7 @@ public class OutputFileGenerator {
             final boolean configuration, final boolean material,
             final boolean instruction, final boolean xml) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(HEADER);
+        builder.append(FileGenerationCommon.HEADER);
         builder.append(START_MENU);
 
         if (generateGraphics) {
@@ -1141,8 +1047,8 @@ public class OutputFileGenerator {
         }
 
         builder.append(ADDITIONAL_MENU);
-        builder.append(PROJECT_NAME);
-        builder.append(project);
+        builder.append(FileGenerationCommon.PROJECT_NAME);
+        builder.append(common.getProject());
         builder.append(PROJECT_END);
         return builder;
     }
@@ -1152,6 +1058,7 @@ public class OutputFileGenerator {
             final boolean instruction, final boolean xml,
             final String initialError) {
         String error = initialError;
+        final DataProcessor dataProcessing = common.getDataProcessing();
 
         if (generateGraphics) {
             try {
@@ -1184,14 +1091,16 @@ public class OutputFileGenerator {
             graficString.append(GRAPHICS_PRINT_WIDTH);
             graficString.append((printWidth
                     / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                    + textbundle.getString("output_decimalPoint") + (printWidth
+                    + FileGenerationCommon.getTextbundle()
+                            .getString("output_decimalPoint")
+                    + (printWidth
                             % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
             graficString.append(GRAPHICS_END);
-            graficString.append(END);
+            graficString.append(FileGenerationCommon.END);
             if (!(dataProcessing.generateUTFOutput(graficString.toString(),
                     "grafic.html", true))) {
-                error = error + "grafic.html "
-                        + textbundle.getString("output_outputFiles_38")
+                error = error + "grafic.html " + FileGenerationCommon
+                        .getTextbundle().getString("output_outputFiles_38")
                         + ".\n\r";
             }
             try {
@@ -1212,92 +1121,9 @@ public class OutputFileGenerator {
         return error;
     }
 
-    private String generateIndex(final boolean generateGraphics,
-            final boolean configuration, final boolean material,
-            final boolean instruction, final boolean xml,
-            final String initialError) {
-        String error = initialError;
-        final StringBuilder index = new StringBuilder();
-        index.append(HEADER);
-        index.append(START_MENU_INDEX);
-
-        if (generateGraphics) {
-            index.append(GRAPHICS_MENU_INDEX);
-        }
-
-        if (configuration) {
-            index.append(CONFIGURATION_MENU_INDEX);
-        }
-
-        if (material) {
-            index.append(MATERIAL_MENU_INDEX);
-        }
-
-        if (instruction) {
-            index.append(INSTRUCTION_MENU_INDEX);
-        }
-
-        if (xml) {
-            index.append(XML_MENU_INDEX);
-        }
-
-        index.append(ADDITIONAL_MENU_INDEX);
-        index.append(PROJECT_NAME);
-        index.append(project);
-        index.append(PROJECT_CONTENT_INDEX_2);
-        index.append(dataProcessing.getMosaicWidth() + " x "
-                + dataProcessing.getMosaicHeight());
-        index.append(PROJECT_CONTENT_INDEX_3);
-        final int width2 = (int) (100
-                * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()
-                        * dataProcessing.getMosaicWidth()));
-        final int height2 = (int) (100
-                * (dataProcessing.getCurrentConfiguration().getBasisWidthMM()
-                        / dataProcessing.getCurrentConfiguration()
-                                .getBasisWidth()
-                        * dataProcessing.getCurrentConfiguration()
-                                .getBasisHeight()
-                        * dataProcessing.getMosaicHeight()));
-        index.append((width2 / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                + textbundle.getString("output_decimalPoint")
-                + (width2 % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT) + " x "
-                + (height2 / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT)
-                + textbundle.getString("output_decimalPoint")
-                + (height2 % ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT));
-        index.append(PROJECT_CONTENT_INDEX_4);
-
-        if (generateGraphics) {
-            index.append(GRAPHICS_CONTENT_INDEX);
-        }
-
-        if (configuration) {
-            index.append(CONFIGURATION_CONTENT_INDEX);
-        }
-
-        if (material) {
-            index.append(MATERIAL_CONTENT_INDEX);
-        }
-
-        if (instruction) {
-            index.append(INSTRUCTION_CONTENT_INDEX);
-        }
-
-        if (xml) {
-            index.append(XML_CONTENT_INDEX);
-        }
-
-        index.append(END);
-
-        if (!(dataProcessing.generateUTFOutput(index.toString(), "index.html",
-                false))) {
-            error = error + "index.html "
-                    + textbundle.getString("output_outputFiles_38") + ".\n\r";
-        }
-        return error;
-    }
-
     private Hashtable<String, Hashtable<String, Integer>> initMaterialHash() {
         final var mHash = new Hashtable<String, Hashtable<String, Integer>>();
+        final DataProcessor dataProcessing = common.getDataProcessing();
         final Enumeration<ColorObject> colorsEnumeration = dataProcessing
                 .getCurrentConfiguration().getAllColors();
         Enumeration<ElementObject> elementsEnumeration;
