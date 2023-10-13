@@ -12,6 +12,8 @@ public class FileGenerationCommon {
     /** Text resource bundle. */
     private static ResourceBundle textbundle = ResourceBundle
             .getBundle("Resources.TextResource");
+    /** 1/2 length and width of 1x1 tile in pixels; used to get midpoint. */
+    static final int HALF_TILE = 4;
 
     // ############################## all
     /** Header. */
@@ -88,6 +90,28 @@ public class FileGenerationCommon {
     private String project;
     /** Data processor. */
     private final DataProcessor dataProcessing;
+    /** Reference value. */
+    private int referenceValue;
+    /** Percent generated. */
+    private int percent = 0;
+
+    /**
+     * Returns percent generated.
+     *
+     * @return percent generated.
+     */
+    public int getPercent() {
+        return percent;
+    }
+
+    /**
+     * Sets percent generated.
+     *
+     * @param percentGenerated percent generated.
+     */
+    public void setPercent(final int percentGenerated) {
+        this.percent = percentGenerated;
+    }
 
     /**
      * Constructor.
@@ -178,6 +202,24 @@ public class FileGenerationCommon {
         builder.append(getProject());
         builder.append(OutputFileGenerator.PROJECT_END);
         return builder;
+    }
+
+    /**
+     * Returns reference value.
+     *
+     * @return reference value.
+     */
+    public int getReferenceValue() {
+        return referenceValue;
+    }
+
+    /**
+     * Sets reference value.
+     *
+     * @param refValue reference value.
+     */
+    public final void setReferenceValue(final int refValue) {
+        this.referenceValue = refValue;
     }
 
 }
