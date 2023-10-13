@@ -2,7 +2,6 @@ package pictobrick.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -31,14 +30,6 @@ public class MoldingOptimizer implements Tiler {
     private static final int TEN = 10;
     /** Number of cents per Euro. */
     private static final int CENT_TO_EURO_MULTIPLIER = 100;
-    /** Critical quantity for additional optimization, 2x2. */
-    private static final int CRITICAL_2X2 = 8;
-    /** Critical quantity for additional optimization, corner 2x2. */
-    private static final int CRITICAL_CORNER_COVERING_2X2 = 4;
-    /** Critical quantity for additional optimization, 1x3. */
-    private static final int CRITICAL_1X3 = 12;
-    /** Critical quantity for additional optimization, 1x2. */
-    private static final int CRITICAL_1X2 = 16;
     /** Single appearance average multiplier for 1x1 moldings. */
     private static final double SINGLE_APPEARANCE_AVG_1X1_MULTIPLIER = 20.0;
     /** Single price average multiplier for 1x1 moldings. */
@@ -58,17 +49,17 @@ public class MoldingOptimizer implements Tiler {
     /** Number of tiling optimizations for standard optimization. */
     private static final int NUMBER_OF_TILING_OPTIONS = 7;
     /** Number of tiling options for additional optimization. */
-    private static final int NUMBER_OF_OPT_TILING_OPTIONS = 5;
+    static final int NUMBER_OF_OPT_TILING_OPTIONS = 5;
     /** Index for covering 1x1 indicator. */
-    private static final int COVERING_1X1 = 0;
+    static final int COVERING_1X1 = 0;
     /** Index for covering 1x2 indicator. */
-    private static final int COVERING_1X2 = 1;
+    public static final int COVERING_1X2 = 1;
     /** Index for covering 1x3 indicator. */
-    private static final int COVERING_1X3 = 2;
+    public static final int COVERING_1X3 = 2;
     /** Index for corner covering with 2x2 indicator. */
-    private static final int CORNER_COVERING_2X2 = 3;
+    public static final int CORNER_COVERING_2X2 = 3;
     /** Index for 2x2 covering indicator. */
-    private static final int COVERING_2X2 = 4;
+    public static final int COVERING_2X2 = 4;
     /** Index for normal molding indicator. */
     private static final int NORMAL_MOLDING = 5;
     /** Index for number of different 1x1 molding colors needed. */
@@ -84,33 +75,41 @@ public class MoldingOptimizer implements Tiler {
     private int rows = 0;
     /** Row being processed. */
     private int colorRow;
+
     /** <code>true</code> if calculating statistics. */
     private boolean statisticOutput;
     /** Names of available colors. */
     private String[] colorArray;
     /** Array of tiling elements. */
     private int[][] elementArray;
-    /** Array of tiling elements for additional optimization. */
-    private int[][] optElements;
+
     /** Name of color for pixel being processed. */
     private String currentColorName;
+
     /**
      * Index of element in {@link #colorArray} with value matching
      * {@link #currentColorName}.
      */
     private int currColorNum;
+
     /** Number of colors available for tiling. */
     private int colorCount;
+
     /** Number of pixels in mosaic image. */
     private int pixelCount;
-    /** Configuration used. */
-    private Configuration configuration;
     /** Information about the algorithm mode. */
     private final Vector<Object> dialogSelection;
-    /** Optimization method code. */
-    private int optimisationMethod;
-    /** Number of times pixel colors change. */
+    /**
+     * Indicates whether to perform additional optimization.
+     */
+    private boolean doAdditionalOptimization;
+    /**
+     * Number of times pixel colors change.
+     */
     private int pixelColorChanges;
+
+    /** Service class performing additional optimization. */
+    private MoldingAdditionalOptimizer additionalOptimizer;
 
     /**
      * Contructor.
@@ -124,6 +123,70 @@ public class MoldingOptimizer implements Tiler {
             final Calculator calculation, final Vector<Object> selection) {
         this.dataProcessing = processor;
         this.dialogSelection = selection;
+        this.additionalOptimizer = new MoldingAdditionalOptimizer(this);
+    }
+
+    /**
+     * Returns row being processed.
+     *
+     * @return row being processed.
+     */
+    public int getColorRow() {
+        return colorRow;
+    }
+
+    /**
+     * Returns Array of tiling elements.
+     *
+     * @return Array of tiling elements.
+     */
+    public int[][] getElementArray() {
+        return elementArray;
+    }
+
+    /**
+     * Returns current color number.
+     *
+     * @return current color number.
+     */
+    public int getCurrColorNum() {
+        return currColorNum;
+    }
+
+    /**
+     * Returns name of color for pixel being processed.
+     *
+     * @return name of color for pixel being processed.
+     */
+    public String getCurrentColorName() {
+        return currentColorName;
+    }
+
+    /**
+     * Returns number of times pixel colors change.
+     *
+     * @return number of times pixel colors change.
+     */
+    public int getPixelColorChanges() {
+        return pixelColorChanges;
+    }
+
+    /**
+     * Sets number of times pixel colors change.
+     *
+     * @param changes number of times pixel colors change.
+     */
+    public void setPixelColorChanges(final int changes) {
+        this.pixelColorChanges = changes;
+    }
+
+    /**
+     * Returns number of colors available for tiling.
+     *
+     * @return number of colors available for tiling.
+     */
+    public int getColorCount() {
+        return colorCount;
     }
 
     /**
@@ -144,7 +207,7 @@ public class MoldingOptimizer implements Tiler {
         this.rows = mosaicHeight;
         this.pixelCount = mosaicWidth * mosaicHeight;
         this.statisticOutput = statistic;
-        this.configuration = config;
+        additionalOptimizer.setConfiguration(config);
         // consistency check: all elements in the configuration must be
         // the same elements as in the system ministeck configuration!
         // if no, we must switch to the algorithm "basic elements only"
@@ -171,8 +234,11 @@ public class MoldingOptimizer implements Tiler {
             final Enumeration<ColorObject> colorEnum = config.getAllColors();
             initializeColorArray(colorEnum);
             initializeElementArray();
+
             // if: additional optimisation mode ...
-            initializeElementArrayOptimizationIfNeeded();
+            if (doAdditionalOptimization) {
+                additionalOptimizer.initializeElementArrayOptimization();
+            }
 
             // scan mosaic linear
             // for each pixel the elementVector is computed
@@ -208,9 +274,12 @@ public class MoldingOptimizer implements Tiler {
                         // the quantity of this element on a normal molding
                         // -----------------------------------------------
                         // (1x1 elements cause no problems)
-                        elementSet = getAdditionalOptimizationModeElementSet(
-                                mosaicWidth, mosaicHeight, mosaic, elementSet,
-                                colorCol);
+                        if (doAdditionalOptimization) {
+                            elementSet = additionalOptimizer
+                                    .getAdditionalOptimizationModeElementSet(
+                                            mosaicWidth, mosaicHeight, mosaic,
+                                            elementSet, colorCol);
+                        }
 
                         // if: normal optimisation mode
                         // ... or ...
@@ -277,63 +346,6 @@ public class MoldingOptimizer implements Tiler {
         }
     }
 
-    private boolean getAdditionalOptimizationModeElementSet(
-            final int mosaicWidth, final int mosaicHeight, final Mosaic mosaic,
-            final boolean elementInitiallySet, final int colorCol) {
-        boolean elementSet = elementInitiallySet;
-
-        if (optimisationMethod == 1) {
-            final var critElems = new Vector<ElementObject>();
-
-            // 2x2 element
-            if (covering2x2()) {
-                final var criticalElements4 = computeElements(4, 2, 2);
-
-                while (criticalElements4.hasMoreElements()) {
-                    critElems.add(criticalElements4.nextElement());
-                }
-            }
-
-            // corner element
-            if (cornerElement()) {
-                final var criticalElements3 = computeElements(3, 2, 2);
-
-                while (criticalElements3.hasMoreElements()) {
-                    critElems.add(criticalElements3.nextElement());
-                }
-            }
-
-            // 1x3 element
-            if (optElements[currColorNum][COVERING_1X3] == 1) {
-                final var criticalElements2 = computeElements(3, 1, 3);
-
-                while (criticalElements2.hasMoreElements()) {
-                    critElems.add(criticalElements2.nextElement());
-                }
-            }
-
-            // 1x2 element
-            if (optElements[currColorNum][COVERING_1X2] == 1) {
-                final var criticalElements1 = computeElements(2, 1, 2);
-
-                while (criticalElements1.hasMoreElements()) {
-                    critElems.add(criticalElements1.nextElement());
-                }
-            }
-
-            // if critical elements are found, the critical
-            // elment vector is scanned
-            // for each element we check, if we can used it in
-            // the
-            // mosaic with a maximal re-coloring of 1 pixel
-            if (critElems.size() > 0) {
-                elementSet = processCriticalElements(mosaicWidth, mosaicHeight,
-                        mosaic, elementSet, colorCol, critElems);
-            } // end if (criticalElements.size()>0)
-        } // end optimisation
-        return elementSet;
-    }
-
     private boolean checkBottomBorder(final Mosaic mosaic, final int left,
             final boolean initialElementSet, final ElementObject currentElement,
             final int colorCol) {
@@ -388,111 +400,6 @@ public class MoldingOptimizer implements Tiler {
         return elementSet;
     }
 
-    private boolean processCriticalElements(final int mosaicWidth,
-            final int mosaicHeight, final Mosaic mosaic,
-            final boolean initialElementSet, final int colorCol,
-            final Vector<ElementObject> critElems) {
-        boolean elementSet = initialElementSet;
-        Vector<String> pixel2;
-        int left;
-        ElementObject currentElement;
-        final var criticalElementsEnum = critElems.elements();
-
-        while (criticalElementsEnum.hasMoreElements() && !elementSet) {
-            currentElement = criticalElementsEnum.nextElement();
-            // find the left element in the top row
-            left = -1;
-
-            for (int i = 0; i < currentElement.getWidth(); i++) {
-                if (currentElement.getMatrix()[0][i] && left == -1) {
-                    left = i;
-                }
-            }
-
-            // check mosaic borders
-            // bottom
-            if (((colorRow + currentElement.getHeight() - 1) < mosaicHeight)
-                    // left
-                    && ((colorCol - left) >= 0)
-                    // right
-                    && ((colorCol + (currentElement.getWidth()
-                            - (left + 1))) < mosaicWidth)) {
-                // color matching
-                // -------------------------
-                // count all pixel who fits in color
-                int fits = 0;
-                boolean occupied = false;
-
-                for (int elementRow = 0; elementRow < currentElement
-                        .getHeight(); elementRow++) {
-                    for (int elementColumn = 0; elementColumn < currentElement
-                            .getWidth(); elementColumn++) {
-                        // test only "true" positions in
-                        // elment matrix
-                        if (currentElement
-                                .getMatrix()[elementRow][elementColumn]) {
-                            pixel2 = mosaic.getMosaic()
-                                    .get(colorRow + elementRow)
-                                    .get((colorCol + elementColumn) - left);
-
-                            if (!pixel2.isEmpty()) {
-                                if (((String) (pixel2.get(0)))
-                                        .equals(currentColorName)) {
-                                    fits++;
-                                }
-                            } else {
-                                occupied = true;
-                            }
-                        }
-                    }
-                }
-
-                // if the number of fitting colors is
-                // equal or only 1 less than the element
-                // size
-                // the element is set to the mosaic
-                // (increment the
-                // pixelColorChanges-counter)
-                if (fits >= (computeElementSize(currentElement) - 1)
-                        && !occupied) {
-                    // set element
-                    pixelColorChanges++;
-                    elementSet = true;
-
-                    for (int elementRow = 0; elementRow < currentElement
-                            .getHeight(); elementRow++) {
-                        for (int elementCol = 0; elementCol < currentElement
-                                .getWidth(); elementCol++) {
-                            if (currentElement
-                                    .getMatrix()[elementRow][elementCol]) {
-                                mosaic.initVector(colorRow + elementRow,
-                                        (colorCol + elementCol) - left);
-                            }
-                        }
-                    }
-
-                    mosaic.setElement(colorRow, colorCol, currentColorName,
-                            false);
-                    mosaic.setElement(colorRow, colorCol,
-                            currentElement.getName(), true);
-                    // count element and if necessary
-                    // use new molding
-                    updateElementAppearance(currentElement);
-                }
-            }
-        } // end while
-
-        return elementSet;
-    }
-
-    private boolean cornerElement() {
-        return optElements[currColorNum][CORNER_COVERING_2X2] == 1;
-    }
-
-    private boolean covering2x2() {
-        return optElements[currColorNum][COVERING_2X2] == 1;
-    }
-
     private void refreshProgressBarAlgorithm()
             throws InterruptedException, InvocationTargetException {
         SwingUtilities.invokeAndWait(new Runnable() {
@@ -509,28 +416,6 @@ public class MoldingOptimizer implements Tiler {
                 }
             }
         });
-    }
-
-    private void initializeElementArrayOptimizationIfNeeded() {
-        if (optimisationMethod == 1) {
-            // init array
-            optElements = new int[colorCount][NUMBER_OF_OPT_TILING_OPTIONS];
-
-            for (int j = 0; j < colorCount; j++) {
-                optElements[j][COVERING_1X1] = 0; // 0 => 1x1 covering:
-                                                  // 1
-                optElements[j][COVERING_1X2] = 0; // 1 => 1x2 covering:
-                                                  // 2
-                optElements[j][COVERING_1X3] = 0; // 2 => 1x3 covering:
-                                                  // 3
-                // and matrix 1x3
-                optElements[j][CORNER_COVERING_2X2] = 0; // 3 => corner
-                                                         // covering:
-                // 3 and matrix 2x2
-                optElements[j][COVERING_2X2] = 0; // 4 => 2x2 covering:
-                                                  // 4
-            }
-        }
     }
 
     private void initializeElementArray() {
@@ -581,6 +466,7 @@ public class MoldingOptimizer implements Tiler {
             // 2 different bars: normal mode and statistic mode
             try {
                 SwingUtilities.invokeAndWait(new Runnable() {
+
                     public void run() {
                         percent = (int) ((Calculator.ONE_HUNDRED_PERCENT / rows)
                                 * colorRow);
@@ -593,7 +479,9 @@ public class MoldingOptimizer implements Tiler {
                         }
                     }
                 });
-            } catch (final Exception e) {
+            } catch (
+
+            final Exception e) {
                 System.out.println(e.toString());
             }
 
@@ -605,39 +493,18 @@ public class MoldingOptimizer implements Tiler {
         return mosaic;
     }
 
-    private void setOptimizationMethod() {
-        // vector dialogSelection contains information about the algorithm mode:
-        // vector is empty: no additional optimisation
-        // vector contains action command "no": no additional optimisation
-        // vector contains action command "yes": additional optimisation mode
-        if (dialogSelection.isEmpty()) {
-            this.optimisationMethod = 0;
-        } else if (((String) dialogSelection.elementAt(0)).equals("no")) {
-            this.optimisationMethod = 0;
-        } else if (((String) dialogSelection.elementAt(0)).equals("yes")) {
-            this.optimisationMethod = 1;
-        }
-    }
-
     /**
-     * Computes the size of an element.
-     *
-     * @author Tobias Reichling
-     * @param element
-     * @return size
+     * Vector dialogSelection contains information about the algorithm mode.
+     * <ul>
+     * <li>vector is empty: no additional optimisation</li>
+     * <li>vector contains action command "no": no additional optimisation</li>
+     * <li>vector contains action command "yes": additional optimisation
+     * mode</li>
+     * </ul>
      */
-    private int computeElementSize(final ElementObject element) {
-        int result = 0;
-
-        for (int row = 0; row < element.getHeight(); row++) {
-            for (int column = 0; column < element.getWidth(); column++) {
-                if (element.getMatrix()[row][column]) {
-                    result++;
-                }
-            }
-        }
-
-        return result;
+    private void setOptimizationMethod() {
+        this.doAdditionalOptimization = ((!dialogSelection.isEmpty())
+                && ("yes".equals((String) dialogSelection.elementAt(0))));
     }
 
     /**
@@ -761,76 +628,13 @@ public class MoldingOptimizer implements Tiler {
     }
 
     /**
-     * Computes elements.
-     *
-     * @param covering
-     * @param width
-     * @param height
-     * @return Enumeration of ElementObjects.
-     * @author Tobias Reichling
-     */
-    private Enumeration<ElementObject> computeElements(final int covering,
-            final int width, final int height) {
-        ElementObject element;
-        int cover = 0;
-        final Vector<ElementObject> elements = new Vector<>();
-        final Enumeration<ElementObject> allElements = configuration
-                .getAllElements();
-
-        while (allElements.hasMoreElements()) {
-            element = allElements.nextElement();
-
-            // check width and height ...
-            if (element.getWidth() == width && element.getHeight() == height) {
-                cover = 0;
-
-                for (int i = 0; i < element.getHeight(); i++) {
-                    for (int j = 0; j < element.getWidth(); j++) {
-                        if (element.getMatrix()[i][j]) {
-                            cover++;
-                        }
-                    }
-                }
-
-                // ... and the covering of the element
-                if (cover == covering) {
-                    elements.add(element);
-                }
-            }
-
-            // also check covering if width = height and height = width because
-            // there
-            // are different directions of elements use (2x3 = 3x2)
-            if (element.getWidth() == height && element.getHeight() == width) {
-                cover = 0;
-
-                for (int i = 0; i < element.getHeight(); i++) {
-                    for (int j = 0; j < element.getWidth(); j++) {
-                        if (element.getMatrix()[i][j]) {
-                            cover++;
-                        }
-                    }
-                }
-
-                if (cover == covering) {
-                    elements.add(element);
-                }
-            }
-        }
-
-        final Enumeration<ElementObject> elementsEnum = elements.elements();
-        return elementsEnum;
-    }
-
-    /**
      * Updates the array with the element quantity and broach a new molding if
      * necessary.
      *
      * @param element
      * @author Tobias Reichling
      */
-    private void updateElementAppearance(final ElementObject element) {
-        final Random random = new Random();
+    void updateElementAppearance(final ElementObject element) {
         final int elementNumber = computeElementNumber(element);
         final int quantity = elementArray[currColorNum][elementNumber];
         // decrement
@@ -861,45 +665,8 @@ public class MoldingOptimizer implements Tiler {
             }
         }
 
-        // if: additional optimisation mode is on:
-        // now we must check if an element has critical quantity or not
-        // critical: quantity is bigger than the quantity of this element in a
-        // normal
-        // molding
-        // - solution: random usage of the critical elements
-        // (random: to avoid visual artefacts !!!)
-        // very critical: quantity is 2x bigger than the quantity of this
-        // element in a
-        // normal molding
-        // - solution: strict usage of the very critical elements
-        if (optimisationMethod == 1) {
-            // 1x2 element
-            calculateOptElements(random, COVERING_1X2, CRITICAL_1X2);
-            // 1x3 element
-            calculateOptElements(random, COVERING_1X3, CRITICAL_1X3);
-            // corner element
-            calculateOptElements(random, CORNER_COVERING_2X2,
-                    CRITICAL_CORNER_COVERING_2X2);
-            // 2x2 element
-            calculateOptElements(random, COVERING_2X2, CRITICAL_2X2);
-        }
-    }
-
-    private void calculateOptElements(final Random random, final int type,
-            final int criticalValue) {
-        // Very critical.
-        if (elementArray[currColorNum][type] > 2 * criticalValue) {
-            optElements[currColorNum][type] = 1;
-            // critical: random
-        } else if (elementArray[currColorNum][type] > criticalValue) {
-            if (random.nextInt(2) % 2 == 0) {
-                optElements[currColorNum][type] = 1;
-            } else {
-                optElements[currColorNum][type] = 0;
-            }
-        } else {
-            // not critical
-            optElements[currColorNum][type] = 0;
+        if (doAdditionalOptimization) {
+            additionalOptimizer.performAdditionalOptimization();
         }
     }
 
@@ -923,7 +690,7 @@ public class MoldingOptimizer implements Tiler {
                 textbundle.getString("output_moldingOptimisation_3"),
                 DataProcessor.SHOW_IN_BOTH);
 
-        if (optimisationMethod == 0) {
+        if (!doAdditionalOptimization) {
             dataProcessing.setInfo(
                     "(" + textbundle.getString("output_moldingOptimisation_4")
                             + ")",
