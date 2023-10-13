@@ -135,4 +135,49 @@ public class FileGenerationCommon {
         this.project = name;
     }
 
+    /**
+     * Get the common document start for all pages generated.
+     *
+     * @param generateGraphics <code>true</code> if generating graphics output.
+     * @param configuration    <code>true</code> if generating configuration
+     *                         output.
+     * @param material         <code>true</code> if generating material output.
+     * @param instruction      <code>true</code> if generating instructions.
+     * @param xml              <code>true</code> if generating XML.
+     * @return a StringBuilder containing the common document starting text.
+     */
+    StringBuilder getCommonDocumentStart(final boolean generateGraphics,
+            final boolean configuration, final boolean material,
+            final boolean instruction, final boolean xml) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(FileGenerationCommon.HEADER);
+        builder.append(OutputFileGenerator.START_MENU);
+
+        if (generateGraphics) {
+            builder.append(OutputFileGenerator.GRAPHIC_MENU);
+        }
+
+        if (configuration) {
+            builder.append(OutputFileGenerator.CONFIGURATION_MENU);
+        }
+
+        if (material) {
+            builder.append(OutputFileGenerator.MATERIAL_MENU);
+        }
+
+        if (instruction) {
+            builder.append(OutputFileGenerator.INSTRUCTION_MENU);
+        }
+
+        if (xml) {
+            builder.append(OutputFileGenerator.XML_MENU);
+        }
+
+        builder.append(OutputFileGenerator.ADDITIONAL_MENU);
+        builder.append(FileGenerationCommon.PROJECT_NAME);
+        builder.append(getProject());
+        builder.append(OutputFileGenerator.PROJECT_END);
+        return builder;
+    }
+
 }
