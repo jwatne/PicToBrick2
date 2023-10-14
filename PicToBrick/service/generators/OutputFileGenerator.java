@@ -65,23 +65,6 @@ public class OutputFileGenerator {
     /** Project end. */
     static final String PROJECT_END = "</strong>\r\n</p>\r\n";
 
-    // ############################## buildinginstruction.html
-    // ---------->all:head
-    // ---------->all without index: from menu_start till project_end
-    /** Instruction start. */
-    private static final String INSTRUCTION_START = "<p>\r\n<strong>"
-            + FileGenerationCommon.getTextbundle()
-                    .getString("output_outputFiles_9")
-            + "</strong><br />\r\n</p>\r\n<ul>\r\n";
-    /** Instruction cell start. */
-    private static final String INSTRUCTION_CELL_START = "<li>\r\n";
-    // ---------->row x, column y: name, color
-    /** Instruction cell end. */
-    private static final String INSTRUCTION_CELL_END = "\r\n</li>\r\n";
-    /** Instruction end. */
-    private static final String INSTRUCTION_END = "</ul>\r\n";
-    // ---------->all:end
-
     // ############################## xml.html
     // ---------->all:head
     // ---------->all without index: from menu_start till project_end
@@ -195,8 +178,9 @@ public class OutputFileGenerator {
                 generateGraphics, configuration, material, instruction, xml,
                 error);
         // instruction.html
-        error = generateInstructions(generateGraphics, configuration, material,
-                instruction, xml, error);
+        error = (new InstructionsGenerator(common)).generateInstructions(
+                generateGraphics, configuration, material, instruction, xml,
+                error);
         // xml.html
         error = generateXml(generateGraphics, configuration, material,
                 instruction, xml, error);
@@ -326,80 +310,6 @@ public class OutputFileGenerator {
                     "mosaic.xml", true))) {
                 error = error + "mosaic.xml " + FileGenerationCommon
                         .getTextbundle().getString("output_outputFiles_38")
-                        + ".\n\r";
-            }
-        }
-        return error;
-    }
-
-    private String generateInstructions(final boolean generateGraphics,
-            final boolean configuration, final boolean material,
-            final boolean instruction, final boolean xml,
-            final String initialError) {
-        String error = initialError;
-        final DataProcessor dataProcessing = common.getDataProcessing();
-
-        if (instruction) {
-            List<List<Vector<String>>> mosaicMatrix = dataProcessing
-                    .getMosaic();
-            final StringBuilder instructionString = common
-                    .getCommonDocumentStart(generateGraphics, configuration,
-                            material, instruction, xml);
-            instructionString.append(INSTRUCTION_START);
-            mosaicMatrix = dataProcessing.getMosaic();
-            common.setPercent(0);
-            common.setReferenceValue(dataProcessing.getMosaicHeight()
-                    * dataProcessing.getMosaicWidth()
-                    / ProgressBarsAlgorithms.ONE_HUNDRED_PERCENT);
-
-            for (int row = 0; row < dataProcessing.getMosaicHeight(); row++) {
-                for (int column = 0; column < dataProcessing
-                        .getMosaicWidth(); column++) {
-                    instructionString.append(INSTRUCTION_CELL_START);
-                    instructionString.append(FileGenerationCommon
-                            .getTextbundle().getString("output_outputFiles_40")
-                            + " " + (row + 1) + ", "
-                            + FileGenerationCommon.getTextbundle()
-                                    .getString("output_outputFiles_41")
-                            + " " + (column + 1) + ": ");
-
-                    if (mosaicMatrix.get(row).get(column).isEmpty()) {
-                        instructionString.append("("
-                                + FileGenerationCommon.getTextbundle()
-                                        .getString("output_outputFiles_42")
-                                + ")");
-                    } else {
-                        instructionString.append((String) mosaicMatrix.get(row)
-                                .get(column).elementAt(0));
-                        instructionString.append(", ");
-                        instructionString.append((String) mosaicMatrix.get(row)
-                                .get(column).elementAt(1));
-                    }
-
-                    instructionString.append(INSTRUCTION_CELL_END);
-
-                    try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            public void run() {
-                                int percent = common.getPercent();
-                                percent++;
-                                common.setPercent(percent);
-                                dataProcessing.refreshProgressBarOutputFiles(
-                                        percent,
-                                        FileGenerationCommon.HALF_TILE);
-                            }
-                        });
-                    } catch (final Exception e) {
-                    }
-                }
-            }
-            instructionString.append(INSTRUCTION_END);
-            instructionString.append(FileGenerationCommon.END);
-            if (!(dataProcessing.generateUTFOutput(instructionString.toString(),
-                    "buildinginstruction.html", true))) {
-                error = error + "buildinginstruction.html "
-                        + FileGenerationCommon.getTextbundle()
-                                .getString("output_outputFiles_38")
                         + ".\n\r";
             }
         }

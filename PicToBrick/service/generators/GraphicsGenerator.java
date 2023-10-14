@@ -44,7 +44,7 @@ public class GraphicsGenerator {
     // ---------->all:end
 
     /** Common file generating code. */
-    private FileGenerationCommon common;
+    private final FileGenerationCommon common;
 
     /**
      * Constructor.

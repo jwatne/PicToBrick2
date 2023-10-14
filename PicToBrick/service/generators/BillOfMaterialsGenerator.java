@@ -40,7 +40,7 @@ public class BillOfMaterialsGenerator {
     private static final String MATERIAL_END = "</table>\r\n";
     // ---------->all:end
     /** Common file generation logic. */
-    private FileGenerationCommon common;
+    private final FileGenerationCommon common;
 
     /**
      * Constructor.
