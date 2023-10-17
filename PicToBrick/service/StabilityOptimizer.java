@@ -140,21 +140,12 @@ public class StabilityOptimizer implements Tiler {
             // run linear through the image - determine the fitting element for
             // every pixel
             final Hashtable<String, String> hash = hashInit(configuration);
-            String currentColor;
-            Vector<String> pixel; // current Pixel
-            Vector<String> pixel2;
-            Enumeration<ElementObject> sorted;
-            // Flag
-            int points = -1;
-            int pointsFlag = -1;
-            int distanceFlag = THRESHOLD2;
-            ElementObject elFlag = new ElementObject();
-            boolean elementSet = false;
+            // int points = -1;
             boolean elementFits = false;
-            ElementObject currentElement;
-            int elementsEnd = 0;
-            int left = 0;
-            int right = 0;
+            // ElementObject currentElement;
+            // int elementsEnd = 0;
+            // int left = 0;
+            // int right = 0;
 
             // run linear through the image
             // decide which element is placed by 5 criteria
@@ -172,166 +163,37 @@ public class StabilityOptimizer implements Tiler {
 
                 for (int colorCol = 0; colorCol < mosaicWidth; colorCol++) {
                     // Color information of the current pixel
-                    pixel = mosaic.getMosaic().get(colorRow).get(colorCol);
+                    final Vector<String> pixel = mosaic.getMosaic()
+                            .get(colorRow).get(colorCol);
 
                     // if the pixel is not covered
                     if (!pixel.isEmpty()) {
-                        // Determine the pixelcolor
-                        currentColor = (String) (pixel.get(0));
-                        // Enumeration (sorted elements)
-                        sorted = elementsSorted.elements();
-                        // Break condition for while
-                        elementSet = false;
-                        // Flag variables
-                        elFlag = null;
-                        pointsFlag = -1;
-                        distanceFlag = THRESHOLD2;
+                        final var pStatus = new PixelStatus(pixel,
+                                (String) (pixel.get(0)),
+                                elementsSorted.elements(), false, null, -1,
+                                THRESHOLD2);
 
                         // run through elementvector with all elements (sorted
                         // by stability)
-                        while (sorted.hasMoreElements() && !elementSet) {
+                        final Enumeration<ElementObject> sorted = pStatus
+                                .getSorted();
+
+                        while (sorted.hasMoreElements()
+                                && !pStatus.isElementSet()) {
                             // get next element
-                            currentElement = (ElementObject) sorted
-                                    .nextElement();
+                            pStatus.setCurrentElement(
+                                    (ElementObject) sorted.nextElement());
                             // Counter for the criterias 3) and 4)
-                            points = 0;
+                            pStatus.setPoints(0);
 
                             // CHECK 1) element fits
                             elementFits = checkIfElementFits(mosaicWidth,
-                                    mosaicHeight, mosaic, currentColor,
-                                    currentElement, colorCol);
+                                    mosaicHeight, mosaic, pStatus, colorCol);
                             // END of optimisation
 
                             // Only continue if the element fits
-                            if (elementFits) {
-                                // The criterias 3) and 4) can not be checked in
-                                // the first row
-                                // -> set element with best stability
-                                if (colorRow == 0) {
-                                    // set element
-                                    elementSet = true;
-                                    elFlag = currentElement;
-                                } else {
-                                    // All other rows in the mosaic
-                                    // --------------------------------------
-                                    // CHECK 2) element ends at the end of the
-                                    // row or color
-                                    if (colorCol + currentElement
-                                            .getWidth() == mosaicWidth) {
-                                        // set element if it ends at the end of
-                                        // the row
-                                        elementSet = true;
-                                        elFlag = currentElement;
-                                    } else {
-                                        // set element if it ends at the end of
-                                        // the color
-                                        pixel2 = getPixel2(mosaic,
-                                                currentElement, colorCol,
-                                                colorRow);
-
-                                        if (!pixel2.isEmpty()) {
-                                            if (atEndOfColor(currentColor,
-                                                    pixel2)) {
-                                                elementSet = true;
-                                                elFlag = currentElement;
-                                            }
-                                        } else {
-                                            // check if there is a element with
-                                            // height=3 in the row above
-                                            pixel2 = getPixel2(mosaic,
-                                                    currentElement, colorCol,
-                                                    colorRow - 1);
-
-                                            if (!pixel2.isEmpty()) {
-                                                if (atEndOfColor(currentColor,
-                                                        pixel2)) {
-                                                    elementSet = true;
-                                                    elFlag = currentElement;
-                                                }
-                                            } else if (colorRow > 1) {
-                                                // check if there is an element
-                                                // with height=3 (2 rows above)
-                                                pixel2 = getPixel2(mosaic,
-                                                        currentElement,
-                                                        colorCol, colorRow - 2);
-
-                                                if (!pixel2.isEmpty()) {
-                                                    if (atEndOfColor(
-                                                            currentColor,
-                                                            pixel2)) {
-                                                        elementSet = true;
-                                                        elFlag = currentElement;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } // END: if
-                                      // (colorColumn+currentElement.getWidth()
-                                      // == mosaicWidth)
-
-                                    // ----------------------------------
-                                    // CHECK 3) elementend is not below a gap
-                                    // - points 2
-                                    if ((colorCol + currentElement
-                                            .getWidth() < mosaicWidth)
-                                            && !elementSet) {
-                                        if (!borders[colorRow - 1][colorCol
-                                                + currentElement.getWidth()]) {
-                                            points = points + 2; // doesn't end
-                                                                 // on a gap
-                                            // -------------------------------
-                                            // CHECK 5) element end is as
-                                            // centered as posible between 2
-                                            // gaps of the row above (only check
-                                            // if the element end is not below a
-                                            // gap)
-                                            elementsEnd = colorCol
-                                                    + currentElement.getWidth();
-                                            // find next gap (left above)
-                                            left = findNextGapLeftAbove(
-                                                    currentElement, colorCol);
-
-                                            // find next gap (right above)
-                                            right = findNextGapRightAbove(
-                                                    mosaicWidth, currentElement,
-                                                    colorCol);
-                                        }
-                                    } // END: if
-                                      // (mosaic.getMosaic()[colorRow-1]
-                                      // [colorColumn+currentElement.getWidth()]
-                                      // .size()==0)
-
-                                    // -------------------------------------
-                                    // CHECK 4) element covers a Gap - points
-                                    // 1
-                                    if (!elementSet) {
-                                        points = addPointIfCoversGapCheck4(
-                                                mosaicWidth, points,
-                                                currentElement, colorCol);
-
-                                        // All points for criterias 3) and 4)
-                                        // are set
-                                        // elements with the same points are
-                                        // ordered by criteria 5)
-                                        if (points == pointsFlag) {
-                                            if (diffDistance(elementsEnd, left,
-                                                    right) < distanceFlag) {
-                                                distanceFlag = diffDistance(
-                                                        elementsEnd, left,
-                                                        right);
-                                                pointsFlag = points;
-                                                elFlag = currentElement;
-                                            }
-                                        } else if (points > pointsFlag) {
-                                            pointsFlag = points;
-                                            elFlag = currentElement;
-                                            distanceFlag = diffDistance(
-                                                    elementsEnd, left, right);
-                                        }
-                                    }
-                                    // ---------------------------------
-                                } // END: if (colorRow==0)
-                            } // END: if (elementFits)
+                            continueIfElementFits(mosaicWidth, mosaic,
+                                    elementFits, colorCol, pStatus);
                         } // END: while (sorted.hasMoreElements() &&
                           // !elementSet)
 
@@ -342,15 +204,10 @@ public class StabilityOptimizer implements Tiler {
                         // a double element (width=2, height=1) is placed
                         // in addition a mixed color is determined
                         if (basisElementShouldBePlacedButCreatesHighGap(
-                                mosaicWidth, mosaicHeight, elFlag, colorCol)) {
-                            elFlag = this.doubleElement;
-
-                            // Algorithm without error distribution.
-                            currentColor = getCurrColorNoErrorDistribution(
-                                    colors, threshold, originalMatrix,
-                                    colorCol);
-                            // Count recolored pixel for statistic output
-                            this.recoloredElements++;
+                                mosaicWidth, mosaicHeight, pStatus.getElFlag(),
+                                colorCol)) {
+                            placeDoubleElementWithMixedColor(colors, threshold,
+                                    originalMatrix, colorCol, pStatus);
                         }
                         // END optimisation
 
@@ -360,7 +217,7 @@ public class StabilityOptimizer implements Tiler {
                         // -> replace the three height=1 elements by one
                         // height=3 element
                         checkIfSameElementAlreadyIn2RowsAbove(mosaic, hash,
-                                currentColor, elFlag, colorCol);
+                                pStatus, colorCol);
                     } // END: if (!pixel.isEmpty())
                       // ---------------------------------------------
                 }
@@ -375,21 +232,178 @@ public class StabilityOptimizer implements Tiler {
         }
     }
 
+    private void continueIfElementFits(final int mosaicWidth,
+            final Mosaic mosaic, final boolean elementFits, final int colorCol,
+            final PixelStatus pStatus) {
+        if (elementFits) {
+            // The criterias 3) and 4) can not be checked in
+            // the first row
+            // -> set element with best stability
+            if (colorRow == 0) {
+                // set element
+                pStatus.setElementSetAndElFlag();
+            } else {
+                // All other rows in the mosaic
+                // --------------------------------------
+                // CHECK 2) element ends at the end of the
+                // row or color
+                if (colorCol + pStatus.getCurrentElement()
+                        .getWidth() == mosaicWidth) {
+                    pStatus.setElementSetAndElFlag();
+                } else {
+                    setElementIfEndsAtColorEnd(mosaic, colorCol, pStatus);
+                } // END: if
+                  // (colorColumn+currentElement.getWidth()
+                  // == mosaicWidth)
+
+                // ----------------------------------
+                // CHECK 3) elementend is not below a gap
+                // - points 2
+                final ElementObject currentElement = pStatus
+                        .getCurrentElement();
+
+                if ((colorCol + currentElement.getWidth() < mosaicWidth)
+                        && !pStatus.isElementSet()) {
+                    if (!borders[colorRow - 1][colorCol
+                            + currentElement.getWidth()]) {
+                        pStatus.doCheck5(mosaicWidth, colorCol, borders,
+                                colorRow);
+                    }
+                } // END: if
+                  // (mosaic.getMosaic()[colorRow-1]
+                  // [colorColumn+currentElement.getWidth()]
+                  // .size()==0)
+
+                if (!pStatus.isElementSet()) {
+                    checkCriteria4And5(mosaicWidth, colorCol, pStatus);
+                }
+                // ---------------------------------
+            } // END: if (colorRow==0)
+        } // END: if (elementFits)
+    }
+
+    private void checkCriteria4And5(final int mosaicWidth, final int colorCol,
+            final PixelStatus pStatus) {
+        final int points = addPointIfCoversGapCheck4(mosaicWidth, pStatus,
+                colorCol);
+        pStatus.setPoints(points);
+
+        // All points for criterias 3) and 4)
+        // are set
+        // elements with the same points are
+        // ordered by criteria 5)
+        orderByCriteria5(pStatus);
+    }
+
+    /**
+     * Places a double element (width = 2, height = 1) and determines a mixed
+     * color.
+     *
+     * @param colors         Array for the colors.
+     * @param threshold      Array for the threshold of the colors.
+     * @param originalMatrix the original image (to determine the original
+     *                       colors later).
+     * @param colorCol       Column currently being processed.
+     * @param pStatus        Container of attributes related to pixels accessed
+     *                       during stability optimization.
+     */
+    private void placeDoubleElementWithMixedColor(final String[] colors,
+            final int[] threshold, final int[][][] originalMatrix,
+            final int colorCol, final PixelStatus pStatus) {
+        pStatus.setElFlag(this.doubleElement);
+
+        // Algorithm without error distribution.
+        pStatus.setCurrentColor(getCurrColorNoErrorDistribution(colors,
+                threshold, originalMatrix, colorCol));
+        // Count recolored pixel for statistic output
+        this.recoloredElements++;
+    }
+
+    private void orderByCriteria5(final PixelStatus pStatus) {
+        final int elementsEnd = pStatus.getElementsEnd();
+        final int left = pStatus.getLeft();
+        final int right = pStatus.getRight();
+        final ElementObject currentElement = pStatus.getCurrentElement();
+        final int points = pStatus.getPoints();
+        final int pointsFlag = pStatus.getPointsFlag();
+        final int distanceFlag = pStatus.getDistanceFlag();
+
+        if (points == pointsFlag) {
+            if (diffDistance(elementsEnd, left, right) < distanceFlag) {
+                pStatus.setDistanceFlag(diffDistance(elementsEnd, left, right));
+                pStatus.setPointsFlag(points);
+                pStatus.setElFlag(currentElement);
+            }
+        } else if (points > pointsFlag) {
+            pStatus.setPointsFlag(points);
+            pStatus.setElFlag(currentElement);
+            pStatus.setDistanceFlag(diffDistance(elementsEnd, left, right));
+        }
+    }
+
+    private void setElementIfEndsAtColorEnd(final Mosaic mosaic,
+            final int colorCol, final PixelStatus pStatus) {
+        final ElementObject currentElement = pStatus.getCurrentElement();
+        Vector<String> pixel2;
+        // set element if it ends at the end of
+        // the color
+        pixel2 = getPixel2(mosaic, currentElement, colorCol, colorRow);
+
+        if (!pixel2.isEmpty()) {
+            if (atEndOfColor(pStatus.getCurrentColor(), pixel2)) {
+                pStatus.setElementSetAndElFlag();
+            }
+        } else {
+            checkFor3HeightElementInRowAbove(mosaic, colorCol, pStatus);
+        }
+    }
+
+    private void checkFor3HeightElementInRowAbove(final Mosaic mosaic,
+            final int colorCol, final PixelStatus pStatus) {
+        final ElementObject currentElement = pStatus.getCurrentElement();
+        Vector<String> pixel2;
+        // check if there is a element with
+        // height=3 in the row above
+        pixel2 = getPixel2(mosaic, currentElement, colorCol, colorRow - 1);
+
+        if (!pixel2.isEmpty()) {
+            if (atEndOfColor(pStatus.getCurrentColor(), pixel2)) {
+                pStatus.setElementSetAndElFlag();
+            }
+        } else if (colorRow > 1) {
+            // check if there is an element
+            // with height=3 (2 rows above)
+            pixel2 = getPixel2(mosaic, currentElement, colorCol, colorRow - 2);
+
+            if (!pixel2.isEmpty()) {
+                if (atEndOfColor(pStatus.getCurrentColor(), pixel2)) {
+                    pStatus.setElementSetAndElFlag();
+                }
+            }
+        }
+    }
+
     private void checkIfSameElementAlreadyIn2RowsAbove(final Mosaic mosaic,
-            final Hashtable<String, String> hash, final String currentColor,
-            final ElementObject elFlag, final int colorCol) {
+            final Hashtable<String, String> hash, final PixelStatus pStatus,
+            final int colorCol) {
+        final String currentColor = pStatus.getCurrentColor();
+        final ElementObject elFlag = pStatus.getElFlag();
+
         if (elFlag.getHeight() == 1) {
-            processForHeight1(mosaic, hash, currentColor, elFlag, colorCol);
+            processForHeight1(mosaic, hash, pStatus, colorCol);
         } else { // height =3
             processForHeight3(mosaic, currentColor, elFlag, colorCol);
         }
     }
 
     private int addPointIfCoversGapCheck4(final int mosaicWidth,
-            final int initialPoints, final ElementObject currentElement,
+            final PixelStatus pStatus,
+            // final int initialPoints, final ElementObject currentElement,
             final int colorCol) {
+        int points = pStatus.getPoints();
+        final ElementObject currentElement = pStatus.getCurrentElement();
         boolean covered = false;
-        int points = initialPoints;
+        // int points = initialPoints;
 
         for (int x = 0; x < (currentElement.getWidth() - 1); x++) {
             if (colorCol + x + 1 < mosaicWidth) {
@@ -410,8 +424,9 @@ public class StabilityOptimizer implements Tiler {
 
     private boolean checkIfElementFits(final int mosaicWidth,
             final int mosaicHeight, final Mosaic mosaic,
-            final String currentColor, final ElementObject currentElement,
-            final int colorCol) {
+            final PixelStatus pStatus, final int colorCol) {
+        final String currentColor = pStatus.getCurrentColor();
+        final ElementObject currentElement = pStatus.getCurrentElement();
         boolean elementFits;
         elementFits = testBottomAndRightBorders(mosaicWidth, mosaicHeight,
                 mosaic, currentColor, currentElement, colorCol);
@@ -625,8 +640,11 @@ public class StabilityOptimizer implements Tiler {
     }
 
     private void processForHeight1(final Mosaic mosaic,
-            final Hashtable<String, String> hash, final String currentColor,
-            final ElementObject elFlag, final int colorCol) {
+            final Hashtable<String, String> hash, final PixelStatus pStatus,
+            final int colorCol) {
+        final String currentColor = pStatus.getCurrentColor();
+        final ElementObject elFlag = pStatus.getElFlag();
+
         if (mustSetElementAndSetCoveredPixelsNull(mosaic, hash, currentColor,
                 elFlag, colorCol)) {
             // set element and set all covered pixels to
@@ -1014,53 +1032,6 @@ public class StabilityOptimizer implements Tiler {
             final int right) {
         return Math.abs(
                 Math.abs(elementsEnd - right) - Math.abs(elementsEnd - left));
-    }
-
-    private int findNextGapRightAbove(final int mosaicWidth,
-            final ElementObject currentElement, final int colorCol) {
-        boolean gap;
-        int counter;
-        int right;
-        gap = false;
-        counter = 1;
-        right = mosaicWidth;
-
-        while (!gap) {
-            if (colorCol + currentElement.getWidth() + counter == mosaicWidth) {
-                right = mosaicWidth;
-                gap = true;
-            } else if (borders[colorRow - 1][colorCol
-                    + currentElement.getWidth() + counter]) {
-                right = colorCol + currentElement.getWidth() + counter;
-                gap = true;
-            }
-            counter++;
-        }
-        return right;
-    }
-
-    private int findNextGapLeftAbove(final ElementObject currentElement,
-            final int colorCol) {
-        boolean gap;
-        int counter;
-        int left;
-        gap = false;
-        counter = 1;
-        left = 0;
-
-        while (!gap) {
-            if (colorCol + currentElement.getWidth() - counter == 0) {
-                left = 0;
-                gap = true;
-            } else if (borders[colorRow - 1][colorCol
-                    + currentElement.getWidth() - counter]) {
-                left = colorCol + currentElement.getWidth() - counter;
-                gap = true;
-            }
-
-            counter++;
-        }
-        return left;
     }
 
     private boolean atEndOfColor(final String currentColor,
