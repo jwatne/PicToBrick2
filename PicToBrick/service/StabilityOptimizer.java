@@ -292,7 +292,7 @@ public class StabilityOptimizer implements Tiler {
         // are set
         // elements with the same points are
         // ordered by criteria 5)
-        orderByCriteria5(pStatus);
+        pStatus.orderByCriteria5();
     }
 
     /**
@@ -317,28 +317,6 @@ public class StabilityOptimizer implements Tiler {
                 threshold, originalMatrix, colorCol));
         // Count recolored pixel for statistic output
         this.recoloredElements++;
-    }
-
-    private void orderByCriteria5(final PixelStatus pStatus) {
-        final int elementsEnd = pStatus.getElementsEnd();
-        final int left = pStatus.getLeft();
-        final int right = pStatus.getRight();
-        final ElementObject currentElement = pStatus.getCurrentElement();
-        final int points = pStatus.getPoints();
-        final int pointsFlag = pStatus.getPointsFlag();
-        final int distanceFlag = pStatus.getDistanceFlag();
-
-        if (points == pointsFlag) {
-            if (diffDistance(elementsEnd, left, right) < distanceFlag) {
-                pStatus.setDistanceFlag(diffDistance(elementsEnd, left, right));
-                pStatus.setPointsFlag(points);
-                pStatus.setElFlag(currentElement);
-            }
-        } else if (points > pointsFlag) {
-            pStatus.setPointsFlag(points);
-            pStatus.setElFlag(currentElement);
-            pStatus.setDistanceFlag(diffDistance(elementsEnd, left, right));
-        }
     }
 
     private void setElementIfEndsAtColorEnd(final Mosaic mosaic,
@@ -923,25 +901,6 @@ public class StabilityOptimizer implements Tiler {
             currentColor = computeMixedColor(color1, color2, labColors);
         }
         return currentColor;
-    }
-
-    /**
-     * Returns the difference (absolute value) between
-     * <ol>
-     * <li>the distance betwen elementEnd and left, and</li>
-     * <li>the distance between elementEnd and right.</li>
-     * </ol>
-     *
-     * @param elementsEnd the position of the end of the element.
-     * @param left        the position of the left edge of the region covered by
-     *                    the element.
-     * @param right       the position of the right edge of the region.
-     * @return the difference between the two distances.
-     */
-    private int diffDistance(final int elementsEnd, final int left,
-            final int right) {
-        return Math.abs(
-                Math.abs(elementsEnd - right) - Math.abs(elementsEnd - left));
     }
 
     private boolean atEndOfColor(final String currentColor,

@@ -421,6 +421,26 @@ public class PixelStatus {
         borders[colorRow][colorCol] = true;
     }
 
+    /**
+     * Order tiles by StabilityOptimizer criteria 5: elementend is as
+     * centered as posible between 2 gaps of the row above.
+     */
+    public final void orderByCriteria5() {
+        final int diffDistance = diffDistance();
+
+        if (points == pointsFlag) {
+            if (diffDistance < distanceFlag) {
+                setDistanceFlag(diffDistance);
+                setPointsFlag(points);
+                setElFlag(currentElement);
+            }
+        } else if (points > pointsFlag) {
+            setPointsFlag(points);
+            setElFlag(currentElement);
+            setDistanceFlag(diffDistance);
+        }
+    }
+
     private boolean mustSetElementAndSetCoveredPixelsNull(final Mosaic mosaic,
             final Hashtable<String, String> hash, final int colorCol,
             final int colorRow) {
@@ -472,6 +492,20 @@ public class PixelStatus {
         borders[colorRow - 2][colorCol] = true;
         borders[colorRow - 1][colorCol] = true;
         borders[colorRow][colorCol] = true;
+    }
+
+    /**
+     * Returns the difference (absolute value) between
+     * <ol>
+     * <li>the distance betwen elementEnd and left, and</li>
+     * <li>the distance between elementEnd and right.</li>
+     * </ol>
+     *
+     * @return the difference between the two distances.
+     */
+    private int diffDistance() {
+        return Math.abs(
+                Math.abs(elementsEnd - right) - Math.abs(elementsEnd - left));
     }
 
 }
