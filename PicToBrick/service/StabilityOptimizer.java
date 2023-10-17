@@ -285,10 +285,8 @@ public class StabilityOptimizer implements Tiler {
 
     private void checkCriteria4And5(final int mosaicWidth, final int colorCol,
             final PixelStatus pStatus) {
-        final int points = addPointIfCoversGapCheck4(mosaicWidth, pStatus,
-                colorCol);
-        pStatus.setPoints(points);
-
+        pStatus.addPointIfCoversGapCheck4(mosaicWidth, colorCol, borders,
+                colorRow);
         // All points for criterias 3) and 4)
         // are set
         // elements with the same points are
@@ -331,32 +329,6 @@ public class StabilityOptimizer implements Tiler {
         } else { // height =3
             pStatus.processForHeight3(mosaic, colorCol, colorRow, borders);
         }
-    }
-
-    private int addPointIfCoversGapCheck4(final int mosaicWidth,
-            final PixelStatus pStatus,
-            // final int initialPoints, final ElementObject currentElement,
-            final int colorCol) {
-        int points = pStatus.getPoints();
-        final ElementObject currentElement = pStatus.getCurrentElement();
-        boolean covered = false;
-        // int points = initialPoints;
-
-        for (int x = 0; x < (currentElement.getWidth() - 1); x++) {
-            if (colorCol + x + 1 < mosaicWidth) {
-                if (borders[colorRow - 1][colorCol + 1 + x]) {
-                    covered = true;
-                }
-            }
-        }
-
-        if (covered) {
-            points = points + 1; // element
-                                 // covers
-                                 // gap(s)
-        }
-
-        return points;
     }
 
     private boolean checkIfElementFits(final int mosaicWidth,

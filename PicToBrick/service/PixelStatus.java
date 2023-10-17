@@ -463,6 +463,31 @@ public class PixelStatus {
         }
     }
 
+    /**
+     * Add a point for check 4 if element covers a gap.
+     *
+     * @param mosaicWidth the width of the Mosaic.
+     * @param colorCol    the column currently being processed.
+     * @param borders     borders.
+     * @param colorRow    the row currently being processed.
+     */
+    public void addPointIfCoversGapCheck4(final int mosaicWidth,
+            final int colorCol, final boolean[][] borders, final int colorRow) {
+        boolean covered = false;
+
+        for (int x = 0; x < (currentElement.getWidth() - 1); x++) {
+            if (colorCol + x + 1 < mosaicWidth) {
+                if (borders[colorRow - 1][colorCol + 1 + x]) {
+                    covered = true;
+                }
+            }
+        }
+
+        if (covered) {
+            points += 1; // element covers gap(s)
+        }
+    }
+
     private boolean mustSetElementAndSetCoveredPixelsNull(final Mosaic mosaic,
             final Hashtable<String, String> hash, final int colorCol,
             final int colorRow) {
