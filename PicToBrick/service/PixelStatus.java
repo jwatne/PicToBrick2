@@ -422,8 +422,8 @@ public class PixelStatus {
     }
 
     /**
-     * Order tiles by StabilityOptimizer criteria 5: elementend is as
-     * centered as posible between 2 gaps of the row above.
+     * Order tiles by StabilityOptimizer criteria 5: elementend is as centered
+     * as posible between 2 gaps of the row above.
      */
     public final void orderByCriteria5() {
         final int diffDistance = diffDistance();
@@ -438,6 +438,28 @@ public class PixelStatus {
             setPointsFlag(points);
             setElFlag(currentElement);
             setDistanceFlag(diffDistance);
+        }
+    }
+
+    /**
+     * Sets element if it ends at the end of the color.
+     *
+     * @param mosaic   the Mosaic being generated.
+     * @param colorCol the column currently being processed.
+     * @param colorRow the row currently being processed.
+     */
+    public void setElementIfEndsAtColorEnd(final Mosaic mosaic,
+            final int colorCol, final int colorRow) {
+        // set element if it ends at the end of
+        // the color
+        final Vector<String> pixel2 = getPixel2(mosaic, colorCol, colorRow);
+
+        if (!pixel2.isEmpty()) {
+            if (atEndOfColor(pixel2)) {
+                setElementSetAndElFlag();
+            }
+        } else {
+            checkFor3HeightElementInRowAbove(mosaic, colorCol, colorRow);
         }
     }
 
@@ -506,6 +528,40 @@ public class PixelStatus {
     private int diffDistance() {
         return Math.abs(
                 Math.abs(elementsEnd - right) - Math.abs(elementsEnd - left));
+    }
+
+    private void checkFor3HeightElementInRowAbove(final Mosaic mosaic,
+            final int colorCol, final int colorRow) {
+        Vector<String> pixel2;
+        // check if there is a element with
+        // height=3 in the row above
+        pixel2 = getPixel2(mosaic, colorCol, colorRow - 1);
+
+        if (!pixel2.isEmpty()) {
+            if (atEndOfColor(pixel2)) {
+                setElementSetAndElFlag();
+            }
+        } else if (colorRow > 1) {
+            // check if there is an element
+            // with height=3 (2 rows above)
+            pixel2 = getPixel2(mosaic, colorCol, colorRow - 2);
+
+            if (!pixel2.isEmpty()) {
+                if (atEndOfColor(pixel2)) {
+                    setElementSetAndElFlag();
+                }
+            }
+        }
+    }
+
+    private boolean atEndOfColor(final Vector<String> pixel2) {
+        return !(currentColor.equals((String) (pixel2.get(0))));
+    }
+
+    private Vector<String> getPixel2(final Mosaic mosaic, final int colorCol,
+            final int rowIndex) {
+        return mosaic.getMosaic().get(rowIndex)
+                .get(colorCol + currentElement.getWidth());
     }
 
 }

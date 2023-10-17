@@ -251,7 +251,8 @@ public class StabilityOptimizer implements Tiler {
                         .getWidth() == mosaicWidth) {
                     pStatus.setElementSetAndElFlag();
                 } else {
-                    setElementIfEndsAtColorEnd(mosaic, colorCol, pStatus);
+                    pStatus.setElementIfEndsAtColorEnd(mosaic, colorCol,
+                            colorRow);
                 } // END: if
                   // (colorColumn+currentElement.getWidth()
                   // == mosaicWidth)
@@ -317,48 +318,6 @@ public class StabilityOptimizer implements Tiler {
                 threshold, originalMatrix, colorCol));
         // Count recolored pixel for statistic output
         this.recoloredElements++;
-    }
-
-    private void setElementIfEndsAtColorEnd(final Mosaic mosaic,
-            final int colorCol, final PixelStatus pStatus) {
-        final ElementObject currentElement = pStatus.getCurrentElement();
-        Vector<String> pixel2;
-        // set element if it ends at the end of
-        // the color
-        pixel2 = getPixel2(mosaic, currentElement, colorCol, colorRow);
-
-        if (!pixel2.isEmpty()) {
-            if (atEndOfColor(pStatus.getCurrentColor(), pixel2)) {
-                pStatus.setElementSetAndElFlag();
-            }
-        } else {
-            checkFor3HeightElementInRowAbove(mosaic, colorCol, pStatus);
-        }
-    }
-
-    private void checkFor3HeightElementInRowAbove(final Mosaic mosaic,
-            final int colorCol, final PixelStatus pStatus) {
-        final ElementObject currentElement = pStatus.getCurrentElement();
-        Vector<String> pixel2;
-        // check if there is a element with
-        // height=3 in the row above
-        pixel2 = getPixel2(mosaic, currentElement, colorCol, colorRow - 1);
-
-        if (!pixel2.isEmpty()) {
-            if (atEndOfColor(pStatus.getCurrentColor(), pixel2)) {
-                pStatus.setElementSetAndElFlag();
-            }
-        } else if (colorRow > 1) {
-            // check if there is an element
-            // with height=3 (2 rows above)
-            pixel2 = getPixel2(mosaic, currentElement, colorCol, colorRow - 2);
-
-            if (!pixel2.isEmpty()) {
-                if (atEndOfColor(pStatus.getCurrentColor(), pixel2)) {
-                    pStatus.setElementSetAndElFlag();
-                }
-            }
-        }
     }
 
     private void checkIfSameElementAlreadyIn2RowsAbove(final Mosaic mosaic,
@@ -901,18 +860,6 @@ public class StabilityOptimizer implements Tiler {
             currentColor = computeMixedColor(color1, color2, labColors);
         }
         return currentColor;
-    }
-
-    private boolean atEndOfColor(final String currentColor,
-            final Vector<String> pixel2) {
-        return !(currentColor.equals((String) (pixel2.get(0))));
-    }
-
-    private Vector<String> getPixel2(final Mosaic mosaic,
-            final ElementObject currentElement, final int colorCol,
-            final int rowIndex) {
-        return mosaic.getMosaic().get(rowIndex)
-                .get(colorCol + currentElement.getWidth());
     }
 
     private boolean doesNotCreateHightGap(final boolean initialElementFits,
