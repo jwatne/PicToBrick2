@@ -1,9 +1,11 @@
 package pictobrick.service;
 
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import pictobrick.model.ElementObject;
+import pictobrick.model.Mosaic;
 
 /**
  * Container of attributes related to pixels accessed during stability
@@ -368,4 +370,84 @@ public class PixelStatus {
 
         return updatedLeftValue;
     }
+
+    /**
+     * Process for height of 1 element.
+     *
+     * @param mosaic   the Mosaic being created.
+     * @param hash     Hashtable for randomization of tile selection.
+     * @param colorCol the column currently being processed.
+     * @param colorRow the row currently being processed.
+     * @param borders  borders for the elements in the Mosaic.
+     */
+    public void processForHeight1(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final int colorCol,
+            final int colorRow, final boolean[][] borders) {
+        if (mustSetElementAndSetCoveredPixelsNull(mosaic, hash, colorCol,
+                colorRow)) {
+            // set element and set all covered pixels to
+            // "null"
+            setElementandSetCoveredPixelsNull(mosaic, hash, colorCol, colorRow,
+                    borders);
+        } else {
+            // set element and set all covered pixels to
+            // "null"
+            setElementAndNullAllCoveredPixels(mosaic, colorCol, colorRow,
+                    borders);
+        }
+    }
+
+    private boolean mustSetElementAndSetCoveredPixelsNull(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final int colorCol,
+            final int colorRow) {
+        return (hash.get(elFlag.getName()) != null) && (colorRow > 1)
+                && ((mosaic.getMosaic().get(colorRow - 1).get(colorCol)
+                        .size() != 0)
+                        && (((String) (mosaic.getMosaic().get(colorRow - 1)
+                                .get(colorCol).get(1))).equals(currentColor))
+                        && (((String) (mosaic.getMosaic().get(colorRow - 1)
+                                .get(colorCol).get(0)))
+                                        .equals(elFlag.getName())))
+                && ((mosaic.getMosaic().get(colorRow - 2).get(colorCol)
+                        .size() != 0)
+                        && (((String) (mosaic.getMosaic().get(colorRow - 2)
+                                .get(colorCol).get(1))).equals(currentColor))
+                        && (((String) (mosaic.getMosaic().get(colorRow - 2)
+                                .get(colorCol).get(0)))
+                                        .equals(elFlag.getName())));
+    }
+
+    private void setElementAndNullAllCoveredPixels(final Mosaic mosaic,
+            final int colorCol, final int colorRow, final boolean[][] borders) {
+        for (int elementRow = 0; elementRow < elFlag
+                .getHeight(); elementRow++) {
+            for (int elCol = 0; elCol < elFlag.getWidth(); elCol++) {
+                mosaic.initVector(colorRow + elementRow, colorCol + elCol);
+            }
+        }
+
+        mosaic.setElement(colorRow, colorCol, currentColor, false);
+        mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
+        borders[colorRow][colorCol] = true;
+    }
+
+    private void setElementandSetCoveredPixelsNull(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final int colorCol,
+            final int colorRow, final boolean[][] borders) {
+        for (int elRow = 0; elRow < StabilityOptimizer.CUTOFF_HEIGHT; elRow++) {
+            for (int elementColumn = 0; elementColumn < elFlag
+                    .getWidth(); elementColumn++) {
+                mosaic.initVector(colorRow - 2 + elRow,
+                        colorCol + elementColumn);
+            }
+        }
+
+        mosaic.setElement(colorRow - 2, colorCol, currentColor, false);
+        mosaic.setElement(colorRow - 2, colorCol,
+                (String) hash.get(elFlag.getName()), true);
+        borders[colorRow - 2][colorCol] = true;
+        borders[colorRow - 1][colorCol] = true;
+        borders[colorRow][colorCol] = true;
+    }
+
 }

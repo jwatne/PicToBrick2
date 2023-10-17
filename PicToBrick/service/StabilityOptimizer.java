@@ -22,6 +22,8 @@ import pictobrick.ui.ProgressBarsAlgorithms;
  * @author Adrian Schuetz
  */
 public class StabilityOptimizer implements Tiler {
+    /** Cutoff height. */
+    public static final int CUTOFF_HEIGHT = 3;
     /** Height of a LEGO brick (vs. 1 for a tile). */
     private static final int BRICK_HEIGHT = 3;
     /** Int value 4. */
@@ -30,8 +32,6 @@ public class StabilityOptimizer implements Tiler {
     private static final int THRESHOLD1 = 50;
     /** Second threshold value. */
     private static final int THRESHOLD2 = 100;
-    /** Cutoff height. */
-    private static final int CUTOFF_HEIGHT = 3;
     /** Bottom border height. */
     private static final int BOTTOM_BORDER = 5;
 
@@ -390,7 +390,8 @@ public class StabilityOptimizer implements Tiler {
         final ElementObject elFlag = pStatus.getElFlag();
 
         if (elFlag.getHeight() == 1) {
-            processForHeight1(mosaic, hash, pStatus, colorCol);
+            pStatus.processForHeight1(mosaic, hash, colorCol, colorRow,
+                    borders);
         } else { // height =3
             processForHeight3(mosaic, currentColor, elFlag, colorCol);
         }
@@ -639,26 +640,6 @@ public class StabilityOptimizer implements Tiler {
         color2.setB(calculation.rgbToLab(new Color(red, green, blue)).getB());
     }
 
-    private void processForHeight1(final Mosaic mosaic,
-            final Hashtable<String, String> hash, final PixelStatus pStatus,
-            final int colorCol) {
-        final String currentColor = pStatus.getCurrentColor();
-        final ElementObject elFlag = pStatus.getElFlag();
-
-        if (mustSetElementAndSetCoveredPixelsNull(mosaic, hash, currentColor,
-                elFlag, colorCol)) {
-            // set element and set all covered pixels to
-            // "null"
-            setElementandSetCoveredPixelsNull(mosaic, hash, currentColor,
-                    elFlag, colorCol);
-        } else {
-            // set element and set all covered pixels to
-            // "null"
-            setElementAndNullAllCoveredPixels(mosaic, currentColor, elFlag,
-                    colorCol);
-        }
-    }
-
     private Mosaic getResultForFailedConsistencyChecks(final int mosaicWidth,
             final int mosaicHeight, final Configuration configuration,
             final Mosaic mosaic) {
@@ -677,26 +658,6 @@ public class StabilityOptimizer implements Tiler {
         }
 
         return mosaic;
-    }
-
-    private boolean mustSetElementAndSetCoveredPixelsNull(final Mosaic mosaic,
-            final Hashtable<String, String> hash, final String currentColor,
-            final ElementObject elFlag, final int colorCol) {
-        return (hash.get(elFlag.getName()) != null) && (colorRow > 1)
-                && ((mosaic.getMosaic().get(colorRow - 1).get(colorCol)
-                        .size() != 0)
-                        && (((String) (mosaic.getMosaic().get(colorRow - 1)
-                                .get(colorCol).get(1))).equals(currentColor))
-                        && (((String) (mosaic.getMosaic().get(colorRow - 1)
-                                .get(colorCol).get(0)))
-                                        .equals(elFlag.getName())))
-                && ((mosaic.getMosaic().get(colorRow - 2).get(colorCol)
-                        .size() != 0)
-                        && (((String) (mosaic.getMosaic().get(colorRow - 2)
-                                .get(colorCol).get(1))).equals(currentColor))
-                        && (((String) (mosaic.getMosaic().get(colorRow - 2)
-                                .get(colorCol).get(0)))
-                                        .equals(elFlag.getName())));
     }
 
     private void updateProgressBarValues(final int barValue) {
@@ -790,21 +751,6 @@ public class StabilityOptimizer implements Tiler {
                 dataProcessing.getInterpolation());
         final int[][][] originalMatrix = calculation.pixelMatrix(original);
         return originalMatrix;
-    }
-
-    private void setElementAndNullAllCoveredPixels(final Mosaic mosaic,
-            final String currentColor, final ElementObject elFlag,
-            final int colorCol) {
-        for (int elementRow = 0; elementRow < elFlag
-                .getHeight(); elementRow++) {
-            for (int elCol = 0; elCol < elFlag.getWidth(); elCol++) {
-                mosaic.initVector(colorRow + elementRow, colorCol + elCol);
-            }
-        }
-
-        mosaic.setElement(colorRow, colorCol, currentColor, false);
-        mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
-        borders[colorRow][colorCol] = true;
     }
 
     private void setOptimizationInfo(final int highGaps, final int highestGap,
@@ -977,25 +923,6 @@ public class StabilityOptimizer implements Tiler {
         mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
         borders[colorRow + 2][colorCol] = true;
         borders[colorRow + 1][colorCol] = true;
-        borders[colorRow][colorCol] = true;
-    }
-
-    private void setElementandSetCoveredPixelsNull(final Mosaic mosaic,
-            final Hashtable<String, String> hash, final String currentColor,
-            final ElementObject elFlag, final int colorCol) {
-        for (int elRow = 0; elRow < CUTOFF_HEIGHT; elRow++) {
-            for (int elementColumn = 0; elementColumn < elFlag
-                    .getWidth(); elementColumn++) {
-                mosaic.initVector(colorRow - 2 + elRow,
-                        colorCol + elementColumn);
-            }
-        }
-
-        mosaic.setElement(colorRow - 2, colorCol, currentColor, false);
-        mosaic.setElement(colorRow - 2, colorCol,
-                (String) hash.get(elFlag.getName()), true);
-        borders[colorRow - 2][colorCol] = true;
-        borders[colorRow - 1][colorCol] = true;
         borders[colorRow][colorCol] = true;
     }
 
