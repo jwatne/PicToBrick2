@@ -276,22 +276,12 @@ public class StabilityOptimizer implements Tiler {
                   // .size()==0)
 
                 if (!pStatus.isElementSet()) {
-                    checkCriteria4And5(mosaicWidth, colorCol, pStatus);
+                    pStatus.checkCriteria4And5(mosaicWidth, colorCol, colorRow,
+                            borders);
                 }
                 // ---------------------------------
             } // END: if (colorRow==0)
         } // END: if (elementFits)
-    }
-
-    private void checkCriteria4And5(final int mosaicWidth, final int colorCol,
-            final PixelStatus pStatus) {
-        pStatus.addPointIfCoversGapCheck4(mosaicWidth, colorCol, borders,
-                colorRow);
-        // All points for criterias 3) and 4)
-        // are set
-        // elements with the same points are
-        // ordered by criteria 5)
-        pStatus.orderByCriteria5();
     }
 
     /**

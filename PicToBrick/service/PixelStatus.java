@@ -319,6 +319,97 @@ public class PixelStatus {
                 colorRow));
     }
 
+    /**
+     * Process for element with height 1.
+     *
+     * @param mosaic   the Mosaic being created.
+     * @param hash     Hashtable for randomization of tile selection.
+     * @param colorCol the column currently being processed.
+     * @param colorRow the row currently being processed.
+     * @param borders  borders for the elements in the Mosaic.
+     */
+    public void processForHeight1(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final int colorCol,
+            final int colorRow, final boolean[][] borders) {
+        if (mustSetElementAndSetCoveredPixelsNull(mosaic, hash, colorCol,
+                colorRow)) {
+            // set element and set all covered pixels to
+            // "null"
+            setElementandSetCoveredPixelsNull(mosaic, hash, colorCol, colorRow,
+                    borders);
+        } else {
+            // set element and set all covered pixels to
+            // "null"
+            setElementAndNullAllCoveredPixels(mosaic, colorCol, colorRow,
+                    borders);
+        }
+    }
+
+    /**
+     * Process for element with height 3.
+     *
+     * @param mosaic   the Mosaic being created.
+     * @param colorCol the column currently being processed.
+     * @param colorRow the row currently being processed.
+     * @param borders  borders for the elements in the Mosaic.
+     */
+    public void processForHeight3(final Mosaic mosaic, final int colorCol,
+            final int colorRow, final boolean[][] borders) {
+        for (int elRow = 0; elRow < StabilityOptimizer.CUTOFF_HEIGHT; elRow++) {
+            for (int elementColumn = 0; elementColumn < elFlag
+                    .getWidth(); elementColumn++) {
+                mosaic.initVector(colorRow + elRow, colorCol + elementColumn);
+            }
+        }
+
+        mosaic.setElement(colorRow, colorCol, currentColor, false);
+        mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
+        borders[colorRow + 2][colorCol] = true;
+        borders[colorRow + 1][colorCol] = true;
+        borders[colorRow][colorCol] = true;
+    }
+
+    /**
+     * Sets element if it ends at the end of the color.
+     *
+     * @param mosaic   the Mosaic being generated.
+     * @param colorCol the column currently being processed.
+     * @param colorRow the row currently being processed.
+     */
+    public void setElementIfEndsAtColorEnd(final Mosaic mosaic,
+            final int colorCol, final int colorRow) {
+        // set element if it ends at the end of
+        // the color
+        final Vector<String> pixel2 = getPixel2(mosaic, colorCol, colorRow);
+
+        if (!pixel2.isEmpty()) {
+            if (atEndOfColor(pixel2)) {
+                setElementSetAndElFlag();
+            }
+        } else {
+            checkFor3HeightElementInRowAbove(mosaic, colorCol, colorRow);
+        }
+    }
+
+    /**
+     * Check StabilityOptimizer criteria 4: element covers a Gap - points 1; and
+     * 5: elementend is as centered as posible between 2 gaps of the row above.
+     *
+     * @param mosaicWidth width of the Mosaic.
+     * @param colorCol    the column being processed.
+     * @param colorRow    the row being processed.
+     * @param borders     borders.
+     */
+    public void checkCriteria4And5(final int mosaicWidth, final int colorCol,
+            final int colorRow, final boolean[][] borders) {
+        addPointIfCoversGapCheck4(mosaicWidth, colorCol, borders, colorRow);
+        // All points for criterias 3) and 4)
+        // are set
+        // elements with the same points are
+        // ordered by criteria 5)
+        orderByCriteria5();
+    }
+
     private int findNextGapRightAbove(final int mosaicWidth, final int colorCol,
             final boolean[][] borders, final int colorRow) {
         boolean gap;
@@ -372,60 +463,10 @@ public class PixelStatus {
     }
 
     /**
-     * Process for element with height 1.
-     *
-     * @param mosaic   the Mosaic being created.
-     * @param hash     Hashtable for randomization of tile selection.
-     * @param colorCol the column currently being processed.
-     * @param colorRow the row currently being processed.
-     * @param borders  borders for the elements in the Mosaic.
-     */
-    public void processForHeight1(final Mosaic mosaic,
-            final Hashtable<String, String> hash, final int colorCol,
-            final int colorRow, final boolean[][] borders) {
-        if (mustSetElementAndSetCoveredPixelsNull(mosaic, hash, colorCol,
-                colorRow)) {
-            // set element and set all covered pixels to
-            // "null"
-            setElementandSetCoveredPixelsNull(mosaic, hash, colorCol, colorRow,
-                    borders);
-        } else {
-            // set element and set all covered pixels to
-            // "null"
-            setElementAndNullAllCoveredPixels(mosaic, colorCol, colorRow,
-                    borders);
-        }
-    }
-
-    /**
-     * Process for element with height 3.
-     *
-     * @param mosaic   the Mosaic being created.
-     * @param colorCol the column currently being processed.
-     * @param colorRow the row currently being processed.
-     * @param borders  borders for the elements in the Mosaic.
-     */
-    public void processForHeight3(final Mosaic mosaic, final int colorCol,
-            final int colorRow, final boolean[][] borders) {
-        for (int elRow = 0; elRow < StabilityOptimizer.CUTOFF_HEIGHT; elRow++) {
-            for (int elementColumn = 0; elementColumn < elFlag
-                    .getWidth(); elementColumn++) {
-                mosaic.initVector(colorRow + elRow, colorCol + elementColumn);
-            }
-        }
-
-        mosaic.setElement(colorRow, colorCol, currentColor, false);
-        mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
-        borders[colorRow + 2][colorCol] = true;
-        borders[colorRow + 1][colorCol] = true;
-        borders[colorRow][colorCol] = true;
-    }
-
-    /**
      * Order tiles by StabilityOptimizer criteria 5: elementend is as centered
      * as posible between 2 gaps of the row above.
      */
-    public final void orderByCriteria5() {
+    private void orderByCriteria5() {
         final int diffDistance = diffDistance();
 
         if (points == pointsFlag) {
@@ -442,28 +483,6 @@ public class PixelStatus {
     }
 
     /**
-     * Sets element if it ends at the end of the color.
-     *
-     * @param mosaic   the Mosaic being generated.
-     * @param colorCol the column currently being processed.
-     * @param colorRow the row currently being processed.
-     */
-    public void setElementIfEndsAtColorEnd(final Mosaic mosaic,
-            final int colorCol, final int colorRow) {
-        // set element if it ends at the end of
-        // the color
-        final Vector<String> pixel2 = getPixel2(mosaic, colorCol, colorRow);
-
-        if (!pixel2.isEmpty()) {
-            if (atEndOfColor(pixel2)) {
-                setElementSetAndElFlag();
-            }
-        } else {
-            checkFor3HeightElementInRowAbove(mosaic, colorCol, colorRow);
-        }
-    }
-
-    /**
      * Add a point for check 4 if element covers a gap.
      *
      * @param mosaicWidth the width of the Mosaic.
@@ -471,7 +490,7 @@ public class PixelStatus {
      * @param borders     borders.
      * @param colorRow    the row currently being processed.
      */
-    public void addPointIfCoversGapCheck4(final int mosaicWidth,
+    private void addPointIfCoversGapCheck4(final int mosaicWidth,
             final int colorCol, final boolean[][] borders, final int colorRow) {
         boolean covered = false;
 
