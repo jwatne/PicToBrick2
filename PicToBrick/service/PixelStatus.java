@@ -372,7 +372,7 @@ public class PixelStatus {
     }
 
     /**
-     * Process for height of 1 element.
+     * Process for element with height 1.
      *
      * @param mosaic   the Mosaic being created.
      * @param hash     Hashtable for randomization of tile selection.
@@ -395,6 +395,30 @@ public class PixelStatus {
             setElementAndNullAllCoveredPixels(mosaic, colorCol, colorRow,
                     borders);
         }
+    }
+
+    /**
+     * Process for element with height 3.
+     *
+     * @param mosaic   the Mosaic being created.
+     * @param colorCol the column currently being processed.
+     * @param colorRow the row currently being processed.
+     * @param borders  borders for the elements in the Mosaic.
+     */
+    public void processForHeight3(final Mosaic mosaic, final int colorCol,
+            final int colorRow, final boolean[][] borders) {
+        for (int elRow = 0; elRow < StabilityOptimizer.CUTOFF_HEIGHT; elRow++) {
+            for (int elementColumn = 0; elementColumn < elFlag
+                    .getWidth(); elementColumn++) {
+                mosaic.initVector(colorRow + elRow, colorCol + elementColumn);
+            }
+        }
+
+        mosaic.setElement(colorRow, colorCol, currentColor, false);
+        mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
+        borders[colorRow + 2][colorCol] = true;
+        borders[colorRow + 1][colorCol] = true;
+        borders[colorRow][colorCol] = true;
     }
 
     private boolean mustSetElementAndSetCoveredPixelsNull(final Mosaic mosaic,

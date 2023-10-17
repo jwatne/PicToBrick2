@@ -386,14 +386,13 @@ public class StabilityOptimizer implements Tiler {
     private void checkIfSameElementAlreadyIn2RowsAbove(final Mosaic mosaic,
             final Hashtable<String, String> hash, final PixelStatus pStatus,
             final int colorCol) {
-        final String currentColor = pStatus.getCurrentColor();
         final ElementObject elFlag = pStatus.getElFlag();
 
         if (elFlag.getHeight() == 1) {
             pStatus.processForHeight1(mosaic, hash, colorCol, colorRow,
                     borders);
         } else { // height =3
-            processForHeight3(mosaic, currentColor, elFlag, colorCol);
+            pStatus.processForHeight3(mosaic, colorCol, colorRow, borders);
         }
     }
 
@@ -908,22 +907,6 @@ public class StabilityOptimizer implements Tiler {
         } else {
             this.colorCount = (tilingInfo.size() - INT4) / 2;
         }
-    }
-
-    private void processForHeight3(final Mosaic mosaic,
-            final String currentColor, final ElementObject elFlag,
-            final int colorCol) {
-        for (int elRow = 0; elRow < CUTOFF_HEIGHT; elRow++) {
-            for (int elementColumn = 0; elementColumn < elFlag
-                    .getWidth(); elementColumn++) {
-                mosaic.initVector(colorRow + elRow, colorCol + elementColumn);
-            }
-        }
-        mosaic.setElement(colorRow, colorCol, currentColor, false);
-        mosaic.setElement(colorRow, colorCol, elFlag.getName(), true);
-        borders[colorRow + 2][colorCol] = true;
-        borders[colorRow + 1][colorCol] = true;
-        borders[colorRow][colorCol] = true;
     }
 
     private String getMixedColor(final String[] colors, final int[] threshold,
