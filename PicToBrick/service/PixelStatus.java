@@ -392,6 +392,25 @@ public class PixelStatus {
     }
 
     /**
+     * Cheks if the same element is already in the 2 rows above.
+     *
+     * @param mosaic   the Mosaic being created.
+     * @param hash     Hashtable for randomization of tile selection.
+     * @param colorCol the column currently being processed.
+     * @param colorRow the row currently being processed.
+     * @param borders  borders for the elements in the Mosaic.
+     */
+    public void checkIfSameElementAlreadyIn2RowsAbove(final Mosaic mosaic,
+            final Hashtable<String, String> hash, final int colorCol,
+            final int colorRow, final boolean[][] borders) {
+        if (elFlag.getHeight() == 1) {
+            processForHeight1(mosaic, hash, colorCol, colorRow, borders);
+        } else { // height =3
+            processForHeight3(mosaic, colorCol, colorRow, borders);
+        }
+    }
+
+    /**
      * Check StabilityOptimizer criteria 4: element covers a Gap - points 1; and
      * 5: elementend is as centered as posible between 2 gaps of the row above.
      *

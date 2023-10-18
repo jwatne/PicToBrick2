@@ -216,8 +216,8 @@ public class StabilityOptimizer implements Tiler {
                         // above
                         // -> replace the three height=1 elements by one
                         // height=3 element
-                        checkIfSameElementAlreadyIn2RowsAbove(mosaic, hash,
-                                pStatus, colorCol);
+                        pStatus.checkIfSameElementAlreadyIn2RowsAbove(mosaic,
+                                hash, colorCol, colorRow, borders);
                     } // END: if (!pixel.isEmpty())
                       // ---------------------------------------------
                 }
@@ -306,19 +306,6 @@ public class StabilityOptimizer implements Tiler {
                 threshold, originalMatrix, colorCol));
         // Count recolored pixel for statistic output
         this.recoloredElements++;
-    }
-
-    private void checkIfSameElementAlreadyIn2RowsAbove(final Mosaic mosaic,
-            final Hashtable<String, String> hash, final PixelStatus pStatus,
-            final int colorCol) {
-        final ElementObject elFlag = pStatus.getElFlag();
-
-        if (elFlag.getHeight() == 1) {
-            pStatus.processForHeight1(mosaic, hash, colorCol, colorRow,
-                    borders);
-        } else { // height =3
-            pStatus.processForHeight3(mosaic, colorCol, colorRow, borders);
-        }
     }
 
     private boolean checkIfElementFits(final int mosaicWidth,
