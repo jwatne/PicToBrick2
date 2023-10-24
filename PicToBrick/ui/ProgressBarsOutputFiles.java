@@ -183,12 +183,12 @@ public class ProgressBarsOutputFiles extends JDialog {
      * @param materialEnabled      <code>true</code> if enabled.
      * @param instructionEnabled   <code>true</code> if enabled.
      * @param xmlEnabled           <code>true</code> if enabled.
-     * @param miscellaneousEnabled <code>true</code> if enabled.
      */
     public void setStatus(final boolean graphicEnabled,
             final boolean configurationEnabled, final boolean materialEnabled,
-            final boolean instructionEnabled, final boolean xmlEnabled,
-            final boolean miscellaneousEnabled) {
+            final boolean instructionEnabled, final boolean xmlEnabled) {
+        final boolean miscellaneousEnabled = true; // Always true.
+
         if (!graphicEnabled) {
             this.graphic.setString(textbundle
                     .getString("dialog_progressBarsOutputFiles_progressBar_1"));

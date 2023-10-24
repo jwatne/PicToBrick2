@@ -828,14 +828,12 @@ public class MainWindow extends JFrame
      * @param material      <code>true</code> if enabled.
      * @param instruction   <code>true</code> if enabled.
      * @param xml           <code>true</code> if enabled.
-     * @param miscellaneous <code>true</code> if enabled.
      */
     public void setStatusProgressBarOutputFiles(final boolean graphic,
             final boolean configuration, final boolean material,
-            final boolean instruction, final boolean xml,
-            final boolean miscellaneous) {
+            final boolean instruction, final boolean xml) {
         progressBarsOutputFiles.setStatus(graphic, configuration, material,
-                instruction, xml, miscellaneous);
+                instruction, xml);
     }
 
     /**

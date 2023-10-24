@@ -480,7 +480,7 @@ public class MainWindowActionHandlers {
                     guiOutputConfiguration.isSelected(),
                     guiOutputMaterial.isSelected(),
                     guiOutputBuildingInstruction.isSelected(),
-                    guiOutputXml.isSelected(), true);
+                    guiOutputXml.isSelected());
             mainWindow.showProgressBarOutputFiles();
 
             // SwingWorker
