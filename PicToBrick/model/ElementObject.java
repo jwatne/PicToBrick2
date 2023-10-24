@@ -1,6 +1,9 @@
 package pictobrick.model;
 
 import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * Contains all information about an element.
@@ -8,6 +11,8 @@ import java.io.Serializable;
  * @author Tobias Reichling
  */
 public class ElementObject implements Serializable {
+    /** Height of a LEGO brick (vs. 1 for a tile). */
+    private static final int BRICK_HEIGHT = 3;
     /** Element width. */
     private int width;
     /** Element height. */
@@ -68,6 +73,167 @@ public class ElementObject implements Serializable {
         this.name = elementName;
         this.stability = elementStability;
         this.costs = elementCosts;
+    }
+
+    /**
+     * Init a hash with same elements of different height (element with height 1
+     * | same element with height 3).
+     *
+     * @author Adrian Schuetz
+     * @param configuration
+     * @return Hash
+     */
+    public static Hashtable<String, String> hashInit(
+            final Configuration configuration) {
+        final Hashtable<String, String> hash = new Hashtable<>();
+        ElementObject testElement1;
+        ElementObject testElement2;
+        final Vector<ElementObject> heightOne = new Vector<>();
+        final Vector<ElementObject> heightThree = new Vector<>();
+        // Enumeration of all elements (split by height)
+        // vector1: elements with height = 1
+        // vector2: elements with height = 3
+        final Enumeration<ElementObject> elements = configuration
+                .getAllElements();
+
+        while (elements.hasMoreElements()) {
+            testElement1 = (ElementObject) elements.nextElement();
+
+            if (testElement1.getHeight() == 1) {
+                heightOne.add(testElement1);
+            } else {
+                heightThree.add(testElement1);
+            }
+        }
+
+        // Enumeration of all elements with height = 1
+        // check if there is a matching element with height = 3
+        // -> put in the hash
+        final Enumeration<ElementObject> heightOneEnum = heightOne.elements();
+        Enumeration<ElementObject> heightThreeEnum;
+
+        while (heightOneEnum.hasMoreElements()) {
+            testElement1 = (ElementObject) heightOneEnum.nextElement();
+            heightThreeEnum = heightThree.elements();
+
+            while (heightThreeEnum.hasMoreElements()) {
+                testElement2 = (ElementObject) heightThreeEnum.nextElement();
+
+                if (testElement1.getWidth() == testElement2.getWidth()) {
+                    hash.put(testElement1.getName(), testElement2.getName());
+                }
+            }
+        }
+
+        return hash;
+    }
+
+    /**
+     * Sorts the element Vector by stability.
+     *
+     * @author Adrian Schuetz
+     * @param elementsUnsorted
+     * @return elementsSorted
+     */
+    public static Vector<ElementObject> sortElementsByStability(
+            final Enumeration<ElementObject> elementsUnsorted) {
+        int stabi = 0;
+        boolean included = false;
+        int position;
+        ElementObject supportElement;
+        final Vector<ElementObject> elementsSorted = new Vector<>();
+
+        // Elements sorted by stability
+        while (elementsUnsorted.hasMoreElements()) {
+            supportElement = ((ElementObject) elementsUnsorted.nextElement());
+
+            if (elementsSorted.size() == 0) {
+                elementsSorted.add(supportElement);
+            } else {
+                stabi = supportElement.getStability();
+                position = 0;
+                included = false;
+                final Enumeration<ElementObject> supportEnum = elementsSorted
+                        .elements();
+
+                while (supportEnum.hasMoreElements() && !included) {
+                    final var anotherElement = (ElementObject) supportEnum
+                            .nextElement();
+
+                    if (stabi >= anotherElement.getStability()) {
+                        elementsSorted.add(position, supportElement);
+                        included = true;
+                    } else {
+                        position++;
+                    }
+                }
+
+                if (!included) {
+                    elementsSorted.add(supportElement);
+                }
+            }
+        }
+
+        return elementsSorted;
+    }
+
+    /**
+     * Checks if there is a valid configuration elements must be rectangles,
+     * without holes and the height must be 1 or 3 (Standard-Lego).
+     *
+     * @author Adrian Schuetz
+     * @param configuration
+     * @return true, false
+     */
+    public static boolean consistencyCheck(final Configuration configuration) {
+        ElementObject testElement;
+
+        // check all elements
+        for (final Enumeration<ElementObject> currentEnum = configuration
+                .getAllElements(); currentEnum.hasMoreElements();) {
+            testElement = currentEnum.nextElement();
+
+            if (!(testElement.getHeight() == 1
+                    || testElement.getHeight() == BRICK_HEIGHT)) {
+                return false;
+            } else {
+                // if element is not holohedral, false
+                for (int i = 0; i < testElement.getHeight(); i++) {
+                    for (int j = 0; j < testElement.getWidth(); j++) {
+                        if (!testElement.getMatrix()[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if there is a valid configuration for the optimisation (element
+     * width = 2 and height = 1).
+     *
+     * @author Adrian Schuetz
+     * @param configuration
+     * @return true, false
+     */
+    public static boolean consistencyCheckOptimisation(
+            final Configuration configuration) {
+        ElementObject testElement;
+
+        // check all elements
+        for (final Enumeration<ElementObject> currentEnum = configuration
+                .getAllElements(); currentEnum.hasMoreElements();) {
+            testElement = currentEnum.nextElement();
+
+            if ((testElement.getHeight() == 1 && testElement.getWidth() == 2)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

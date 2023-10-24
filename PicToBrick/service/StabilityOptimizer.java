@@ -24,8 +24,6 @@ import pictobrick.ui.ProgressBarsAlgorithms;
 public class StabilityOptimizer implements Tiler {
     /** Cutoff height. */
     public static final int CUTOFF_HEIGHT = 3;
-    /** Height of a LEGO brick (vs. 1 for a tile). */
-    private static final int BRICK_HEIGHT = 3;
     /** Int value 4. */
     private static final int INT4 = 4;
     /** First threshold value. */
@@ -126,12 +124,13 @@ public class StabilityOptimizer implements Tiler {
                 mosaicHeight);
         initializeBordersArray(mosaicWidth, mosaicHeight);
         // Create vector with elements (sorted by stability)
-        final Vector<ElementObject> elementsSorted = sortElementsByStability(
-                configuration.getAllElements());
+        final Vector<ElementObject> elementsSorted = ElementObject
+                .sortElementsByStability(configuration.getAllElements());
 
         // Consistency check
-        if (!consistencyCheck(configuration) || (optimisation
-                && !consistencyCheckOptimisation(configuration))) {
+        if (!ElementObject.consistencyCheck(configuration)
+                || (optimisation && !ElementObject
+                        .consistencyCheckOptimisation(configuration))) {
             // ------------ALTERNATIVE-ALGORITHM------------
             return getResultForFailedConsistencyChecks(mosaicWidth,
                     mosaicHeight, configuration, mosaic);
@@ -139,7 +138,8 @@ public class StabilityOptimizer implements Tiler {
             // ------------MAIN-ALGORITHM------------
             // run linear through the image - determine the fitting element for
             // every pixel
-            final Hashtable<String, String> hash = hashInit(configuration);
+            final Hashtable<String, String> hash = ElementObject
+                    .hashInit(configuration);
             // int points = -1;
             boolean elementFits = false;
             // ElementObject currentElement;
@@ -931,166 +931,5 @@ public class StabilityOptimizer implements Tiler {
         }
 
         return bigGap;
-    }
-
-    /**
-     * Init a hash with same elements of different height (element with height 1
-     * | same element with height 3).
-     *
-     * @author Adrian Schuetz
-     * @param configuration
-     * @return Hash
-     */
-    private Hashtable<String, String> hashInit(
-            final Configuration configuration) {
-        final Hashtable<String, String> hash = new Hashtable<>();
-        ElementObject testElement1;
-        ElementObject testElement2;
-        final Vector<ElementObject> heightOne = new Vector<>();
-        final Vector<ElementObject> heightThree = new Vector<>();
-        // Enumeration of all elements (split by height)
-        // vector1: elements with height = 1
-        // vector2: elements with height = 3
-        final Enumeration<ElementObject> elements = configuration
-                .getAllElements();
-
-        while (elements.hasMoreElements()) {
-            testElement1 = (ElementObject) elements.nextElement();
-
-            if (testElement1.getHeight() == 1) {
-                heightOne.add(testElement1);
-            } else {
-                heightThree.add(testElement1);
-            }
-        }
-
-        // Enumeration of all elements with height = 1
-        // check if there is a matching element with height = 3
-        // -> put in the hash
-        final Enumeration<ElementObject> heightOneEnum = heightOne.elements();
-        Enumeration<ElementObject> heightThreeEnum;
-
-        while (heightOneEnum.hasMoreElements()) {
-            testElement1 = (ElementObject) heightOneEnum.nextElement();
-            heightThreeEnum = heightThree.elements();
-
-            while (heightThreeEnum.hasMoreElements()) {
-                testElement2 = (ElementObject) heightThreeEnum.nextElement();
-
-                if (testElement1.getWidth() == testElement2.getWidth()) {
-                    hash.put(testElement1.getName(), testElement2.getName());
-                }
-            }
-        }
-
-        return hash;
-    }
-
-    /**
-     * Sorts the element Vector by stability.
-     *
-     * @author Adrian Schuetz
-     * @param elementsUnsorted
-     * @return elementsSorted
-     */
-    private Vector<ElementObject> sortElementsByStability(
-            final Enumeration<ElementObject> elementsUnsorted) {
-        int stabi = 0;
-        boolean included = false;
-        int position;
-        ElementObject supportElement;
-        final Vector<ElementObject> elementsSorted = new Vector<>();
-
-        // Elements sorted by stability
-        while (elementsUnsorted.hasMoreElements()) {
-            supportElement = ((ElementObject) elementsUnsorted.nextElement());
-
-            if (elementsSorted.size() == 0) {
-                elementsSorted.add(supportElement);
-            } else {
-                stabi = supportElement.getStability();
-                position = 0;
-                included = false;
-                final Enumeration<ElementObject> supportEnum = elementsSorted
-                        .elements();
-
-                while (supportEnum.hasMoreElements() && !included) {
-                    final var anotherElement = (ElementObject) supportEnum
-                            .nextElement();
-
-                    if (stabi >= anotherElement.getStability()) {
-                        elementsSorted.add(position, supportElement);
-                        included = true;
-                    } else {
-                        position++;
-                    }
-                }
-
-                if (!included) {
-                    elementsSorted.add(supportElement);
-                }
-            }
-        }
-
-        return elementsSorted;
-    }
-
-    /**
-     * Checks if there is a valid configuration elements must be rectangles,
-     * without holes and the height must be 1 or 3 (Standard-Lego).
-     *
-     * @author Adrian Schuetz
-     * @param configuration
-     * @return true, false
-     */
-    private boolean consistencyCheck(final Configuration configuration) {
-        ElementObject testElement;
-
-        // check all elements
-        for (final Enumeration<ElementObject> currentEnum = configuration
-                .getAllElements(); currentEnum.hasMoreElements();) {
-            testElement = currentEnum.nextElement();
-
-            if (!(testElement.getHeight() == 1
-                    || testElement.getHeight() == BRICK_HEIGHT)) {
-                return false;
-            } else {
-                // if element is not holohedral, false
-                for (int i = 0; i < testElement.getHeight(); i++) {
-                    for (int j = 0; j < testElement.getWidth(); j++) {
-                        if (!testElement.getMatrix()[i][j]) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks if there is a valid configuration for the optimisation (element
-     * width = 2 and height = 1).
-     *
-     * @author Adrian Schuetz
-     * @param configuration
-     * @return true, false
-     */
-    private boolean consistencyCheckOptimisation(
-            final Configuration configuration) {
-        ElementObject testElement;
-
-        // check all elements
-        for (final Enumeration<ElementObject> currentEnum = configuration
-                .getAllElements(); currentEnum.hasMoreElements();) {
-            testElement = currentEnum.nextElement();
-
-            if ((testElement.getHeight() == 1 && testElement.getWidth() == 2)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
