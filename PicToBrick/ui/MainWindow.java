@@ -276,6 +276,27 @@ public class MainWindow extends JFrame
         guiPanelRightArea = new JPanel(new BorderLayout());
         guiPanelTopArea.add(guiPanelRightArea, BorderLayout.EAST);
         // image area top
+        constructTopImageArea();
+        // image area bottom
+        constructBottomImageArea();
+        // split pane
+        constructSplitPane();
+        // option panels all
+        constructOptionPanelsAll();
+        // option panel 1
+        guiPanelOptions1 = new OptionsPanel1(new BorderLayout(), this);
+        // option panel 2
+        guiPanelOptions2 = new OptionsPanel2(new BorderLayout(), this);
+        // option panel 3
+        guiPanelOptions3 = new OptionsPanel3(new BorderLayout(), this);
+        // zoom area
+        guiPanelZoom = new ZoomPanel(new GridLayout(ZOOM_PANEL_ROWS, 1), this);
+        // information area
+        constructInformationArea();
+        pack();
+    }
+
+    private void constructTopImageArea() {
         guiPictureElementTop = new PictureElement(this);
         final GridBagLayout top2gbl = new GridBagLayout();
         final GridBagConstraints top2gbc = new GridBagConstraints();
@@ -289,7 +310,9 @@ public class MainWindow extends JFrame
         guiScrollPaneTop.setMinimumSize(new Dimension(0, 0));
         guiScrollPaneTop.setPreferredSize(
                 new Dimension(SCROLL_PANE_SIZE, SCROLL_PANE_SIZE));
-        // image area bottom
+    }
+
+    private void constructBottomImageArea() {
         guiPictureElementBottom = new PictureElement(this);
         final GridBagLayout bottom2gbl = new GridBagLayout();
         final GridBagConstraints bottom2gbc = new GridBagConstraints();
@@ -303,7 +326,9 @@ public class MainWindow extends JFrame
         guiScrollPaneBottom.setMinimumSize(new Dimension(0, 0));
         guiScrollPaneBottom.setPreferredSize(
                 new Dimension(SCROLL_PANE_SIZE, SCROLL_PANE_SIZE));
-        // split pane
+    }
+
+    private void constructSplitPane() {
         guiSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
         guiSplitPane.setDividerLocation(0);
         guiSplitPane.setContinuousLayout(true);
@@ -314,21 +339,15 @@ public class MainWindow extends JFrame
         guiSplitPane.setTopComponent(guiScrollPaneTop);
         guiSplitPane.setBottomComponent(guiScrollPaneBottom);
         guiPanelTopArea.add(guiSplitPane, BorderLayout.CENTER);
-        // option panels all
+    }
+
+    private void constructOptionPanelsAll() {
         final TitledBorder optionAreaBorder = BorderFactory.createTitledBorder(
                 textbundle.getString("dialog_mainWindow_border_2"));
         optionAreaBorder.setTitleColor(MEDIUM_GRAY);
-        // option panel 1
-        guiPanelOptions1 = new OptionsPanel1(new BorderLayout(), this);
-        // option panel 2
-        guiPanelOptions2 = new OptionsPanel2(new BorderLayout(), this);
-        // option panel 3
-        guiPanelOptions3 = new OptionsPanel3(new BorderLayout(), this);
+    }
 
-        // zoom area
-        guiPanelZoom = new ZoomPanel(new GridLayout(ZOOM_PANEL_ROWS, 1), this);
-
-        // information area
+    private void constructInformationArea() {
         guiPanelInformation = new JPanel(new GridLayout(1, 1));
         guiTextFieldInformation = new JTextField();
         guiTextFieldInformation.setEditable(false);
@@ -342,7 +361,6 @@ public class MainWindow extends JFrame
         guiPanelInformation.setBorder(informationAreaBorder);
         guiPanelInformation.add(guiTextFieldInformation);
         guiStatusHandler.guiStatus(GuiStatusHandler.GUI_START);
-        pack();
     }
 
     /**
