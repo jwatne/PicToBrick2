@@ -175,49 +175,45 @@ public class ProgressBarsOutputFiles extends JDialog {
     }
 
     /**
-     * Sets the progress bar status (enabled/disabled).
+     * Sets the progress bar status (enabled/disabled). Modified to use
+     * OutputSelections record by John Watne 10/2023.
      *
      * @author Adrian Schuetz
-     * @param graphicEnabled       <code>true</code> if enabled.
-     * @param configurationEnabled <code>true</code> if enabled.
-     * @param materialEnabled      <code>true</code> if enabled.
-     * @param instructionEnabled   <code>true</code> if enabled.
-     * @param xmlEnabled           <code>true</code> if enabled.
+     * @param selections indicators of which output files were selected to be
+     *                   output by the user.
      */
-    public void setStatus(final boolean graphicEnabled,
-            final boolean configurationEnabled, final boolean materialEnabled,
-            final boolean instructionEnabled, final boolean xmlEnabled) {
+    public void setStatus(final OutputSelections selections) {
         final boolean miscellaneousEnabled = true; // Always true.
 
-        if (!graphicEnabled) {
+        if (!selections.graphic()) {
             this.graphic.setString(textbundle
                     .getString("dialog_progressBarsOutputFiles_progressBar_1"));
         } else {
             this.graphic.setString(null);
         }
 
-        if (!configurationEnabled) {
+        if (!selections.configuration()) {
             this.configuration.setString(textbundle
                     .getString("dialog_progressBarsOutputFiles_progressBar_1"));
         } else {
             this.configuration.setString(null);
         }
 
-        if (!materialEnabled) {
+        if (!selections.material()) {
             this.material.setString(textbundle
                     .getString("dialog_progressBarsOutputFiles_progressBar_1"));
         } else {
             this.material.setString(null);
         }
 
-        if (!instructionEnabled) {
+        if (!selections.instruction()) {
             this.instruction.setString(textbundle
                     .getString("dialog_progressBarsOutputFiles_progressBar_1"));
         } else {
             this.instruction.setString(null);
         }
 
-        if (!xmlEnabled) {
+        if (!selections.xml()) {
             this.xml.setString(textbundle
                     .getString("dialog_progressBarsOutputFiles_progressBar_1"));
         } else {

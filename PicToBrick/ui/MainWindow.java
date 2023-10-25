@@ -820,20 +820,16 @@ public class MainWindow extends JFrame
     }
 
     /**
-     * Sets status for file output status progress bars..
+     * Sets status for file output status progress bars. Modified to use
+     * OutputSelections record parameter by John Watne 10/2023.
      *
      * @author Tobias Reichling
-     * @param graphic       <code>true</code> if enabled.
-     * @param configuration <code>true</code> if enabled.
-     * @param material      <code>true</code> if enabled.
-     * @param instruction   <code>true</code> if enabled.
-     * @param xml           <code>true</code> if enabled.
+     * @param selections indicators of which output files were selected to be
+     *                   output by the user.
      */
-    public void setStatusProgressBarOutputFiles(final boolean graphic,
-            final boolean configuration, final boolean material,
-            final boolean instruction, final boolean xml) {
-        progressBarsOutputFiles.setStatus(graphic, configuration, material,
-                instruction, xml);
+    public void setStatusProgressBarOutputFiles(
+            final OutputSelections selections) {
+        progressBarsOutputFiles.setStatus(selections);
     }
 
     /**

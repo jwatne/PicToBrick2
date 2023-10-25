@@ -13,6 +13,7 @@ import pictobrick.service.DataProcessor;
 import pictobrick.service.SwingWorker;
 import pictobrick.ui.MainWindow;
 import pictobrick.ui.MosaicSizeDialog;
+import pictobrick.ui.OutputSelections;
 import pictobrick.ui.PictureElement;
 import pictobrick.ui.WorkingDirectoryDialog;
 import pictobrick.ui.menus.OutputMenu;
@@ -475,12 +476,13 @@ public class MainWindowActionHandlers {
             mainWindow.refreshProgressBarOutputFiles(0, XML_PROGRESS_BAR);
             mainWindow.refreshProgressBarOutputFiles(0,
                     MISCELLANEOUS_PROGRESS_BAR);
-            mainWindow.setStatusProgressBarOutputFiles(
+            final OutputSelections selections = new OutputSelections(
                     guiOutputGrafic.isSelected(),
                     guiOutputConfiguration.isSelected(),
                     guiOutputMaterial.isSelected(),
                     guiOutputBuildingInstruction.isSelected(),
                     guiOutputXml.isSelected());
+            mainWindow.setStatusProgressBarOutputFiles(selections);
             mainWindow.showProgressBarOutputFiles();
 
             // SwingWorker
