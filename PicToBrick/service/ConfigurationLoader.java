@@ -49,8 +49,11 @@ public class ConfigurationLoader {
     public void configurationLoad() {
         final Vector<String> configurationVector = dataProcessing
                 .getConfiguration();
+        final Integer lastConfigurationSource = dataProcessing
+                .getLastConfigurationSource();
         var configurationLoadingDialog = new ConfigurationLoadingDialog(
-                mainWindow, configurationVector);
+                mainWindow, configurationVector, lastConfigurationSource,
+                dataProcessing.getLastConfigurationSelectionIndex());
 
         if (!configurationLoadingDialog.isCanceled()) {
             switch (configurationLoadingDialog.getSelection()) {
@@ -78,13 +81,16 @@ public class ConfigurationLoader {
     private void loadExistingConfiguration(
             final Vector<String> configurationVector,
             final ConfigurationLoadingDialog configurationLoadingDialog) {
+        final int selectionIndex = configurationLoadingDialog.getFile();
         final String existingFile = (String) configurationVector
-                .elementAt(configurationLoadingDialog.getFile());
+                .elementAt(selectionIndex);
 
-        if (configurationLoadingDialog.getFile() < MIN_FILE_VALUE) {
+        if (selectionIndex < MIN_FILE_VALUE) {
             dataProcessing.setCurrentConfiguration(
-                    dataProcessing.getSystemConfiguration(
-                            configurationLoadingDialog.getFile()));
+                    dataProcessing.getSystemConfiguration(selectionIndex));
+            dataProcessing
+                    .setLastConfigurationSource(LOAD_EXISTING_CONFIGURATION);
+            dataProcessing.setLastConfigurationSelectionIndex(selectionIndex);
             mainWindow.getGuiPanelOptions1()
                     .showConfigurationInfo(existingFile);
             mainWindow.showInfo(
@@ -97,6 +103,9 @@ public class ConfigurationLoader {
             try {
                 dataProcessing.setCurrentConfiguration(
                         dataProcessing.configurationLoad(existingFile));
+                dataProcessing.setLastConfigurationSource(
+                        LOAD_EXISTING_CONFIGURATION);
+                dataProcessing.setLastConfigurationSource(selectionIndex);
                 mainWindow.getGuiPanelOptions1()
                         .showConfigurationInfo(existingFile);
                 mainWindow.showInfo(MainWindow.getTextBundle()
@@ -114,13 +123,14 @@ public class ConfigurationLoader {
     private void loadDerivitiveConfiguration(
             final Vector<String> configurationVector,
             final ConfigurationLoadingDialog configurationLoadingDialog) {
+        final int selectionIndex = configurationLoadingDialog.getFile();
         final String file = (String) configurationVector
-                .elementAt(configurationLoadingDialog.getFile());
+                .elementAt(selectionIndex);
         Configuration configurationOld = new Configuration();
 
-        if (configurationLoadingDialog.getFile() < MIN_FILE_VALUE) {
-            configurationOld = dataProcessing.getSystemConfiguration(
-                    configurationLoadingDialog.getFile());
+        if (selectionIndex < MIN_FILE_VALUE) {
+            configurationOld = dataProcessing
+                    .getSystemConfiguration(selectionIndex);
         } else {
             try {
                 configurationOld = dataProcessing.configurationLoad(file);
@@ -161,6 +171,10 @@ public class ConfigurationLoader {
                                 configDialog.getConfiguration());
                         dataProcessing.setCurrentConfiguration(
                                 configDialog.getConfiguration());
+                        dataProcessing.setLastConfigurationSource(
+                                DERIVITIVE_CONFIGURATION);
+                        dataProcessing.setLastConfigurationSelectionIndex(
+                                selectionIndex);
                         mainWindow.getGuiPanelOptions1().showConfigurationInfo(
                                 configDialog.getConfiguration().getName()
                                         + ".cfg");
@@ -212,6 +226,8 @@ public class ConfigurationLoader {
                                 configDialog.getConfiguration());
                         dataProcessing.setCurrentConfiguration(
                                 configDialog.getConfiguration());
+                        dataProcessing
+                                .setLastConfigurationSource(NEW_CONFIGURATION);
                         mainWindow.getGuiPanelOptions1().showConfigurationInfo(
                                 configDialog.getConfiguration().getName()
                                         + ".cfg");

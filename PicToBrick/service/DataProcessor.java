@@ -58,6 +58,58 @@ public class DataProcessor {
             .getBundle("Resources.TextResource");
     /** Contains all program data and provides appropriate methods. */
     private final DataManagement dataManagement;
+    /** Last configuration source: new, derived, or existing. */
+    private Integer lastConfigurationSource;
+    /**
+     * Last configuration selected index, for configuration filenames in
+     * selection.
+     */
+    private Integer lastConfigurationSelectionIndex = null;
+
+    /**
+     * Returns last configuration selected index, for configuration filenames in
+     * selection.
+     *
+     * @return last configuration selected index, for configuration filenames in
+     *         selection.
+     */
+    public Integer getLastConfigurationSelectionIndex() {
+        return lastConfigurationSelectionIndex;
+    }
+
+    /**
+     * Sets last configuration selected index, for configuration filenames in
+     * selection.
+     *
+     * @param selection last configuration selected index, for configuration
+     *                  filenames in selection.
+     */
+    public void setLastConfigurationSelectionIndex(final Integer selection) {
+        this.lastConfigurationSelectionIndex = selection;
+    }
+
+    /**
+     * Returns last configuration source: new, derived, or existing.
+     *
+     * @return last configuration source: new, derived, or existing.
+     */
+    public Integer getLastConfigurationSource() {
+        return lastConfigurationSource;
+    }
+
+    /**
+     * Sets last configuration source: new, derived, or existing.
+     *
+     * @param source last configuration source: new, derived, or existing.
+     */
+    public void setLastConfigurationSource(final Integer source) {
+        this.lastConfigurationSource = switch (source) {
+        case ConfigurationLoader.NEW_CONFIGURATION,
+         ConfigurationLoader.DERIVITIVE_CONFIGURATION,
+         ConfigurationLoader.LOAD_EXISTING_CONFIGURATION -> source;
+        default -> null; // Unknown value for configuration type source.
+        };
+    }
 
     /**
      * Returns data manager.

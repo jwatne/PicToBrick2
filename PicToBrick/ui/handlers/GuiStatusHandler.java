@@ -309,7 +309,8 @@ public class GuiStatusHandler {
      */
     private void processGuiStart() {
         final DataProcessor dataProcessing = mainWindow.getDataProcessing();
-        dataProcessing.setCurrentConfiguration(null);
+        // dataProcessing.setCurrentConfiguration(null); Possible to keep
+        // configuration for multiple mosaics in same session?
         // sets option panel 1
         final JPanel guiPanelRightArea = mainWindow.getGuiPanelRightArea();
         guiPanelRightArea.removeAll();

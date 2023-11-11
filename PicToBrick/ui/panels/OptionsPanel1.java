@@ -218,7 +218,7 @@ public class OptionsPanel1 extends JPanel implements OptionsPanel {
     public void processGuiStart() {
         // init information labels
         showImageInfo("");
-        showConfigurationInfo("");
+        // showConfigurationInfo("");
         showDimensionInfo(0, 0, true);
         // enable/disable buttons, menu items, etc.
         getButtonMosaicDimension().setEnabled(false);
