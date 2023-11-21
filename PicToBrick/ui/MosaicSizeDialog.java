@@ -113,7 +113,6 @@ public class MosaicSizeDialog extends JDialog
                 " " + textbundle.getString("dialog_mosaicSize_label_4"));
         final JLabel heightBETextUnit = new JLabel(
                 " " + textbundle.getString("dialog_mosaicSize_label_4"));
-        // Input fields
         mosaicWidthMM = new JTextField();
         mosaicWidthMM.setHorizontalAlignment(JTextField.RIGHT);
         mosaicHeightMM = new JTextField();
@@ -122,6 +121,19 @@ public class MosaicSizeDialog extends JDialog
         mosaicWidthBE.setHorizontalAlignment(JTextField.RIGHT);
         mosaicHeightBE = new JTextField();
         mosaicHeightBE.setHorizontalAlignment(JTextField.RIGHT);
+        final MainWindow mainWindow = (MainWindow) owner; // Cast as the
+                                                          // MainWindow that it
+                                                          // is.
+        final int mosaicHeight = mainWindow.getMosaicHeight();
+        final int mosaicWidth = mainWindow.getMosaicWidth();
+
+        if ((mosaicHeight > 0) && (mosaicWidth > 0)) {
+            mosaicHeightBE.setText("" + mosaicHeight);
+            mosaicWidthBE.setText("" + mosaicWidth);
+            this.heightBE = mosaicHeight;
+            this.widthBE = mosaicWidth;
+        }
+
         // BUTTON
         final JButton ok = new JButton(textbundle.getString("button_ok"));
         ok.addActionListener(this);
@@ -307,21 +319,8 @@ public class MosaicSizeDialog extends JDialog
         // if the result is 0 basis elements it is set to 1 basis element!
         if (event.getActionCommand().contains("mmtobe")) {
             if (isValidInputMM()) {
-                if (((int) java.lang.Math.round(
-                        this.widthMM / this.configurationBasisWidthMM)) < 1) {
-                    mosaicWidthBE.setText("1");
-                } else {
-                    mosaicWidthBE.setText("" + ((int) java.lang.Math.round(
-                            this.widthMM / this.configurationBasisWidthMM)));
-                }
-
-                if (((int) java.lang.Math.round(
-                        this.heightMM / this.configurationBasisHeightMM)) < 1) {
-                    mosaicHeightBE.setText("1");
-                } else {
-                    mosaicHeightBE.setText("" + ((int) java.lang.Math.round(
-                            this.heightMM / this.configurationBasisHeightMM)));
-                }
+                setMosaicWidthBasisElementText();
+                setMosaicHeightBasisElementText();
             } else {
                 JOptionPane.showMessageDialog(this, error,
                         textbundle.getString("dialog_error_frame"),
@@ -331,12 +330,8 @@ public class MosaicSizeDialog extends JDialog
             // truncate after second decimal point
         } else if (event.getActionCommand().contains("betomm")) {
             if (isValidInputBE()) {
-                mosaicWidthMM.setText("" + ((int) ((this.widthBE
-                        * this.configurationBasisWidthMM) * INT100))
-                        / DOUBLE_100);
-                mosaicHeightMM.setText("" + ((int) ((this.heightBE
-                        * this.configurationBasisHeightMM) * INT100))
-                        / DOUBLE_100);
+                setMosaicWidthMMText();
+                setMosaicHeightMMText();
             } else {
                 JOptionPane.showMessageDialog(this, error,
                         textbundle.getString("dialog_error_frame"),
@@ -353,6 +348,38 @@ public class MosaicSizeDialog extends JDialog
                         textbundle.getString("dialog_error_frame"),
                         JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+
+    private void setMosaicHeightMMText() {
+        mosaicHeightMM.setText(
+                "" + ((int) ((this.heightBE * this.configurationBasisHeightMM)
+                        * INT100)) / DOUBLE_100);
+    }
+
+    private void setMosaicWidthMMText() {
+        mosaicWidthMM.setText(
+                "" + ((int) ((this.widthBE * this.configurationBasisWidthMM)
+                        * INT100)) / DOUBLE_100);
+    }
+
+    private void setMosaicHeightBasisElementText() {
+        if (((int) java.lang.Math
+                .round(this.heightMM / this.configurationBasisHeightMM)) < 1) {
+            mosaicHeightBE.setText("1");
+        } else {
+            mosaicHeightBE.setText("" + ((int) java.lang.Math
+                    .round(this.heightMM / this.configurationBasisHeightMM)));
+        }
+    }
+
+    private void setMosaicWidthBasisElementText() {
+        if (((int) java.lang.Math
+                .round(this.widthMM / this.configurationBasisWidthMM)) < 1) {
+            mosaicWidthBE.setText("1");
+        } else {
+            mosaicWidthBE.setText("" + ((int) java.lang.Math
+                    .round(this.widthMM / this.configurationBasisWidthMM)));
         }
     }
 }
